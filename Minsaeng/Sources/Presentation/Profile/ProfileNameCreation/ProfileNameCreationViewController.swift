@@ -246,15 +246,15 @@ extension ProfileNameCreationViewController {
     
     private func setKeyboardObserver() {
         NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
-            .bind(with: self, onNext: { owner, notification in
-                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                    let keyboardHeight: CGFloat = keyboardSize.height - self.view.safeAreaInsets.bottom
-                    owner.scrollView.snp.updateConstraints {
-                        $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(keyboardHeight - 62)
-                    }
-                    self.view.layoutIfNeeded()
-                }
-            })
-            .disposed(by: disposeBag)
+        .compactMap { $0.userInfo }
+        .compactMap { $0[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue }
+        .bind(with: self, onNext: { owner, element in
+            let keyboardHeight = element.cgRectValue.height
+            owner.scrollView.snp.updateConstraints {
+                $0.bottom.equalTo(owner.view.safeAreaLayoutGuide).inset(keyboardHeight - 62)
+            }
+            owner.view.layoutIfNeeded()
+        })
+        .disposed(by: disposeBag)
     }
 }

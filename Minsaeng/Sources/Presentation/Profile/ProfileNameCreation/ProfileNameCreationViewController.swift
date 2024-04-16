@@ -249,7 +249,7 @@ extension ProfileNameCreationViewController {
         .compactMap { $0.userInfo }
         .compactMap { $0[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue }
         .bind(with: self, onNext: { owner, element in
-            let keyboardHeight = element.cgRectValue.height
+            let keyboardHeight = element.cgRectValue.height - owner.view.safeAreaInsets.bottom
             owner.scrollView.snp.updateConstraints {
                 $0.bottom.equalTo(owner.view.safeAreaLayoutGuide).inset(keyboardHeight - 62)
             }

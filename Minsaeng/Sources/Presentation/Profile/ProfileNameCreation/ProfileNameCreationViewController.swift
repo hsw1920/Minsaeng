@@ -77,7 +77,6 @@ final class ProfileNameCreationViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigation()
         setKeyboardObserver()
     }
     
@@ -113,13 +112,12 @@ final class ProfileNameCreationViewController: BaseViewController {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.bottom.equalTo(nameTextField.snp.top).offset(-12)
             $0.top.equalToSuperview().inset(62)
             $0.leading.equalToSuperview().inset(24)
         }
         
         nameTextField.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).inset(32)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(50)
         }
@@ -134,11 +132,6 @@ final class ProfileNameCreationViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(62)
         }
-    }
-    
-    private func setupNavigation() {
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.isTranslucent = false
     }
 }
 
@@ -247,15 +240,15 @@ extension ProfileNameCreationViewController {
     
     private func setKeyboardObserver() {
         NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
-            .bind(with: self, onNext: { owner, notification in
-                if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                    let keyboardHeight: CGFloat = keyboardSize.height - self.view.safeAreaInsets.bottom
-                    owner.scrollView.snp.updateConstraints {
-                        $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(keyboardHeight - 62)
-                    }
-                    self.view.layoutIfNeeded()
-                }
-            })
-            .disposed(by: disposeBag)
+        .compactMap { $0.userInfo }
+        .compactMap { $0[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue }
+        .bind(with: self, onNext: { owner, element in
+            let keyboardHeight = element.cgRectValue.height - owner.view.safeAreaInsets.bottom
+            owner.scrollView.snp.updateConstraints {
+                $0.bottom.equalTo(owner.view.safeAreaLayoutGuide).inset(keyboardHeight - 62)
+            }
+            owner.view.layoutIfNeeded()
+        })
+        .disposed(by: disposeBag)
     }
 }

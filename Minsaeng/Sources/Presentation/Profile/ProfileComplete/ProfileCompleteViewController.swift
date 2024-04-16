@@ -11,7 +11,16 @@ import RxCocoa
 import ReactorKit
 
 final class ProfileCompleteViewController: BaseViewController {
+ 
+    // MARK: Init
+    init(with reactor: ProfileCompleteCreationReactor) {
+        super.init(nibName: nil, bundle: nil)
+        self.reactor = reactor
+    }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 

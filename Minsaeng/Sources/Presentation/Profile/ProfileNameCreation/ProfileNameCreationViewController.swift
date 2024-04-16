@@ -77,7 +77,6 @@ final class ProfileNameCreationViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigation()
         setKeyboardObserver()
     }
     
@@ -133,11 +132,6 @@ final class ProfileNameCreationViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(62)
         }
-    }
-    
-    private func setupNavigation() {
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.isTranslucent = false
     }
 }
 

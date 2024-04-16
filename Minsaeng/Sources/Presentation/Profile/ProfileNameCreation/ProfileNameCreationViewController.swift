@@ -113,13 +113,12 @@ final class ProfileNameCreationViewController: BaseViewController {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.bottom.equalTo(nameTextField.snp.top).offset(-12)
             $0.top.equalToSuperview().inset(62)
             $0.leading.equalToSuperview().inset(24)
         }
         
         nameTextField.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).inset(32)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(50)
         }

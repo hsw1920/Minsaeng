@@ -8,7 +8,7 @@
 import ReactorKit
 import RxCocoa
 
-final class ProfileCompleteCreationReactor: Reactor {
+final class ProfileCompleteReactor: Reactor {
     enum Action {
         case pushButtonTapped
     }

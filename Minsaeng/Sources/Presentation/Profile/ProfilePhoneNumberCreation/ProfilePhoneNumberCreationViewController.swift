@@ -171,7 +171,7 @@ extension ProfilePhoneNumberCreationViewController: View {
             .distinctUntilChanged()
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
-                let reactor = ProfileCompleteCreationReactor()
+                let reactor = ProfileCompleteReactor()
                 let nextViewController = ProfileCompleteViewController(with: reactor)
                 owner.navigationController?.pushViewController(nextViewController, animated: true)
             })

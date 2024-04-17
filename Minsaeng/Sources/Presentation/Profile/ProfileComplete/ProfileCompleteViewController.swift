@@ -35,7 +35,7 @@ final class ProfileCompleteViewController: BaseViewController {
     }()
     
     // MARK: Init
-    init(with reactor: ProfileCompleteCreationReactor) {
+    init(with reactor: ProfileCompleteReactor) {
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -69,19 +69,19 @@ final class ProfileCompleteViewController: BaseViewController {
 }
 
 extension ProfileCompleteViewController: View {
-    func bind(reactor: ProfileCompleteCreationReactor) {
+    func bind(reactor: ProfileCompleteReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
     }
     
-    private func bindAction(reactor: ProfileCompleteCreationReactor) {
+    private func bindAction(reactor: ProfileCompleteReactor) {
         nextButton.rx.tap
-            .map { ProfileCompleteCreationReactor.Action.pushButtonTapped }
+            .map { ProfileCompleteReactor.Action.pushButtonTapped }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
     
-    private func bindState(reactor: ProfileCompleteCreationReactor) {
+    private func bindState(reactor: ProfileCompleteReactor) {
         reactor.state
             .map(\.isPushHome)
             .distinctUntilChanged()

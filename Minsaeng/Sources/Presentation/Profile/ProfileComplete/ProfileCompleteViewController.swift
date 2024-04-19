@@ -49,6 +49,11 @@ final class ProfileCompleteViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNavigation()
+    }
+    
     override func setupUI() {
         view.addSubview(titleLabel)
         view.addSubview(imageView)
@@ -70,6 +75,10 @@ final class ProfileCompleteViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(62)
         }
+    }
+    
+    private func setupNavigation() {
+        navigationItem.setHidesBackButton(true, animated: true)
     }
 }
 

@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		604D1A5F2BCFACBE00630CFC /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A5E2BCFACBE00630CFC /* Coordinator.swift */; };
+		604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A602BCFAD4300630CFC /* AppCoordinator.swift */; };
+		604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */; };
+		604D1A672BCFBCD800630CFC /* ProfileCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A662BCFBCD800630CFC /* ProfileCoordinatorInterface.swift */; };
+		60714C662BD27414008D8040 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C652BD27414008D8040 /* MainViewController.swift */; };
+		60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */; };
+		60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6D2BD27606008D8040 /* MainCoordinator.swift */; };
 		6089FE0F2BCCC13F00E42E71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6089FE0E2BCCC13F00E42E71 /* AppDelegate.swift */; };
 		6089FE112BCCC13F00E42E71 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6089FE102BCCC13F00E42E71 /* SceneDelegate.swift */; };
 		6089FE182BCCC14000E42E71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6089FE172BCCC14000E42E71 /* Assets.xcassets */; };
@@ -26,6 +33,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		604D1A5E2BCFACBE00630CFC /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		604D1A602BCFAD4300630CFC /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
+		604D1A662BCFBCD800630CFC /* ProfileCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinatorInterface.swift; sourceTree = "<group>"; };
+		60714C652BD27414008D8040 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinatorInterface.swift; sourceTree = "<group>"; };
+		60714C6D2BD27606008D8040 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		6089FE0B2BCCC13F00E42E71 /* Minsaeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Minsaeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6089FE0E2BCCC13F00E42E71 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6089FE102BCCC13F00E42E71 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -57,6 +71,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		604D1A5D2BCFACB600630CFC /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				604D1A5E2BCFACBE00630CFC /* Coordinator.swift */,
+				604D1A602BCFAD4300630CFC /* AppCoordinator.swift */,
+				60714C6C2BD275FF008D8040 /* Main */,
+				604D1A622BCFB26600630CFC /* Profile */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		604D1A622BCFB26600630CFC /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		604D1A652BCFBCC000630CFC /* CoordinatorInterface */ = {
+			isa = PBXGroup;
+			children = (
+				604D1A662BCFBCD800630CFC /* ProfileCoordinatorInterface.swift */,
+			);
+			path = CoordinatorInterface;
+			sourceTree = "<group>";
+		};
+		60714C642BD272EF008D8040 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				60714C692BD27448008D8040 /* CoordinatorInterface */,
+				60714C652BD27414008D8040 /* MainViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		60714C692BD27448008D8040 /* CoordinatorInterface */ = {
+			isa = PBXGroup;
+			children = (
+				60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */,
+			);
+			path = CoordinatorInterface;
+			sourceTree = "<group>";
+		};
+		60714C6C2BD275FF008D8040 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				60714C6D2BD27606008D8040 /* MainCoordinator.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		6089FE022BCCC13F00E42E71 = {
 			isa = PBXGroup;
 			children = (
@@ -86,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				6089FE2E2BCCD57700E42E71 /* Application */,
+				604D1A5D2BCFACB600630CFC /* Coordinator */,
 				6089FE302BCCD5B900E42E71 /* Presentation */,
 			);
 			path = Sources;
@@ -113,6 +180,7 @@
 		6089FE302BCCD5B900E42E71 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				60714C642BD272EF008D8040 /* Main */,
 				6089FE342BCCE66700E42E71 /* Profile */,
 				6089FE312BCCD5CC00E42E71 /* Base */,
 			);
@@ -130,6 +198,7 @@
 		6089FE342BCCE66700E42E71 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				604D1A652BCFBCC000630CFC /* CoordinatorInterface */,
 				60BBAC832BCD5F9B00F8DA5B /* ProfileNameCreation */,
 				60BBAC852BCD5FBD00F8DA5B /* ProfilePhoneNumberCreation */,
 				60BBAC842BCD5FAC00F8DA5B /* ProfileComplete */,
@@ -246,12 +315,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */,
 				608C957B2BCD0E4A00B334EF /* ProfileNameCreationReactor.swift in Sources */,
 				6089FE252BCCC20800E42E71 /* BaseViewController.swift in Sources */,
+				60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */,
+				604D1A5F2BCFACBE00630CFC /* Coordinator.swift in Sources */,
+				604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */,
 				6089FE0F2BCCC13F00E42E71 /* AppDelegate.swift in Sources */,
 				60BBAC8B2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift in Sources */,
+				60714C662BD27414008D8040 /* MainViewController.swift in Sources */,
+				60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */,
 				60BBAC8D2BCD608F00F8DA5B /* ProfileCompleteReactor.swift in Sources */,
 				60BBAC892BCD604300F8DA5B /* ProfileCompleteViewController.swift in Sources */,
+				604D1A672BCFBCD800630CFC /* ProfileCoordinatorInterface.swift in Sources */,
 				60BBAC872BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift in Sources */,
 				6089FE112BCCC13F00E42E71 /* SceneDelegate.swift in Sources */,
 				6089FE362BCCE69B00E42E71 /* ProfileNameCreationViewController.swift in Sources */,

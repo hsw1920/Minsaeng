@@ -12,8 +12,9 @@ import ReactorKit
 
 final class ProfilePhoneNumberCreationViewController: BaseViewController {
     deinit {
-        print("deinit!")
+        print("deinit: \(self)")
     }
+    private let coordinator: ProfileCoordinatorInterface
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
@@ -67,7 +68,8 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     }()
     
     // MARK: Init
-    init(with reactor: ProfilePhoneNumberCreationReactor) {
+    init(with reactor: ProfilePhoneNumberCreationReactor, coordinator: ProfileCoordinatorInterface) {
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -171,9 +173,7 @@ extension ProfilePhoneNumberCreationViewController: View {
             .distinctUntilChanged()
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
-                let reactor = ProfileCompleteCreationReactor()
-                let nextViewController = ProfileCompleteViewController(with: reactor)
-                owner.navigationController?.pushViewController(nextViewController, animated: true)
+                owner.coordinator.pushCompleteView()
             })
             .disposed(by: disposeBag)
         

@@ -8,17 +8,17 @@
 import ReactorKit
 import RxCocoa
 
-final class ProfileCompleteCreationReactor: Reactor {
+final class ProfileCompleteReactor: Reactor {
     enum Action {
-        
+        case pushButtonTapped
     }
     
     enum Mutation {
-        
+        case goToHome
     }
     
     struct State {
-        
+        var isPushHome: Bool = false
     }
     
     // MARK: Property
@@ -26,12 +26,20 @@ final class ProfileCompleteCreationReactor: Reactor {
     
     // MARK: Mutation
     func mutate(action: Action) -> Observable<Mutation> { 
-        
+        switch action {
+        case .pushButtonTapped:
+            return Observable.just(.goToHome)
+        }
     }
     
     // MARK: Reduce
     func reduce(state: State, mutation: Mutation) -> State { 
-        
+        var newState = state
+        switch mutation {
+        case .goToHome:
+            newState.isPushHome = true
+        }
+        return newState
     }
 
 }

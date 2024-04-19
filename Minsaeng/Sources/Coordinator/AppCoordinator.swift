@@ -32,10 +32,9 @@ final class AppCoordinator: Coordinator {
     }
     
     private func showMainFlow() {
-//        let coordinator = MainCoordinator(navigationController: navigationController)
-//        coordinator.finishDelegate = self
-//        childCoordinators.append(coordinator)
-//        coordinator.start()
+        let coordinator = MainCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
 }
 
@@ -43,11 +42,12 @@ extension AppCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("End: \(childCoordinator.type) Flow")
         removeChildCoordinator(child: childCoordinator)
+        
         switch childCoordinator.type {
         case .profile:
             childCoordinators.removeAll()
             navigationController.viewControllers.removeAll()
-            
+
             showMainFlow()
         default:
             break

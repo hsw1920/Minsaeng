@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+protocol MainCoordinatorInterface {
+    func pushCreateView()
+    func pushSettingView()
+}

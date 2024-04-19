@@ -11,6 +11,10 @@ import RxCocoa
 import ReactorKit
 
 final class ProfileCompleteViewController: BaseViewController {
+    deinit {
+        print("deinit: \(self)")
+    }
+    private let coordinator: ProfileCoordinatorInterface
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -34,8 +38,9 @@ final class ProfileCompleteViewController: BaseViewController {
         return button
     }()
     
-    // MARK: Init
-    init(with reactor: ProfileCompleteReactor) {
+    // MARK: Init    
+    init(with reactor: ProfileCompleteReactor, coordinator: ProfileCoordinatorInterface) {
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -87,9 +92,7 @@ extension ProfileCompleteViewController: View {
             .distinctUntilChanged()
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
-//                let reactor = ProfileCompleteCreationReactor()
-//                let nextViewController = ProfileCompleteViewController(with: reactor)
-//                owner.navigationController?.pushViewController(nextViewController, animated: true)
+                owner.coordinator.pushMainView()
             })
             .disposed(by: disposeBag)
     }

@@ -284,6 +284,13 @@ extension CreateFormViewController {
             owner.confirmButton.snp.updateConstraints {
                 $0.bottom.equalTo(owner.view.safeAreaLayoutGuide).inset(keyboardHeight)
             }
+            
+            var contentInset: UIEdgeInsets = owner.scrollView.contentInset
+            contentInset.bottom = element.cgRectValue.height - 62
+            owner.scrollView.contentInset = contentInset
+            owner.scrollView.setContentOffset(CGPoint(x: 0, y: keyboardHeight),
+                                              animated: true)
+            
             owner.view.layoutIfNeeded()
         })
         .disposed(by: disposeBag)
@@ -293,6 +300,12 @@ extension CreateFormViewController {
             owner.confirmButton.snp.updateConstraints {
                 $0.bottom.equalTo(owner.view.safeAreaLayoutGuide.snp.bottom)
             }
+            
+            let contentInset: UIEdgeInsets = UIEdgeInsets.zero
+            owner.scrollView.contentInset = contentInset
+            owner.scrollView.setContentOffset(.zero,
+                                              animated: true)
+            
             owner.view.layoutIfNeeded()
         })
         .disposed(by: disposeBag)

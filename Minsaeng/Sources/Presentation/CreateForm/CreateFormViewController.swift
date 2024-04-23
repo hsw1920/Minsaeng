@@ -6,13 +6,15 @@
 //
 
 import UIKit
+import RxCocoa
 import ReactorKit
 
 final class CreateFormViewController: BaseViewController {
     deinit {
         print("deinit: \(self)")
     }
-    
+    private let scrollView: UIScrollView = .init()
+    private let contentView: UIView = .init()
     private let photoView: UIView = .init()
     private let vehicleNumberView: UIView = .init()
     private let violationView: UIView = .init()
@@ -60,7 +62,7 @@ final class CreateFormViewController: BaseViewController {
     
     private let violationCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.register(ViolationTypeCell.self, forCellWithReuseIdentifier: "ViolationTypeCell")
+        collectionView.register(ViolationTypeCell.self, forCellWithReuseIdentifier: ViolationTypeCell.reuseIdentifier)
         collectionView.backgroundColor = .systemGreen
         return collectionView
     }()
@@ -104,17 +106,32 @@ final class CreateFormViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        violationCollectionView.delegate = self
-        violationCollectionView.dataSource = self
+
+        setCollectionView()
     }
     
     override func setupUI() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.width.height.equalToSuperview()
+        }
+        
         [photoView, vehicleNumberView, violationView, detailContentView, replyOptionView].forEach {
-            view.addSubview($0)
+            contentView.addSubview($0)
             $0.backgroundColor = .systemCyan
         }
         photoView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(16)
+            $0.top.equalToSuperview().inset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(92)
         }
@@ -195,6 +212,14 @@ final class CreateFormViewController: BaseViewController {
             $0.centerY.leading.equalToSuperview()
         }
     }
+    
+    private func setCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 6.0
+        layout.minimumInteritemSpacing = 6.0
+        layout.itemSize = CGSize(width: (view.bounds.width - 48.0 - 12) / 3, height: 48)
+        violationCollectionView.collectionViewLayout = layout
+    }
 }
 
 extension CreateFormViewController: View {
@@ -204,37 +229,28 @@ extension CreateFormViewController: View {
     }
     
     private func bindAction(reactor: CreateFormReactor) {
-        
+        violationCollectionView.rx.itemSelected
+            .map { CreateFormReactor.Action.violationButtonTapped($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(reactor: CreateFormReactor) {
+        reactor.state
+            .map(\.violations)
+            .observe(on: MainScheduler.instance)
+            .bind(to: violationCollectionView.rx.items(
+                cellIdentifier: ViolationTypeCell.reuseIdentifier,
+                cellType: ViolationTypeCell.self
+            )) { index, item, cell in
+                cell.configure(type: item)
+            }
+            .disposed(by: disposeBag)
         
+        reactor.state
+            .map(\.placeholder)
+            .observe(on: MainScheduler.instance)
+            .bind(to: detailContentTextView.rx.text)
+            .disposed(by: disposeBag)
     }
-}
-
-extension CreateFormViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ViolationTypeCell", for: indexPath) as? ViolationTypeCell else {
-            return UICollectionViewCell()
-        }
-        cell.contentView.backgroundColor = .systemYellow
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: (view.bounds.width - 48.0 - 12) / 3, height: 48)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 6.0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 6.0
-    }
-    
 }

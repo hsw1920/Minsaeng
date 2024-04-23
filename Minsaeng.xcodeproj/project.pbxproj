@@ -34,6 +34,7 @@
 		60FF96D12BD545B4003DCD7C /* CreateFormReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96D02BD545B4003DCD7C /* CreateFormReactor.swift */; };
 		60FF96D52BD5474E003DCD7C /* CreateFormCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96D42BD5474E003DCD7C /* CreateFormCoordinator.swift */; };
 		60FF96D82BD547D6003DCD7C /* CreateFormCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96D72BD547D6003DCD7C /* CreateFormCoordinatorInterface.swift */; };
+		60FF96DA2BD55F0E003DCD7C /* ViolationTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96D92BD55F0E003DCD7C /* ViolationTypeCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		60FF96D02BD545B4003DCD7C /* CreateFormReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormReactor.swift; sourceTree = "<group>"; };
 		60FF96D42BD5474E003DCD7C /* CreateFormCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormCoordinator.swift; sourceTree = "<group>"; };
 		60FF96D72BD547D6003DCD7C /* CreateFormCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormCoordinatorInterface.swift; sourceTree = "<group>"; };
+		60FF96D92BD55F0E003DCD7C /* ViolationTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViolationTypeCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +250,7 @@
 			children = (
 				60FF96D62BD547B4003DCD7C /* CoordinatorInterface */,
 				60FF96CE2BD545AE003DCD7C /* CreateFormViewController.swift */,
+				60FF96D92BD55F0E003DCD7C /* ViolationTypeCell.swift */,
 				60FF96D02BD545B4003DCD7C /* CreateFormReactor.swift */,
 			);
 			path = CreateForm;
@@ -369,6 +372,7 @@
 				604D1A672BCFBCD800630CFC /* ProfileCoordinatorInterface.swift in Sources */,
 				60FF96D52BD5474E003DCD7C /* CreateFormCoordinator.swift in Sources */,
 				60BBAC872BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift in Sources */,
+				60FF96DA2BD55F0E003DCD7C /* ViolationTypeCell.swift in Sources */,
 				6089FE112BCCC13F00E42E71 /* SceneDelegate.swift in Sources */,
 				6089FE362BCCE69B00E42E71 /* ProfileNameCreationViewController.swift in Sources */,
 			);

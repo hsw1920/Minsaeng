@@ -20,7 +20,8 @@ final class CreateFormCoordinator: Coordinator {
     
     func start() {
         print("Start: CreateForm Flow")
-        let reactor = CreateFormReactor()
+        let component: Violation = .crosswalk
+        let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         navigationController.pushViewController(viewController, animated: true)
     }

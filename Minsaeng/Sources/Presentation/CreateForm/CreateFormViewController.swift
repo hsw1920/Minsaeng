@@ -45,6 +45,7 @@ final class CreateFormViewController: BaseViewController {
     
     private let vehicleNumberTextField: UITextField = {
         let textField = UITextField()
+        textField.isEnabled = false
         textField.backgroundColor = .systemGreen
         textField.font = .systemFont(ofSize: 16, weight: .regular)
         textField.layer.cornerRadius = 12
@@ -76,6 +77,8 @@ final class CreateFormViewController: BaseViewController {
     
     private let detailContentTextView: UITextView = {
         let textView = UITextView()
+        textView.autocorrectionType = .no
+        textView.spellCheckingType = .no
         textView.font = .systemFont(ofSize: 14, weight: .regular)
         textView.backgroundColor = .systemGreen
         textView.layer.cornerRadius = 12
@@ -89,6 +92,14 @@ final class CreateFormViewController: BaseViewController {
         label.text = "(선택) 민원 접수 후 회신에 동의합니다."
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
+    }()
+    
+    private let confirmButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("작성 완료", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .blue
+        return button
     }()
     
     private let coordinator: CreateFormCoordinator
@@ -108,10 +119,12 @@ final class CreateFormViewController: BaseViewController {
         super.viewDidLoad()
 
         setCollectionView()
+        setKeyboardObserver()
     }
     
     override func setupUI() {
         view.addSubview(scrollView)
+        view.addSubview(confirmButton)
         scrollView.addSubview(contentView)
         
         scrollView.snp.makeConstraints {
@@ -124,6 +137,12 @@ final class CreateFormViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
             $0.width.height.equalToSuperview()
+        }
+        
+        confirmButton.snp.makeConstraints {
+            $0.height.equalTo(62)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         
         [photoView, vehicleNumberView, violationView, detailContentView, replyOptionView].forEach {
@@ -252,5 +271,30 @@ extension CreateFormViewController: View {
             .observe(on: MainScheduler.instance)
             .bind(to: detailContentTextView.rx.text)
             .disposed(by: disposeBag)
+    }
+}
+
+extension CreateFormViewController {
+    private func setKeyboardObserver() {
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+        .compactMap { $0.userInfo }
+        .compactMap { $0[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue }
+        .bind(with: self, onNext: { owner, element in
+            let keyboardHeight = element.cgRectValue.height - owner.view.safeAreaInsets.bottom
+            owner.confirmButton.snp.updateConstraints {
+                $0.bottom.equalTo(owner.view.safeAreaLayoutGuide).inset(keyboardHeight)
+            }
+            owner.view.layoutIfNeeded()
+        })
+        .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+        .bind(with: self, onNext: { owner, element in
+            owner.confirmButton.snp.updateConstraints {
+                $0.bottom.equalTo(owner.view.safeAreaLayoutGuide.snp.bottom)
+            }
+            owner.view.layoutIfNeeded()
+        })
+        .disposed(by: disposeBag)
     }
 }

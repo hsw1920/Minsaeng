@@ -9,37 +9,6 @@ import Foundation
 import ReactorKit
 import RxCocoa
 
-enum Violation: Int, CaseIterable {
-    case hydrant = 0
-    case intersection
-    case busStop
-    case crosswalk
-    case schoolZone
-    case sidewalk
-    case etc
-    
-    var description: String {
-        switch self {
-        case .hydrant: "소화전에 불법주정차"
-        case .intersection: "교차로 모퉁이에 불법주정차"
-        case .busStop: "버스 정류소에 불법주정차"
-        case .crosswalk: "횡단보도에 불법주정차"
-        case .schoolZone: "어린이 보호구역에 불법주정차"
-        case .sidewalk: "인도에 불법주정차"
-        case .etc: "해당 내용으로 불법주정차"
-        }
-    }
-}
-
-struct CreateFormComponent {
-    let violationType: Violation
-    let vehicleNumber: String
-    let detailContent: String
-    let date: Date
-    let name: String
-    let phoneNumber: String
-}
-
 final class CreateFormReactor: Reactor {
     enum Action {
         case viewDidLoad
@@ -66,12 +35,12 @@ final class CreateFormReactor: Reactor {
     
     // MARK: Property
     var initialState: State = .init()
-    var readyToConfirm = PublishSubject<CreateFormComponent>()
+    var readyToConfirm = PublishSubject<CreateFormComponentImpl>()
     
     // MARK: Init
-    init(component: Violation) {
-        self.initialState.violations[component.rawValue].isSelected = true
-        self.initialState.detailContent = component.description
+    init(component: CreateFormComponent) {
+        self.initialState.violations[component.violationType.rawValue].isSelected = true
+        self.initialState.detailContent = component.violationType.description
         self.initialState.vehicleNumber = " <#차량번호> "
     }
     
@@ -111,7 +80,6 @@ final class CreateFormReactor: Reactor {
             newState.violations = parseSelectedViolationType(with: newState.violations, 
                                                              index: indexPath.row)
         case .setDetailContent(let indexPath):
-            let selectedViolation = newState.violations[indexPath.row]
             newState.detailContent = Violation(rawValue: indexPath.row)?.description ?? ""
         case .toggleReply:
             newState.isSelectedReplyButton.toggle()
@@ -134,7 +102,7 @@ extension CreateFormReactor {
         return newViolations
     }
     
-    private func makeComponent() -> CreateFormComponent {
+    private func makeComponent() -> CreateFormComponentImpl {
         let violationId = currentState.violations.firstIndex(where: { $0.isSelected }) ?? 0
         let violationType = Violation(rawValue: violationId) ?? .etc
         let vehicleNumber = currentState.vehicleNumber
@@ -143,11 +111,11 @@ extension CreateFormReactor {
         let name = "이름"
         let phoneNumber = "휴대폰 번호"
         
-        return CreateFormComponent(violationType: violationType,
-                                   vehicleNumber: vehicleNumber,
-                                   detailContent: detailContent,
-                                   date: date,
-                                   name: name,
-                                   phoneNumber: phoneNumber)
+        return CreateFormComponentImpl(vehicleNumber: vehicleNumber,
+                                       violationType: violationType,
+                                       detailContent: detailContent,
+                                       date: date,
+                                       name: name,
+                                       phoneNumber: phoneNumber)
     }
 }

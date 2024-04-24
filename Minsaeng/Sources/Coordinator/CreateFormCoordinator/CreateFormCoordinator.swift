@@ -23,7 +23,19 @@ final class CreateFormCoordinator: Coordinator {
     
     func start() {
         print("Start: CreateForm Flow")
-        let component: Violation = .crosswalk
+        // TODO: CoreML
+        let violation: Violation = .etc
+        let vehicleNumber: String = "<#차량번호>"
+        
+        // TODO: Profile LocalDB
+        let name: String = "이름"
+        let phoneNumber: String = "휴대전화 번호"
+        
+        let component = CreateFormComponentImpl(vehicleNumber: vehicleNumber,
+                                                violationType: violation,
+                                                detailContent: violation.description,
+                                                name: name,
+                                                phoneNumber: phoneNumber)
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         navigationController.pushViewController(viewController, animated: true)

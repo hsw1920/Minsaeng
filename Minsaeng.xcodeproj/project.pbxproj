@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		600D4F3B2BD7F0B0004CD12B /* CreateFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D4F3A2BD7F0B0004CD12B /* CreateFormView.swift */; };
+		600D4F3E2BD8F324004CD12B /* CreateFormComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D4F3D2BD8F324004CD12B /* CreateFormComponent.swift */; };
+		600D4F402BD8F347004CD12B /* Violation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D4F3F2BD8F347004CD12B /* Violation.swift */; };
 		604D1A5F2BCFACBE00630CFC /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A5E2BCFACBE00630CFC /* Coordinator.swift */; };
 		604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A602BCFAD4300630CFC /* AppCoordinator.swift */; };
 		604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */; };
@@ -40,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		600D4F3A2BD7F0B0004CD12B /* CreateFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormView.swift; sourceTree = "<group>"; };
+		600D4F3D2BD8F324004CD12B /* CreateFormComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormComponent.swift; sourceTree = "<group>"; };
+		600D4F3F2BD8F347004CD12B /* Violation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Violation.swift; sourceTree = "<group>"; };
 		604D1A5E2BCFACBE00630CFC /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		604D1A602BCFAD4300630CFC /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
@@ -83,6 +87,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		600D4F3C2BD8F315004CD12B /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				600D4F3D2BD8F324004CD12B /* CreateFormComponent.swift */,
+				600D4F3F2BD8F347004CD12B /* Violation.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
 		604D1A5D2BCFACB600630CFC /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
@@ -250,6 +263,7 @@
 		60FF96CD2BD54591003DCD7C /* CreateForm */ = {
 			isa = PBXGroup;
 			children = (
+				600D4F3C2BD8F315004CD12B /* Entity */,
 				60FF96D62BD547B4003DCD7C /* CoordinatorInterface */,
 				60FF96CE2BD545AE003DCD7C /* CreateFormViewController.swift */,
 				600D4F3A2BD7F0B0004CD12B /* CreateFormView.swift */,
@@ -366,6 +380,7 @@
 				604D1A5F2BCFACBE00630CFC /* Coordinator.swift in Sources */,
 				604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */,
 				600D4F3B2BD7F0B0004CD12B /* CreateFormView.swift in Sources */,
+				600D4F3E2BD8F324004CD12B /* CreateFormComponent.swift in Sources */,
 				60FF96D82BD547D6003DCD7C /* CreateFormCoordinatorInterface.swift in Sources */,
 				6089FE0F2BCCC13F00E42E71 /* AppDelegate.swift in Sources */,
 				60BBAC8B2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift in Sources */,
@@ -379,6 +394,7 @@
 				60FF96DA2BD55F0E003DCD7C /* ViolationTypeCell.swift in Sources */,
 				6089FE112BCCC13F00E42E71 /* SceneDelegate.swift in Sources */,
 				6089FE362BCCE69B00E42E71 /* ProfileNameCreationViewController.swift in Sources */,
+				600D4F402BD8F347004CD12B /* Violation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

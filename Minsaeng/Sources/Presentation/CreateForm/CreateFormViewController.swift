@@ -49,6 +49,11 @@ extension CreateFormViewController: View {
             .map { CreateFormReactor.Action.replyButtonTapped }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        createFormView.confirmButton.rx.tap
+            .map { CreateFormReactor.Action.confirmButtonTapped }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(reactor: CreateFormReactor) {

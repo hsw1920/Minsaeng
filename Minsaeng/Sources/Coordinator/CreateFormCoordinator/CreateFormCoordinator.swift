@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import RxSwift
 
 final class CreateFormCoordinator: Coordinator {
+    var disposeBag = DisposeBag()
+    
     var type: CoordinatorType { .main }
     weak var finishDelegate: CoordinatorFinishDelegate?
     
@@ -24,7 +27,17 @@ final class CreateFormCoordinator: Coordinator {
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         navigationController.pushViewController(viewController, animated: true)
+        
+        reactor.readyToConfirm
+            .bind(with: self, onNext: { owner, component in
+                // MessageFlow 시작
+                print("Start: CreateMessage Flow")
+                print(component)
+            })
+            .disposed(by: disposeBag)
     }
+    
+    
 }
 
 extension CreateFormCoordinator: CreateFormCoordinatorInterface {

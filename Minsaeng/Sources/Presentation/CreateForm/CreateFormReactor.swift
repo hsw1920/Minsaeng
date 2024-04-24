@@ -19,10 +19,20 @@ enum Violation: Int, CaseIterable {
     case etc
 }
 
+struct CreateFormComponent {
+    let violationType: Violation
+    let vehicleNumber: String
+    let detailContent: String
+    let date: Date
+    let name: String
+    let phoneNumber: String
+}
+
 final class CreateFormReactor: Reactor {
     enum Action {
         case violationButtonTapped(IndexPath)
         case replyButtonTapped
+        case confirmButtonTapped
     }
     
     enum Mutation {
@@ -39,6 +49,7 @@ final class CreateFormReactor: Reactor {
     
     // MARK: Property
     var initialState: State = .init()
+    var readyToConfirm = PublishSubject<CreateFormComponent>()
     
     // MARK: Init
     init(component: Violation) {
@@ -60,6 +71,10 @@ final class CreateFormReactor: Reactor {
             ])   
         case .replyButtonTapped:
             return .just(.toggleReply)
+        case .confirmButtonTapped:
+            let component = makeComponent()
+            readyToConfirm.onNext(component)
+            return Observable.empty()
         }
     }
     
@@ -88,5 +103,21 @@ extension CreateFormReactor {
             : (newViolations[selected].isSelected = false)
         }
         return newViolations
+    }
+    
+    private func makeComponent() -> CreateFormComponent {
+        let violationId = currentState.violations.firstIndex(where: { $0.isSelected }) ?? 0
+        let violationType = Violation(rawValue: violationId) ?? .etc
+        let vehicleNumber = "아직 구현 안함."
+        let detailContent = currentState.placeholder
+        let date = Date.now
+        let name = "이름"
+        let phoneNumber = "휴대폰 번호"
+        return CreateFormComponent(violationType: violationType,
+                                   vehicleNumber: vehicleNumber,
+                                   detailContent: detailContent,
+                                   date: date,
+                                   name: name,
+                                   phoneNumber: phoneNumber)
     }
 }

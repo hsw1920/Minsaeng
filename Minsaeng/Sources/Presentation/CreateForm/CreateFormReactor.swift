@@ -22,16 +22,19 @@ enum Violation: Int, CaseIterable {
 final class CreateFormReactor: Reactor {
     enum Action {
         case violationButtonTapped(IndexPath)
+        case replyButtonTapped
     }
     
     enum Mutation {
         case setViolation(IndexPath)
         case setDetailContent(IndexPath)
+        case toggleReply
     }
     
     struct State {
         var violations: [ViolationType] = ViolationType.mock
         var placeholder: String = ""
+        var isSelectedReplyButton: Bool = true
     }
     
     // MARK: Property
@@ -55,6 +58,8 @@ final class CreateFormReactor: Reactor {
                 .just(.setViolation(indexPath)),
                 .just(.setDetailContent(indexPath))
             ])   
+        case .replyButtonTapped:
+            return .just(.toggleReply)
         }
     }
     
@@ -67,6 +72,8 @@ final class CreateFormReactor: Reactor {
         case .setDetailContent(let indexPath):
             let selectedViolation = newState.violations[indexPath.row]
             newState.placeholder = selectedViolation.description
+        case .toggleReply:
+            newState.isSelectedReplyButton.toggle()
         }
         return newState
     }

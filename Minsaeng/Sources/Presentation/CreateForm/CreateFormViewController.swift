@@ -44,12 +44,16 @@ extension CreateFormViewController: View {
             .map { CreateFormReactor.Action.violationButtonTapped($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        createFormView.replyOptionButton.rx.tap
+            .map { CreateFormReactor.Action.replyButtonTapped }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(reactor: CreateFormReactor) {
         reactor.state
             .map(\.violations)
-            .observe(on: MainScheduler.instance)
             .bind(to: createFormView.violationCollectionView.rx.items(
                 cellIdentifier: ViolationTypeCell.reuseIdentifier,
                 cellType: ViolationTypeCell.self
@@ -60,8 +64,22 @@ extension CreateFormViewController: View {
         
         reactor.state
             .map(\.placeholder)
-            .observe(on: MainScheduler.instance)
             .bind(to: createFormView.detailContentTextView.rx.text)
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.isSelectedReplyButton)
+            .distinctUntilChanged()
+            .map(parseReplyButtonImage)
+            .bind(to: createFormView.replyOptionButton.rx.image())
+            .disposed(by: disposeBag)
+    }
+}
+
+extension CreateFormViewController {
+    private func parseReplyButtonImage(with isSelected: Bool) -> UIImage? {
+        return isSelected ?
+        UIImage(systemName: "checkmark.square.fill")
+        :UIImage(systemName: "square")
     }
 }

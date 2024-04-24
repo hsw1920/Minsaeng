@@ -44,7 +44,6 @@ final class CreateFormView: UIView {
     private let vehicleNumberTextField: UITextField = {
         let textField = UITextField()
         textField.isEnabled = false
-        textField.backgroundColor = .systemGreen
         textField.font = .systemFont(ofSize: 16, weight: .regular)
         textField.layer.cornerRadius = 12
         textField.layer.borderColor = UIColor.darkGray.cgColor
@@ -62,7 +61,6 @@ final class CreateFormView: UIView {
     let violationCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.register(ViolationTypeCell.self, forCellWithReuseIdentifier: ViolationTypeCell.reuseIdentifier)
-        collectionView.backgroundColor = .systemGreen
         return collectionView
     }()
     
@@ -78,20 +76,21 @@ final class CreateFormView: UIView {
         textView.autocorrectionType = .no
         textView.spellCheckingType = .no
         textView.font = .systemFont(ofSize: 14, weight: .regular)
-        textView.backgroundColor = .systemGreen
         textView.layer.cornerRadius = 12
         textView.layer.borderColor = UIColor.darkGray.cgColor
         textView.layer.borderWidth = 1
         return textView
     }()
-    
-    private let replyOptionLabel: UILabel = {
-        let label = UILabel()
-        label.text = "(선택) 민원 접수 후 회신에 동의합니다."
-        label.font = .systemFont(ofSize: 16, weight: .bold)
-        return label
+
+    let replyOptionButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.strokedCheckmark, for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: "(선택) 민원 접수 후 회신에 동의합니다.",
+                                                     attributes: [.font : UIFont.systemFont(ofSize: 16, weight: .bold)]),
+                                  for: .normal)
+        return button
     }()
-    
+
     let confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("작성 완료", for: .normal)
@@ -145,7 +144,9 @@ final class CreateFormView: UIView {
         
         [photoView, vehicleNumberView, violationView, detailContentView, replyOptionView].forEach {
             contentView.addSubview($0)
-            $0.backgroundColor = .systemCyan
+            
+            $0.layer.borderColor = UIColor.lightGray.cgColor
+            $0.layer.borderWidth = 1
         }
         photoView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
@@ -177,7 +178,7 @@ final class CreateFormView: UIView {
         [vehicleNumberTitleLabel, vehicleNumberTextField].forEach { vehicleNumberView.addSubview($0) }
         [violationTitleLabel, violationCollectionView].forEach { violationView.addSubview($0) }
         [detailContentTitleLabel, detailContentTextView].forEach { detailContentView.addSubview($0) }
-        [replyOptionLabel].forEach { replyOptionView.addSubview($0) }
+        [replyOptionButton].forEach { replyOptionView.addSubview($0) }
         
         photoTitleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
@@ -225,7 +226,7 @@ final class CreateFormView: UIView {
             $0.leading.trailing.bottom.equalToSuperview()
         }
         
-        replyOptionLabel.snp.makeConstraints {
+        replyOptionButton.snp.makeConstraints {
             $0.centerY.leading.equalToSuperview()
         }
     }

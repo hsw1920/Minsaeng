@@ -11,7 +11,7 @@ import RxSwift
 final class CreateFormCoordinator: Coordinator {
     var disposeBag = DisposeBag()
     
-    var type: CoordinatorType { .main }
+    var type: CoordinatorType { .createForm }
     weak var finishDelegate: CoordinatorFinishDelegate?
     
     var childCoordinators: [Coordinator] = []

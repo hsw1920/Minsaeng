@@ -40,6 +40,11 @@ extension CreateFormViewController: View {
     }
     
     private func bindAction(reactor: CreateFormReactor) {
+        self.rx.methodInvoked(#selector(UIViewController.viewDidLoad))
+            .map{ _ in CreateFormReactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         createFormView.violationCollectionView.rx.itemSelected
             .map { CreateFormReactor.Action.violationButtonTapped($0) }
             .bind(to: reactor.action)
@@ -52,6 +57,11 @@ extension CreateFormViewController: View {
         
         createFormView.confirmButton.rx.tap
             .map { CreateFormReactor.Action.confirmButtonTapped }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        createFormView.detailContentTextView.rx.text.orEmpty
+            .map { CreateFormReactor.Action.editDetailContent($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -68,7 +78,13 @@ extension CreateFormViewController: View {
             .disposed(by: disposeBag)
         
         reactor.state
-            .map(\.placeholder)
+            .map(\.vehicleNumber)
+            .bind(to: createFormView.vehicleNumberTextField.rx.text)
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.detailContent)
+            .distinctUntilChanged()
             .bind(to: createFormView.detailContentTextView.rx.text)
             .disposed(by: disposeBag)
         

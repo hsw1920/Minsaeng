@@ -9,17 +9,16 @@ import UIKit
 
 struct ViolationType {
     let title: String
-    let description: String
     var isSelected: Bool
     
     static let mock: [ViolationType] = [
-        ViolationType(title: "소화전", description: "소화전에 불법주정차", isSelected: false),
-        ViolationType(title: "교차로 모퉁이", description: "교차로 모퉁이에 불법주정차", isSelected: false),
-        ViolationType(title: "버스 정류소", description: "버스 정류소에 불법주정차", isSelected: false),
-        ViolationType(title: "횡단보도", description: "횡단보도에 불법주정차", isSelected: false),
-        ViolationType(title: "어린이 보호구역", description: "어린이 보호구역에 불법주정차", isSelected: false),
-        ViolationType(title: "인도", description: "인도에 불법주정차", isSelected: false),
-        ViolationType(title: "기타", description: "해당 상황으로 불법 주정차", isSelected: false),
+        ViolationType(title: "소화전", isSelected: false),
+        ViolationType(title: "교차로 모퉁이", isSelected: false),
+        ViolationType(title: "버스 정류소", isSelected: false),
+        ViolationType(title: "횡단보도", isSelected: false),
+        ViolationType(title: "어린이 보호구역", isSelected: false),
+        ViolationType(title: "인도", isSelected: false),
+        ViolationType(title: "기타", isSelected: false),
     ]
 }
 

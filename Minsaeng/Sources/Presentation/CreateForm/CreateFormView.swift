@@ -41,7 +41,7 @@ final class CreateFormView: UIView {
         return label
     }()
     
-    private let vehicleNumberTextField: UITextField = {
+    let vehicleNumberTextField: UITextField = {
         let textField = UITextField()
         textField.isEnabled = false
         textField.font = .systemFont(ofSize: 16, weight: .regular)

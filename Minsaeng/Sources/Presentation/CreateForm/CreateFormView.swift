@@ -99,6 +99,15 @@ final class CreateFormView: UIView {
         return button
     }()
     
+    let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .white
+        activityIndicator.style = .medium
+        activityIndicator.stopAnimating()
+        return activityIndicator
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -122,6 +131,13 @@ final class CreateFormView: UIView {
     private func setupUI() {
         self.addSubview(scrollView)
         self.addSubview(confirmButton)
+        confirmButton.addSubview(activityIndicator)
+        
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.width.height.equalTo(50)
+        }
+        
         scrollView.addSubview(contentView)
         
         scrollView.snp.makeConstraints {

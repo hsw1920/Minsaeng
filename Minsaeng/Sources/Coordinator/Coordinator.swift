@@ -33,4 +33,6 @@ enum CoordinatorType {
     case app
     case main
     case profile
+    case createForm
+    case createMessage
 }

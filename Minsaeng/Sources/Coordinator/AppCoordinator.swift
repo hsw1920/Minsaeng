@@ -25,7 +25,14 @@ final class AppCoordinator: Coordinator {
     }
     
     private func showProfileFlow() {
-        let coordinator = ProfileCoordinator(navigationController: navigationController)
+//        let coordinator = ProfileCoordinator(navigationController: navigationController)
+//        coordinator.finishDelegate = self
+//        childCoordinators.append(coordinator)
+//        coordinator.start()
+        
+        
+        
+        let coordinator = CreateFormCoordinator(navigationController: navigationController)
         coordinator.finishDelegate = self
         childCoordinators.append(coordinator)
         coordinator.start()

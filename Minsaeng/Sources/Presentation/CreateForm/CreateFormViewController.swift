@@ -8,6 +8,7 @@
 import UIKit
 import RxCocoa
 import ReactorKit
+import MessageUI
 
 final class CreateFormViewController: BaseViewController {
     deinit {
@@ -57,6 +58,10 @@ extension CreateFormViewController: View {
         
         createFormView.confirmButton.rx.tap
             .map { CreateFormReactor.Action.confirmButtonTapped }
+            .do(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+                self?.startActivityIndicator()
+            })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -102,5 +107,36 @@ extension CreateFormViewController {
         return isSelected ?
         UIImage(systemName: "checkmark.square.fill")
         :UIImage(systemName: "square")
+    }
+    
+    func startActivityIndicator() {
+        createFormView.confirmButton.setTitle("", for: .normal)
+        createFormView.activityIndicator.startAnimating()
+    }
+    
+    func stopActivityIndicator() {
+        createFormView.confirmButton.setTitle("작성 완료", for: .normal)
+        createFormView.activityIndicator.stopAnimating()
+    }
+}
+
+extension CreateFormViewController: MFMessageComposeViewControllerDelegate {
+    func messageComposeViewController(_ controller: MFMessageComposeViewController,
+                                      didFinishWith result: MessageComposeResult) {
+        self.stopActivityIndicator()
+        switch result {
+        case .cancelled:
+            print(">>> Cancel")
+            dismiss(animated: true)
+        case .sent:
+            print(">>> Sent Message: \(controller.body ?? "")")
+            dismiss(animated: true)
+        case .failed:
+            print(">>> Failed")
+            dismiss(animated: true)
+        @unknown default:
+            print(">>> Unknown Error")
+            dismiss(animated: true)
+        }
     }
 }

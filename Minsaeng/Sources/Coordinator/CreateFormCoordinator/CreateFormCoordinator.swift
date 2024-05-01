@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import MessageUI
 
 final class CreateFormCoordinator: Coordinator {
     var disposeBag = DisposeBag()
@@ -41,15 +42,41 @@ final class CreateFormCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
         
         reactor.readyToConfirm
+            .observe(on: MainScheduler.asyncInstance)
             .bind(with: self, onNext: { owner, component in
                 // MessageFlow 시작
                 print("Start: CreateMessage Flow")
-                print(component)
+                owner.showSendMessage(viewController: viewController,
+                                  component: component)
             })
             .disposed(by: disposeBag)
     }
     
-    
+    private func showSendMessage(viewController: CreateFormViewController,
+                                 component: CreateFormComponentImpl) {
+        guard MFMessageComposeViewController.canSendText() else {
+            print("SMS services are not available")
+            return
+        }
+        
+        let messageViewController = MFMessageComposeViewController()
+        messageViewController.messageComposeDelegate = viewController
+        messageViewController.recipients = ["1234567890"]
+        messageViewController.body = """
+        위반 차량 번호: \(component.vehicleNumber)
+        위반 유형: \(component.violationType)
+        상세 내용: \(component.detailContent)
+        일시: \(component.date)
+        신고자 이름: \(component.name)
+        신고자 번호: \(component.phoneNumber)
+        """
+        
+        let image = UIImage(systemName: "sun.max")
+        if let imageData = image?.pngData() {
+            messageViewController.addAttachmentData(imageData, typeIdentifier: "public.png", filename: "image.png")
+        }
+        navigationController.present(messageViewController, animated: true)
+    }
 }
 
 extension CreateFormCoordinator: CreateFormCoordinatorInterface {

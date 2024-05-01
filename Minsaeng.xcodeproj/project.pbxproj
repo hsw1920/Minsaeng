@@ -87,6 +87,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		600635AB2BE20EE50081BDEB /* Message */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		600635AE2BE20F9E0081BDEB /* SendMessageCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SendMessageCoordinator;
+			sourceTree = "<group>";
+		};
 		600D4F3C2BD8F315004CD12B /* Entity */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +115,7 @@
 			children = (
 				604D1A5E2BCFACBE00630CFC /* Coordinator.swift */,
 				604D1A602BCFAD4300630CFC /* AppCoordinator.swift */,
+				600635AE2BE20F9E0081BDEB /* SendMessageCoordinator */,
 				60FF96D32BD54727003DCD7C /* CreateFormCoordinator */,
 				60714C6C2BD275FF008D8040 /* Main */,
 				604D1A622BCFB26600630CFC /* Profile */,
@@ -206,6 +221,7 @@
 		6089FE302BCCD5B900E42E71 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				600635AB2BE20EE50081BDEB /* Message */,
 				60FF96CD2BD54591003DCD7C /* CreateForm */,
 				60714C642BD272EF008D8040 /* Main */,
 				6089FE342BCCE66700E42E71 /* Profile */,

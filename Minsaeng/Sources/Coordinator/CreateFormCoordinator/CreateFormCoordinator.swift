@@ -55,7 +55,7 @@ final class CreateFormCoordinator: Coordinator {
     private func bind(with viewController: CreateFormViewController,
                       reactor: CreateFormReactor) {
         reactor.readyToConfirm
-            .observe(on: MainSchedCreauler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(with: self, onNext: { owner, component in
                 owner.showSendMessage(viewController: viewController,
                                       component: component)

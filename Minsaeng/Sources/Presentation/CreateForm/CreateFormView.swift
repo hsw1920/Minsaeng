@@ -258,8 +258,11 @@ final class CreateFormView: UIView {
 
 extension CreateFormView {
     private func setKeyboardObserver() {
-        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
-            .compactMap { $0.userInfo }
+        let textViewBeginEditingObservable = detailContentTextView.rx.didBeginEditing.asObservable()
+        let keyboardWillShowObservable = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification).asObservable()
+        
+        Observable.zip(textViewBeginEditingObservable, keyboardWillShowObservable)
+            .compactMap { $1.userInfo }
             .compactMap { $0[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue }
             .observe(on: MainScheduler.instance)
             .bind(with: self, onNext: { owner, element in

@@ -21,17 +21,35 @@ final class MainCoordinator: Coordinator {
     func start() {
         print("Start: Main Flow")
         let viewController = MainViewController(coordinator: self)
-        navigationController.pushViewController(viewController, animated: true)
+        navigationController.setViewControllers([viewController], animated: true)
     }
 }
 
 extension MainCoordinator: MainCoordinatorInterface {
     func pushCreateView() {
-        // create Flow의 start 화면으로 push합니다.
+        let coordinator = CreateFormCoordinator(navigationController: navigationController)
+        coordinator.finishDelegate = self
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
     
     func pushSettingView() {
         // setting Flow의 start 화면으로 push합니다.
     }
     
+}
+
+extension MainCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        print("End: \(childCoordinator.type) Flow")
+        removeChildCoordinator(child: childCoordinator)
+        
+        switch childCoordinator.type {
+        case .createForm:
+            // MARK: 나중에
+            break
+        default:
+            break
+        }
+    }
 }

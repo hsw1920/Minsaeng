@@ -14,10 +14,11 @@ final class MainViewController: BaseViewController {
         print("deinit: \(self)")
     }
 
-    private let testLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Main 화면"
-        return label
+    private let testButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("메시지 생성", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        return button
     }()
     
     private let coordinator: MainCoordinatorInterface
@@ -34,6 +35,7 @@ final class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigation()
+        bind()
     }
     
     func setupNavigation() {
@@ -48,10 +50,18 @@ final class MainViewController: BaseViewController {
     }
     
     override func setupUI() {
-        view.addSubview(testLabel)
-        testLabel.snp.makeConstraints {
+        view.addSubview(testButton)
+        testButton.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
+    }
+    
+    private func bind() {
+        testButton.rx.tap
+            .bind(with: self, onNext: { owner, _ in
+                owner.coordinator.pushCreateView()
+            })
+            .disposed(by: disposeBag)
     }
 }
 

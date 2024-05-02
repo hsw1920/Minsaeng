@@ -21,18 +21,12 @@ final class AppCoordinator: Coordinator {
 
     func start() {
         print("Start: App Flow")
-        self.showProfileFlow()
+//        self.showProfileFlow()
+        self.showMainFlow()
     }
     
     private func showProfileFlow() {
-//        let coordinator = ProfileCoordinator(navigationController: navigationController)
-//        coordinator.finishDelegate = self
-//        childCoordinators.append(coordinator)
-//        coordinator.start()
-        
-        
-        
-        let coordinator = CreateFormCoordinator(navigationController: navigationController)
+        let coordinator = ProfileCoordinator(navigationController: navigationController)
         coordinator.finishDelegate = self
         childCoordinators.append(coordinator)
         coordinator.start()
@@ -40,6 +34,7 @@ final class AppCoordinator: Coordinator {
     
     private func showMainFlow() {
         let coordinator = MainCoordinator(navigationController: navigationController)
+        coordinator.finishDelegate = self
         childCoordinators.append(coordinator)
         coordinator.start()
     }
@@ -53,9 +48,8 @@ extension AppCoordinator: CoordinatorFinishDelegate {
         switch childCoordinator.type {
         case .profile:
             childCoordinators.removeAll()
-            navigationController.viewControllers.removeAll()
-
             showMainFlow()
+//            navigationController.viewControllers.removeAll()
         default:
             break
         }

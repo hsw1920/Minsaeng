@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import MessageUI
+import ReactorKit
 
 final class CreateFormCoordinator: Coordinator {
     var disposeBag = DisposeBag()
@@ -20,6 +21,10 @@ final class CreateFormCoordinator: Coordinator {
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+    }
+    
+    deinit {
+        print("deinit: \(self)")
     }
     
     func start() {
@@ -39,15 +44,21 @@ final class CreateFormCoordinator: Coordinator {
                                                 phoneNumber: phoneNumber)
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
-        navigationController.pushViewController(viewController, animated: true)
+        viewController.modalPresentationStyle = .overFullScreen
         
+        navigationController.present(viewController, animated: true)
+        
+        bind(with: viewController,
+             reactor: reactor)
+    }
+    
+    private func bind(with viewController: CreateFormViewController,
+                      reactor: CreateFormReactor) {
         reactor.readyToConfirm
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainSchedCreauler.asyncInstance)
             .bind(with: self, onNext: { owner, component in
-                // MessageFlow 시작
-                print("Start: CreateMessage Flow")
                 owner.showSendMessage(viewController: viewController,
-                                  component: component)
+                                      component: component)
             })
             .disposed(by: disposeBag)
     }
@@ -60,6 +71,7 @@ final class CreateFormCoordinator: Coordinator {
         }
         
         let messageViewController = MFMessageComposeViewController()
+        
         messageViewController.messageComposeDelegate = viewController
         messageViewController.recipients = ["1234567890"]
         messageViewController.body = """
@@ -72,15 +84,21 @@ final class CreateFormCoordinator: Coordinator {
         """
         
         let image = UIImage(systemName: "sun.max")
+        
         if let imageData = image?.pngData() {
             messageViewController.addAttachmentData(imageData, typeIdentifier: "public.png", filename: "image.png")
         }
-        navigationController.present(messageViewController, animated: true)
+        
+        viewController.present(messageViewController, animated: true)
     }
 }
 
 extension CreateFormCoordinator: CreateFormCoordinatorInterface {
-    
-    
+    func finishCreateForm(_ viewController: CreateFormViewController) {
+        // MARK: 왜 강제로 해제해야할까?
+        disposeBag = DisposeBag()
+        viewController.dismiss(animated: true)
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+    }
 }
 

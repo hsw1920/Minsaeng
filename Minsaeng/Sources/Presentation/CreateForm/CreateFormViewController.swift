@@ -96,7 +96,11 @@ extension CreateFormViewController: View {
         reactor.state
             .map(\.isSelectedReplyButton)
             .distinctUntilChanged()
-            .map(parseReplyButtonImage)
+//            .map(parseReplyButtonImage)
+            // MARK: 그냥 map으로 하면 강한참조 걸린다.
+            .map { [weak self] isSelected in
+                self?.parseReplyButtonImage(with: isSelected)
+            }
             .bind(to: createFormView.replyOptionButton.rx.image())
             .disposed(by: disposeBag)
     }
@@ -127,10 +131,14 @@ extension CreateFormViewController: MFMessageComposeViewControllerDelegate {
         switch result {
         case .cancelled:
             print(">>> Cancel")
-            dismiss(animated: true)
+            dismiss(animated: true) {
+                self.coordinator.finishCreateForm(self)
+            }
         case .sent:
             print(">>> Sent Message: \(controller.body ?? "")")
-            dismiss(animated: true)
+            dismiss(animated: true) {
+                self.coordinator.finishCreateForm(self)
+            }
         case .failed:
             print(">>> Failed")
             dismiss(animated: true)

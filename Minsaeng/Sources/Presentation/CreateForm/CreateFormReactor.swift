@@ -8,6 +8,7 @@
 import Foundation
 import ReactorKit
 import RxCocoa
+import UIKit
 
 final class CreateFormReactor: Reactor {
     enum Action {
@@ -16,6 +17,7 @@ final class CreateFormReactor: Reactor {
         case replyButtonTapped
         case confirmButtonTapped
         case editDetailContent(String)
+        case shootCamera(Data?)
     }
     
     enum Mutation {
@@ -24,6 +26,7 @@ final class CreateFormReactor: Reactor {
         case setDetailContent(IndexPath)
         case setDetailContentString(String)
         case toggleReply
+        case updateCaptureImage(Data)
     }
     
     struct State {
@@ -31,14 +34,17 @@ final class CreateFormReactor: Reactor {
         var vehicleNumber: String = ""
         var detailContent: String = ""
         var isSelectedReplyButton: Bool = true
+        var captureImageData: Data?
     }
     
     // MARK: Property
     var initialState: State = .init()
     var readyToConfirm = PublishSubject<CreateFormComponentImpl>()
+    var component: CreateFormComponent!
     
     // MARK: Init
     init(component: CreateFormComponent) {
+        self.component = component
         self.initialState.violations[component.violationType.rawValue].isSelected = true
         self.initialState.detailContent = component.violationType.description
         self.initialState.vehicleNumber = " <#차량번호> "
@@ -66,6 +72,9 @@ final class CreateFormReactor: Reactor {
             return Observable.empty()
         case .editDetailContent(let text):
             return .just(.setDetailContentString(text))
+        case .shootCamera(let image):
+            guard let image else { return .empty() }
+            return .just(.updateCaptureImage(image))
         }
     }
     
@@ -85,6 +94,8 @@ final class CreateFormReactor: Reactor {
             newState.isSelectedReplyButton.toggle()
         case .setDetailContentString(let text):
             newState.detailContent = text
+        case .updateCaptureImage(let image):
+            newState.captureImageData = image
         }
         return newState
     }
@@ -108,14 +119,18 @@ extension CreateFormReactor {
         let vehicleNumber = currentState.vehicleNumber
         let detailContent = currentState.detailContent
         let date = Date.now
-        let name = "이름"
-        let phoneNumber = "휴대폰 번호"
+        let name = component.name
+        let phoneNumber = component.phoneNumber
+        let imageData = currentState.captureImageData
+        let isReceived = currentState.isSelectedReplyButton
         
         return CreateFormComponentImpl(vehicleNumber: vehicleNumber,
                                        violationType: violationType,
                                        detailContent: detailContent,
                                        date: date,
                                        name: name,
-                                       phoneNumber: phoneNumber)
+                                       phoneNumber: phoneNumber, 
+                                       isReceived: isReceived,
+                                       imageData: imageData)
     }
 }

@@ -8,6 +8,7 @@
 import UIKit
 import RxCocoa
 import ReactorKit
+import MessageUI
 
 final class CreateFormViewController: BaseViewController {
     deinit {
@@ -15,7 +16,8 @@ final class CreateFormViewController: BaseViewController {
     }
     
     private let coordinator: CreateFormCoordinator
-    private let createFormView = CreateFormView()
+    var captureImage = PublishRelay<Data?>()
+    let createFormView = CreateFormView()
     
     // MARK: Init
     init(with reactor: CreateFormReactor, coordinator: CreateFormCoordinator) {
@@ -37,6 +39,14 @@ extension CreateFormViewController: View {
     func bind(reactor: CreateFormReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
+        
+        createFormView.view1.rx.tap
+            .bind(onNext: { [weak self] _ in
+                let vc = CameraViewController()
+                vc.modalPresentationStyle = .overFullScreen
+                self?.present(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindAction(reactor: CreateFormReactor) {
@@ -57,11 +67,20 @@ extension CreateFormViewController: View {
         
         createFormView.confirmButton.rx.tap
             .map { CreateFormReactor.Action.confirmButtonTapped }
+            .do(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+                self?.startActivityIndicator()
+            })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         createFormView.detailContentTextView.rx.text.orEmpty
             .map { CreateFormReactor.Action.editDetailContent($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.captureImage.asObservable()
+            .map { CreateFormReactor.Action.shootCamera($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -91,8 +110,22 @@ extension CreateFormViewController: View {
         reactor.state
             .map(\.isSelectedReplyButton)
             .distinctUntilChanged()
-            .map(parseReplyButtonImage)
+//            .map(parseReplyButtonImage)
+            // MARK: 그냥 map으로 하면 강한참조 걸린다.
+            .map { [weak self] isSelected in
+                self?.parseReplyButtonImage(with: isSelected)
+            }
             .bind(to: createFormView.replyOptionButton.rx.image())
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.captureImageData)
+            .map { data in
+                guard let data else { return UIImage() }
+                let image = UIImage(data: data)
+                return image
+            }
+            .bind(to: createFormView.view3.rx.image)
             .disposed(by: disposeBag)
     }
 }
@@ -102,5 +135,40 @@ extension CreateFormViewController {
         return isSelected ?
         UIImage(systemName: "checkmark.square.fill")
         :UIImage(systemName: "square")
+    }
+    
+    func startActivityIndicator() {
+        createFormView.confirmButton.setTitle("", for: .normal)
+        createFormView.activityIndicator.startAnimating()
+    }
+    
+    func stopActivityIndicator() {
+        createFormView.confirmButton.setTitle("작성 완료", for: .normal)
+        createFormView.activityIndicator.stopAnimating()
+    }
+}
+
+extension CreateFormViewController: MFMessageComposeViewControllerDelegate {
+    func messageComposeViewController(_ controller: MFMessageComposeViewController,
+                                      didFinishWith result: MessageComposeResult) {
+        self.stopActivityIndicator()
+        switch result {
+        case .cancelled:
+            print(">>> Cancel")
+            dismiss(animated: true) {
+                self.coordinator.finishCreateForm(self)
+            }
+        case .sent:
+            print(">>> Sent Message: \(controller.body ?? "")")
+            dismiss(animated: true) {
+                self.coordinator.finishCreateForm(self)
+            }
+        case .failed:
+            print(">>> Failed")
+            dismiss(animated: true)
+        @unknown default:
+            print(">>> Unknown Error")
+            dismiss(animated: true)
+        }
     }
 }

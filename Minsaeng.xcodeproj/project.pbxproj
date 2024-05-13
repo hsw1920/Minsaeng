@@ -29,6 +29,7 @@
 		608C95772BCD06C000B334EF /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 608C95762BCD06C000B334EF /* RxRelay */; };
 		608C95792BCD06C000B334EF /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 608C95782BCD06C000B334EF /* RxSwift */; };
 		608C957B2BCD0E4A00B334EF /* ProfileNameCreationReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608C957A2BCD0E4A00B334EF /* ProfileNameCreationReactor.swift */; };
+		60AA6D902BE3AB840087C8F3 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AA6D8F2BE3AB840087C8F3 /* CameraViewController.swift */; };
 		60BBAC872BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBAC862BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift */; };
 		60BBAC892BCD604300F8DA5B /* ProfileCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBAC882BCD604300F8DA5B /* ProfileCompleteViewController.swift */; };
 		60BBAC8B2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBAC8A2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift */; };
@@ -60,6 +61,7 @@
 		6089FE242BCCC20800E42E71 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		6089FE352BCCE69B00E42E71 /* ProfileNameCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNameCreationViewController.swift; sourceTree = "<group>"; };
 		608C957A2BCD0E4A00B334EF /* ProfileNameCreationReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileNameCreationReactor.swift; sourceTree = "<group>"; };
+		60AA6D8F2BE3AB840087C8F3 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		60BBAC862BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePhoneNumberCreationViewController.swift; sourceTree = "<group>"; };
 		60BBAC882BCD604300F8DA5B /* ProfileCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCompleteViewController.swift; sourceTree = "<group>"; };
 		60BBAC8A2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePhoneNumberCreationReactor.swift; sourceTree = "<group>"; };
@@ -87,6 +89,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		600635AB2BE20EE50081BDEB /* Message */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		600635AE2BE20F9E0081BDEB /* SendMessageCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SendMessageCoordinator;
+			sourceTree = "<group>";
+		};
 		600D4F3C2BD8F315004CD12B /* Entity */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +117,7 @@
 			children = (
 				604D1A5E2BCFACBE00630CFC /* Coordinator.swift */,
 				604D1A602BCFAD4300630CFC /* AppCoordinator.swift */,
+				600635AE2BE20F9E0081BDEB /* SendMessageCoordinator */,
 				60FF96D32BD54727003DCD7C /* CreateFormCoordinator */,
 				60714C6C2BD275FF008D8040 /* Main */,
 				604D1A622BCFB26600630CFC /* Profile */,
@@ -206,6 +223,8 @@
 		6089FE302BCCD5B900E42E71 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				60AA6D8E2BE3AB6F0087C8F3 /* Camera */,
+				600635AB2BE20EE50081BDEB /* Message */,
 				60FF96CD2BD54591003DCD7C /* CreateForm */,
 				60714C642BD272EF008D8040 /* Main */,
 				6089FE342BCCE66700E42E71 /* Profile */,
@@ -231,6 +250,14 @@
 				60BBAC842BCD5FAC00F8DA5B /* ProfileComplete */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		60AA6D8E2BE3AB6F0087C8F3 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				60AA6D8F2BE3AB840087C8F3 /* CameraViewController.swift */,
+			);
+			path = Camera;
 			sourceTree = "<group>";
 		};
 		60BBAC832BCD5F9B00F8DA5B /* ProfileNameCreation */ = {
@@ -387,6 +414,7 @@
 				60714C662BD27414008D8040 /* MainViewController.swift in Sources */,
 				60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */,
 				60BBAC8D2BCD608F00F8DA5B /* ProfileCompleteReactor.swift in Sources */,
+				60AA6D902BE3AB840087C8F3 /* CameraViewController.swift in Sources */,
 				60BBAC892BCD604300F8DA5B /* ProfileCompleteViewController.swift in Sources */,
 				604D1A672BCFBCD800630CFC /* ProfileCoordinatorInterface.swift in Sources */,
 				60FF96D52BD5474E003DCD7C /* CreateFormCoordinator.swift in Sources */,
@@ -541,10 +569,12 @@
 				DEVELOPMENT_TEAM = 3NP4Z3WZ94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Minsaeng/Resources/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -568,10 +598,12 @@
 				DEVELOPMENT_TEAM = 3NP4Z3WZ94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Minsaeng/Resources/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

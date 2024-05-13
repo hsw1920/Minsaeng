@@ -8,5 +8,5 @@
 import Foundation
 
 protocol CreateFormCoordinatorInterface {
-    
+    func finishCreateForm(_ viewController: CreateFormViewController)
 }

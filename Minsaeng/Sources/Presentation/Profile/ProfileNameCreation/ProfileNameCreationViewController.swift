@@ -28,6 +28,11 @@ final class ProfileNameCreationViewController: BaseViewController {
         return contentView
     }()
     
+    private let stepImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "ProfileStep1"))
+        return imageView
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "이름을 입력해주세요"
@@ -82,6 +87,7 @@ final class ProfileNameCreationViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigation()
         setKeyboardObserver()
     }
     
@@ -94,7 +100,7 @@ final class ProfileNameCreationViewController: BaseViewController {
     override func setupUI() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [titleLabel, nameTextField, nextButton, descriptionLabel].forEach {
+        [stepImage, titleLabel, nameTextField, nextButton, descriptionLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -116,8 +122,15 @@ final class ProfileNameCreationViewController: BaseViewController {
             $0.edges.equalToSuperview()
         }
         
+        stepImage.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(32)
+            $0.leading.equalToSuperview().inset(24)
+            $0.width.equalTo(35)
+            $0.height.equalTo(15)
+        }
+        
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(62)
+            $0.top.equalTo(stepImage.snp.bottom).offset(16)
             $0.leading.equalToSuperview().inset(24)
         }
         
@@ -137,6 +150,10 @@ final class ProfileNameCreationViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(62)
         }
+    }
+    
+    private func setupNavigation() {
+        title = "프로필 설정"
     }
 }
 

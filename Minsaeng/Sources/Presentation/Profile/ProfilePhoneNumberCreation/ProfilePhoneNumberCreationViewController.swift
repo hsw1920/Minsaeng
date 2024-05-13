@@ -28,6 +28,11 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
         return contentView
     }()
     
+    private let stepImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "ProfileStep2"))
+        return imageView
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "휴대전화를 입력해주세요"
@@ -93,7 +98,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     override func setupUI() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [titleLabel, phoneNumberTextField, nextButton, descriptionLabel].forEach {
+        [stepImage, titleLabel, phoneNumberTextField, nextButton, descriptionLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -115,8 +120,15 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
             $0.edges.equalToSuperview()
         }
         
+        stepImage.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(32)
+            $0.leading.equalToSuperview().inset(24)
+            $0.width.equalTo(35)
+            $0.height.equalTo(15)
+        }
+        
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(62)
+            $0.top.equalTo(stepImage.snp.bottom).offset(16)
             $0.leading.equalToSuperview().inset(24)
         }
         
@@ -139,6 +151,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     }
     
     private func setupNavigation() {
+        title = "프로필 설정"
         navigationItem.setHidesBackButton(true, animated: true)
     }
 }

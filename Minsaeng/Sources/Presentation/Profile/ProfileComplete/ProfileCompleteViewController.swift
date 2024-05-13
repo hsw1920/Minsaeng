@@ -23,11 +23,10 @@ final class ProfileCompleteViewController: BaseViewController {
         return label
     }()
     
-    private let imageView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 12
-        view.backgroundColor = .lightGray
-        return view
+    private let imageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "ProfileComplete"))
+        imageView.layer.cornerRadius = 12
+        return imageView
     }()
     
     private let nextButton: UIButton = {
@@ -78,6 +77,7 @@ final class ProfileCompleteViewController: BaseViewController {
     }
     
     private func setupNavigation() {
+        title = "프로필 설정"
         navigationItem.setHidesBackButton(true, animated: true)
     }
 }

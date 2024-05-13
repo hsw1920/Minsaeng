@@ -119,8 +119,6 @@ extension CreateFormReactor {
         let vehicleNumber = currentState.vehicleNumber
         let detailContent = currentState.detailContent
         let date = Date.now
-        let name = component.name
-        let phoneNumber = component.phoneNumber
         let imageData = currentState.captureImageData
         let isReceived = currentState.isSelectedReplyButton
         
@@ -128,8 +126,7 @@ extension CreateFormReactor {
                                        violationType: violationType,
                                        detailContent: detailContent,
                                        date: date,
-                                       name: name,
-                                       phoneNumber: phoneNumber, 
+                                       profile: component.profile,
                                        isReceived: isReceived,
                                        imageData: imageData)
     }

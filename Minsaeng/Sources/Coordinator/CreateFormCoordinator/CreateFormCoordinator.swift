@@ -28,20 +28,19 @@ final class CreateFormCoordinator: Coordinator {
     }
     
     func start() {
+        let realmManager = RealmManager()
         print("Start: CreateForm Flow")
         // TODO: CoreML
         let violation: Violation = .etc
         let vehicleNumber: String = "<#차량번호>"
         
         // TODO: Profile LocalDB
-        let name: String = "홍길동"
-        let phoneNumber: String = "01012341234"
+        guard let profile = realmManager.loadProfile() else { return }
         
         let component = CreateFormComponentImpl(vehicleNumber: vehicleNumber,
                                                 violationType: violation,
                                                 detailContent: violation.description,
-                                                name: name,
-                                                phoneNumber: phoneNumber,
+                                                profile: profile,
                                                 isReceived: true,
                                                 imageData: nil)
         let reactor = CreateFormReactor(component: component)
@@ -81,8 +80,8 @@ final class CreateFormCoordinator: Coordinator {
         위반 유형: \(component.violationType)
         상세 내용: \(component.detailContent)
         일시: \(component.date)
-        신고자 이름: \(component.name)
-        신고자 번호: \(component.phoneNumber)
+        신고자 이름: \(component.profile.name)
+        신고자 번호: \(component.profile.phoneNumber)
         회신 동의 여부: \(component.isReceived ? "예" : "아니오")
         """
         

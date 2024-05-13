@@ -22,18 +22,24 @@ struct CreateFormComponentImpl: CreateFormComponent {
     let date: Date
     let name: String
     let phoneNumber: String
+    let imageData: Data?
+    let isReceived: Bool
     
     init(vehicleNumber: String,
          violationType: Violation,
          detailContent: String,
          date: Date = .now,
          name: String,
-         phoneNumber: String) {
+         phoneNumber: String,
+         isReceived: Bool,
+         imageData: Data?) {
         self.violationType = violationType
         self.vehicleNumber = vehicleNumber
         self.detailContent = detailContent
         self.date = date
         self.name = name
         self.phoneNumber = phoneNumber
+        self.isReceived = isReceived
+        self.imageData = imageData
     }
 }

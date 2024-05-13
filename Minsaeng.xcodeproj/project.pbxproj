@@ -17,6 +17,8 @@
 		60714C662BD27414008D8040 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C652BD27414008D8040 /* MainViewController.swift */; };
 		60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */; };
 		60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6D2BD27606008D8040 /* MainCoordinator.swift */; };
+		60784A412BF1E25900F4AC99 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 60784A402BF1E25900F4AC99 /* Realm */; };
+		60784A432BF1E25900F4AC99 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 60784A422BF1E25900F4AC99 /* RealmSwift */; };
 		6089FE0F2BCCC13F00E42E71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6089FE0E2BCCC13F00E42E71 /* AppDelegate.swift */; };
 		6089FE112BCCC13F00E42E71 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6089FE102BCCC13F00E42E71 /* SceneDelegate.swift */; };
 		6089FE182BCCC14000E42E71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6089FE172BCCC14000E42E71 /* Assets.xcassets */; };
@@ -78,7 +80,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60784A412BF1E25900F4AC99 /* Realm in Frameworks */,
 				608C95752BCD06C000B334EF /* RxCocoa in Frameworks */,
+				60784A432BF1E25900F4AC99 /* RealmSwift in Frameworks */,
 				6089FE282BCCD24500E42E71 /* ReactorKit in Frameworks */,
 				608C95792BCD06C000B334EF /* RxSwift in Frameworks */,
 				608C95772BCD06C000B334EF /* RxRelay in Frameworks */,
@@ -338,6 +342,8 @@
 				608C95742BCD06C000B334EF /* RxCocoa */,
 				608C95762BCD06C000B334EF /* RxRelay */,
 				608C95782BCD06C000B334EF /* RxSwift */,
+				60784A402BF1E25900F4AC99 /* Realm */,
+				60784A422BF1E25900F4AC99 /* RealmSwift */,
 			);
 			productName = Minsaeng;
 			productReference = 6089FE0B2BCCC13F00E42E71 /* Minsaeng.app */;
@@ -371,6 +377,7 @@
 				6089FE262BCCD24500E42E71 /* XCRemoteSwiftPackageReference "ReactorKit" */,
 				6089FE292BCCD42700E42E71 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				608C95732BCD06C000B334EF /* XCRemoteSwiftPackageReference "RxSwift" */,
+				60784A3F2BF1E25900F4AC99 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 6089FE0C2BCCC13F00E42E71 /* Products */;
 			projectDirPath = "";
@@ -641,6 +648,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		60784A3F2BF1E25900F4AC99 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		6089FE262BCCD24500E42E71 /* XCRemoteSwiftPackageReference "ReactorKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactorKit/ReactorKit";
@@ -668,6 +683,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		60784A402BF1E25900F4AC99 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60784A3F2BF1E25900F4AC99 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		60784A422BF1E25900F4AC99 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60784A3F2BF1E25900F4AC99 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		6089FE272BCCD24500E42E71 /* ReactorKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6089FE262BCCD24500E42E71 /* XCRemoteSwiftPackageReference "ReactorKit" */;

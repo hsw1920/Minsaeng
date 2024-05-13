@@ -15,6 +15,7 @@ final class ProfileNameCreationViewController: BaseViewController {
         print("deinit: \(self)")
     }
     private let coordinator: ProfileCoordinatorInterface
+    private var component: Profile
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
@@ -75,8 +76,11 @@ final class ProfileNameCreationViewController: BaseViewController {
     }()
     
     // MARK: Init
-    init(with reactor: ProfileNameCreationReactor, coordinator: ProfileCoordinatorInterface) {
+    init(with reactor: ProfileNameCreationReactor, 
+         coordinator: ProfileCoordinatorInterface,
+         component: Profile) {
         self.coordinator = coordinator
+        self.component = component
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -187,7 +191,9 @@ extension ProfileNameCreationViewController: View {
             .distinctUntilChanged()
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
-                owner.coordinator.pushPhoneNumberCreationView()
+                guard let name = owner.nameTextField.text else { return }
+                owner.component.name = name
+                owner.coordinator.pushPhoneNumberCreationView(profile: owner.component)
             })
             .disposed(by: disposeBag)
         

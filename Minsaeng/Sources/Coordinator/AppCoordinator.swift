@@ -14,6 +14,7 @@ final class AppCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
+    var realmManager: RealmManager = RealmManager()
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -21,8 +22,13 @@ final class AppCoordinator: Coordinator {
 
     func start() {
         print("Start: App Flow")
-//        self.showProfileFlow()
-        self.showMainFlow()
+        if realmManager.isProfileExists() {
+            self.showMainFlow()
+            print("프로필: \(realmManager.loadProfile()!)")
+        } else {
+            self.showProfileFlow()
+            print("프로필이 존재하지 않습니다.")
+        }
     }
     
     private func showProfileFlow() {

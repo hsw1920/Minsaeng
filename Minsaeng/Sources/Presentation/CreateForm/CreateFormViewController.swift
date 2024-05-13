@@ -16,7 +16,8 @@ final class CreateFormViewController: BaseViewController {
     }
     
     private let coordinator: CreateFormCoordinator
-    private let createFormView = CreateFormView()
+    var captureImage = PublishRelay<Data?>()
+    let createFormView = CreateFormView()
     
     // MARK: Init
     init(with reactor: CreateFormReactor, coordinator: CreateFormCoordinator) {
@@ -38,6 +39,14 @@ extension CreateFormViewController: View {
     func bind(reactor: CreateFormReactor) {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
+        
+        createFormView.view1.rx.tap
+            .bind(onNext: { [weak self] _ in
+                let vc = CameraViewController()
+                vc.modalPresentationStyle = .overFullScreen
+                self?.present(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindAction(reactor: CreateFormReactor) {
@@ -67,6 +76,11 @@ extension CreateFormViewController: View {
         
         createFormView.detailContentTextView.rx.text.orEmpty
             .map { CreateFormReactor.Action.editDetailContent($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.captureImage.asObservable()
+            .map { CreateFormReactor.Action.shootCamera($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -102,6 +116,16 @@ extension CreateFormViewController: View {
                 self?.parseReplyButtonImage(with: isSelected)
             }
             .bind(to: createFormView.replyOptionButton.rx.image())
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.captureImageData)
+            .map { data in
+                guard let data else { return UIImage() }
+                let image = UIImage(data: data)
+                return image
+            }
+            .bind(to: createFormView.view3.rx.image)
             .disposed(by: disposeBag)
     }
 }

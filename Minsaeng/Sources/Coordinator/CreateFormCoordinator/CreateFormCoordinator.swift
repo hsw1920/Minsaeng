@@ -34,14 +34,16 @@ final class CreateFormCoordinator: Coordinator {
         let vehicleNumber: String = "<#차량번호>"
         
         // TODO: Profile LocalDB
-        let name: String = "이름"
-        let phoneNumber: String = "휴대전화 번호"
+        let name: String = "홍길동"
+        let phoneNumber: String = "01012341234"
         
         let component = CreateFormComponentImpl(vehicleNumber: vehicleNumber,
                                                 violationType: violation,
                                                 detailContent: violation.description,
                                                 name: name,
-                                                phoneNumber: phoneNumber)
+                                                phoneNumber: phoneNumber,
+                                                isReceived: true,
+                                                imageData: nil)
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         viewController.modalPresentationStyle = .overFullScreen
@@ -73,7 +75,7 @@ final class CreateFormCoordinator: Coordinator {
         let messageViewController = MFMessageComposeViewController()
         
         messageViewController.messageComposeDelegate = viewController
-        messageViewController.recipients = ["1234567890"]
+        messageViewController.recipients = ["02120"]
         messageViewController.body = """
         위반 차량 번호: \(component.vehicleNumber)
         위반 유형: \(component.violationType)
@@ -81,11 +83,11 @@ final class CreateFormCoordinator: Coordinator {
         일시: \(component.date)
         신고자 이름: \(component.name)
         신고자 번호: \(component.phoneNumber)
+        회신 동의 여부: \(component.isReceived ? "예" : "아니오")
         """
         
-        let image = UIImage(systemName: "sun.max")
-        
-        if let imageData = image?.pngData() {
+        if let image = UIImage(data: component.imageData ?? Data()),
+           let imageData = image.pngData() {
             messageViewController.addAttachmentData(imageData, typeIdentifier: "public.png", filename: "image.png")
         }
         

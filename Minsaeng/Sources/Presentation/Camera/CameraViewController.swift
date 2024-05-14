@@ -14,60 +14,58 @@ final class CameraViewController: BaseViewController {
     deinit {
         print("deinit: \(self)")
     }
-    var shootCamera: (() -> (UIImage))?
-    
     
     var captureSession: AVCaptureSession!
     var cameraOutput: AVCapturePhotoOutput!
     var videoOutput: AVCaptureVideoDataOutput!
     var previewLayer: AVCaptureVideoPreviewLayer!
     
-    let label: UILabel = {
+    private let vehicleNumberlabel: UILabel = {
         let label = UILabel()
-        label.text = "<#차량번호>"
+        label.text = "01가1234"
+        label.textColor = .MSWhite
         return label
     }()
     
-    let vehicleNumberView: UIImageView = {
-        let view = UIImageView()
-        view.backgroundColor = .systemGreen
+    private let vehicleNumberView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .MSBlack
         return view
     }()
     
-    let cameraView: UIImageView = {
+    private let cameraView: UIImageView = {
         let view = UIImageView()
-        view.backgroundColor = .systemMint
+        view.backgroundColor = .MSBlack
         return view
     }()
     
-    let captureImageButton : UIButton = {
+    private let captureButtonView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 40
+        view.layer.borderWidth = 4
+        view.layer.borderColor = UIColor.MSWhite.cgColor
+        return view
+    }()
+    
+    private let captureButton : UIButton = {
         let button = UIButton()
-        button.backgroundColor = .white
-        button.layer.cornerRadius = 40
+        button.backgroundColor = .MSWhite
+        button.layer.cornerRadius = 32
+        return button
+    }()
+    
+    private let cancelButton : UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: "취소",
+                                                     attributes: [.font : UIFont.systemFont(ofSize: 18, weight: .medium)]),
+                                  for: .normal)
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        vehicleNumberView.addSubview(label)
-        label.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
-        
-        view.backgroundColor = .black
-        captureImageButton.rx.tap
-            .bind(onNext: { [weak self] in
-                print("tap")
-                // 호출될 때 마다 다른 세팅을 주어야 하기 때문에 메서드 안에서 생성
-                guard let self else { return }
-                let settings = AVCapturePhotoSettings(
-                    format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
-                
-                // 아래에 AVCapturePhotoCaptureDelegate를 채택
-                cameraOutput.capturePhoto(with: settings, delegate: self)
-            })
-            .disposed(by: disposeBag)
+        bind()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -76,15 +74,29 @@ final class CameraViewController: BaseViewController {
         setupAndStartCaputeSession()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // MARK: 세션 정지
+        captureSession.stopRunning()
+    }
     
     override func setupUI() {
+        view.backgroundColor = .MSBlack
+        
         view.addSubview(vehicleNumberView)
         view.addSubview(cameraView)
-        view.addSubview(captureImageButton)
+        view.addSubview(cancelButton)
+        view.addSubview(captureButtonView)
         
         vehicleNumberView.snp.makeConstraints {
             $0.top.leading.right.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(100)
+        }
+        
+        vehicleNumberView.addSubview(vehicleNumberlabel)
+        vehicleNumberlabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
         
         cameraView.snp.makeConstraints {
@@ -93,12 +105,41 @@ final class CameraViewController: BaseViewController {
             $0.height.equalTo(view.bounds.width * 4/3)
         }
         
-        captureImageButton.snp.makeConstraints {
-            //            $0.top.equalTo(cameraView.snp.bottom).offset(16)
+        captureButtonView.snp.makeConstraints {
             $0.width.height.equalTo(80)
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
+        
+        captureButtonView.addSubview(captureButton)
+        captureButton.snp.makeConstraints {
+            $0.width.height.equalTo(64)
+            $0.center.equalToSuperview()
+        }
+        
+        cancelButton.snp.makeConstraints {
+            $0.centerY.equalTo(captureButtonView)
+            $0.leading.equalToSuperview().inset(36)
+        }
+    }
+    
+    private func bind() {
+        captureButton.rx.tap
+            .bind(with: self, onNext: { owner, _ in
+                // 호출될 때 마다 다른 세팅을 주어야 하기 때문에 메서드 안에서 생성
+                let settings = AVCapturePhotoSettings(
+                    format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+                
+                // 아래에 AVCapturePhotoCaptureDelegate를 채택
+                owner.cameraOutput.capturePhoto(with: settings, delegate: owner)
+            })
+            .disposed(by: disposeBag)
+        
+        cancelButton.rx.tap
+            .bind(with: self, onNext: { owner, _ in
+                owner.dismiss(animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func checkPermission() {
@@ -143,7 +184,6 @@ final class CameraViewController: BaseViewController {
     }
     
     func setupPreviewLayer() {
-        print(self.cameraView.frame)
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame = self.cameraView.bounds
         self.cameraView.layer.addSublayer(previewLayer)
@@ -151,9 +191,10 @@ final class CameraViewController: BaseViewController {
     
     private func setupInputs() {
         AVCaptureDevice.default(for: AVMediaType.video)
-        let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera,
-                                                  for: .video, position: .unspecified)
-        guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice!),
+        
+        guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                        for: .video, position: .unspecified),
+              let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice),
               captureSession.canAddInput(videoDeviceInput) else {
             return
         }
@@ -186,30 +227,29 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, 
                        didOutput sampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
-        print(">>> video")
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
         
-//        DispatchQueue.global(qos: .background).async { [weak self] in
-//            self?.processPixelBuffer(pixelBuffer)
-//        }
+        // TODO: 여기서 buffer를 AI 모델 전달하여 차량번호 반환받기
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.processPixelBuffer(pixelBuffer)
+        }
     }
     
     private func processPixelBuffer(_ pixelBuffer: CVPixelBuffer) {
-        // pixelBuffer를 UIImage 또는 CIImage로 변환하여 AI 모델에 전달할 수 있습니다.
+        // TODO: pixelBuffer를 UIImage 또는 CIImage로 변환하여 AI 모델에 전달하여 위반유형 반환받기
 //        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        // 또는 UIImage로 변환
         let uiImage = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer))
         
-        DispatchQueue.main.async { [weak self] in
-            self?.vehicleNumberView.image = uiImage
-        }
-        
-        
-        // AI 모델에 이미지 전달 등의 작업 수행
+        // TODO: AI 모델에 이미지 전달 등의 작업 수행
         // 예:
-        // yourAIModel.processImage(image)
+        // yourAIModel.processImage(uiImage)
+        
+        // TODO: 여기서 UI 로직 처리
+//        DispatchQueue.main.async { [weak self] in
+//
+//        }
     }
 }
 
@@ -224,7 +264,6 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
             self?.captureSession.stopRunning()
          
             DispatchQueue.main.async { [weak self] in
-                self?.vehicleNumberView.image = nil
                 self?.cameraView.image = image
                 
                 if let vc = self?.presentingViewController as? CreateFormViewController {

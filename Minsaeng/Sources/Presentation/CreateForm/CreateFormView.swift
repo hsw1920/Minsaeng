@@ -20,9 +20,30 @@ final class CreateFormView: UIView {
         button.layer.cornerRadius = 12
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.lightGray.cgColor
-        button.backgroundColor = .systemGreen
         return button
     }()
+    
+    private let shootPhotoContentView: UIView = {
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
+    private let shootPhotoImage: UIImageView = {
+        let configuration = UIImage.SymbolConfiguration(pointSize: 26)
+        let image = UIImage(systemName: "camera", withConfiguration: configuration)
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = .lightGray
+        return imageView
+    }()
+    
+    private let shootPhotoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "1/2"
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        return label
+    }()
+    
     
     private let requiredPhoto: UIImageView = {
         let imageView = UIImageView()
@@ -44,7 +65,9 @@ final class CreateFormView: UIView {
     
     let removePhotoButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 12)
+        let image = UIImage(systemName: "xmark", withConfiguration: configuration)
+        button.setImage(image, for: .normal)
         button.tintColor = .white
         button.layer.cornerRadius = 12
         button.backgroundColor = .systemRed
@@ -195,9 +218,6 @@ final class CreateFormView: UIView {
         
         [photoView, vehicleNumberView, violationView, detailContentView, replyOptionView].forEach {
             contentView.addSubview($0)
-            
-            $0.layer.borderColor = UIColor.lightGray.cgColor
-            $0.layer.borderWidth = 1
         }
         
         photoView.snp.makeConstraints {
@@ -250,6 +270,24 @@ final class CreateFormView: UIView {
                 make.width.height.equalTo(80)
             }
             photoStackView.addArrangedSubview($0)
+        }
+        
+        shootPhotoButton.addSubview(shootPhotoContentView)
+        
+        shootPhotoContentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        [shootPhotoImage, shootPhotoLabel].forEach { shootPhotoContentView.addSubview($0) }
+        
+        shootPhotoImage.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(18)
+        }
+        
+        shootPhotoLabel.snp.makeConstraints {
+            $0.centerX.equalTo(shootPhotoImage)
+            $0.bottom.equalToSuperview().inset(10)
         }
         
         vehicleNumberTitleLabel.snp.makeConstraints {

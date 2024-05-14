@@ -19,7 +19,7 @@ final class CreateFormView: UIView {
         let button = UIButton()
         button.layer.cornerRadius = 12
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.layer.borderColor = UIColor.MSBorderGray.cgColor
         return button
     }()
     
@@ -33,13 +33,14 @@ final class CreateFormView: UIView {
         let configuration = UIImage.SymbolConfiguration(pointSize: 26)
         let image = UIImage(systemName: "camera", withConfiguration: configuration)
         let imageView = UIImageView(image: image)
-        imageView.tintColor = .lightGray
+        imageView.tintColor = .MSDarkGray
         return imageView
     }()
     
     private let shootPhotoLabel: UILabel = {
         let label = UILabel()
         label.text = "1/2"
+        label.textColor = .MSDarkGray
         label.font = .systemFont(ofSize: 12, weight: .medium)
         return label
     }()
@@ -49,7 +50,7 @@ final class CreateFormView: UIView {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 12
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderColor = UIColor.MSBorderGray.cgColor
         return imageView
     }()
     
@@ -59,7 +60,7 @@ final class CreateFormView: UIView {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 12
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderColor = UIColor.MSBorderGray.cgColor
         return imageView
     }()
     
@@ -68,9 +69,9 @@ final class CreateFormView: UIView {
         let configuration = UIImage.SymbolConfiguration(pointSize: 12)
         let image = UIImage(systemName: "xmark", withConfiguration: configuration)
         button.setImage(image, for: .normal)
-        button.tintColor = .white
+        button.tintColor = .MSWhite
         button.layer.cornerRadius = 12
-        button.backgroundColor = .systemRed
+        button.backgroundColor = .MSWarning
         return button
     }()
     
@@ -82,6 +83,7 @@ final class CreateFormView: UIView {
     private let photoTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "사진첨부"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
@@ -97,6 +99,7 @@ final class CreateFormView: UIView {
     private let vehicleNumberTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "차량번호"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
@@ -104,9 +107,11 @@ final class CreateFormView: UIView {
     let vehicleNumberTextField: UITextField = {
         let textField = UITextField()
         textField.isEnabled = false
+        textField.addPaddingLeft(16)
         textField.font = .systemFont(ofSize: 16, weight: .regular)
+        textField.textColor = .MSBlack
         textField.layer.cornerRadius = 12
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.MSBorderGray.cgColor
         textField.layer.borderWidth = 1
         return textField
     }()
@@ -114,6 +119,7 @@ final class CreateFormView: UIView {
     private let violationTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "위반유형"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
@@ -127,17 +133,20 @@ final class CreateFormView: UIView {
     private let detailContentTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "상세내용"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
     
     let detailContentTextView: UITextView = {
         let textView = UITextView()
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10)
         textView.autocorrectionType = .no
         textView.spellCheckingType = .no
         textView.font = .systemFont(ofSize: 14, weight: .regular)
+        textView.textColor = .MSBlack
         textView.layer.cornerRadius = 12
-        textView.layer.borderColor = UIColor.darkGray.cgColor
+        textView.layer.borderColor = UIColor.MSBorderGray.cgColor
         textView.layer.borderWidth = 1
         return textView
     }()
@@ -146,23 +155,24 @@ final class CreateFormView: UIView {
         let button = UIButton()
         button.setImage(.strokedCheckmark, for: .normal)
         button.setAttributedTitle(NSAttributedString(string: "(선택) 민원 접수 후 회신에 동의합니다.",
-                                                     attributes: [.font : UIFont.systemFont(ofSize: 16, weight: .bold)]),
+                                                     attributes: [.font : UIFont.systemFont(ofSize: 16, weight: .medium)]),
                                   for: .normal)
+        button.setTitleColor(.MSBlack, for: .normal)
         return button
     }()
 
     let confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("작성 완료", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.backgroundColor = .MSMain
         return button
     }()
     
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView()
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .white
+        activityIndicator.color = .MSWhite
         activityIndicator.style = .medium
         activityIndicator.stopAnimating()
         return activityIndicator

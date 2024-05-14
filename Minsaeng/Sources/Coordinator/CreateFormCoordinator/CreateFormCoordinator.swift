@@ -32,7 +32,7 @@ final class CreateFormCoordinator: Coordinator {
         print("Start: CreateForm Flow")
         // TODO: CoreML
         let violation: Violation = .etc
-        let vehicleNumber: String = "<#차량번호>"
+        let vehicleNumber: String = "01가1234"
         
         // TODO: Profile LocalDB
         guard let profile = realmManager.loadProfile() else { return }

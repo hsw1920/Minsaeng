@@ -47,7 +47,7 @@ final class CreateFormReactor: Reactor {
         self.component = component
         self.initialState.violations[component.violationType.rawValue].isSelected = true
         self.initialState.detailContent = component.violationType.description
-        self.initialState.vehicleNumber = " <#차량번호> "
+        self.initialState.vehicleNumber = component.vehicleNumber
     }
     
     deinit {

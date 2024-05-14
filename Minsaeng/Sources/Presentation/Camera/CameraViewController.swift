@@ -15,10 +15,10 @@ final class CameraViewController: BaseViewController {
         print("deinit: \(self)")
     }
     
-    var captureSession: AVCaptureSession!
-    var cameraOutput: AVCapturePhotoOutput!
-    var videoOutput: AVCaptureVideoDataOutput!
-    var previewLayer: AVCaptureVideoPreviewLayer!
+    private var captureSession: AVCaptureSession!
+    private var cameraOutput: AVCapturePhotoOutput!
+    private var videoOutput: AVCaptureVideoDataOutput!
+    private var previewLayer: AVCaptureVideoPreviewLayer!
     
     private let vehicleNumberlabel: UILabel = {
         let label = UILabel()
@@ -124,6 +124,18 @@ final class CameraViewController: BaseViewController {
     }
     
     private func bind() {
+        captureButton.rx.controlEvent(.touchDown)
+            .bind(with: self) { owner, _ in
+                owner.captureButtonTransitioningDown()
+            }
+            .disposed(by: disposeBag)
+        
+        captureButton.rx.controlEvent(.touchUpOutside)
+            .bind(with: self) { owner, _ in
+                owner.captureButtonTransitioningUp()
+            }
+            .disposed(by: disposeBag)
+        
         captureButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
                 // 호출될 때 마다 다른 세팅을 주어야 하기 때문에 메서드 안에서 생성
@@ -132,6 +144,7 @@ final class CameraViewController: BaseViewController {
                 
                 // 아래에 AVCapturePhotoCaptureDelegate를 채택
                 owner.cameraOutput.capturePhoto(with: settings, delegate: owner)
+                owner.captureButtonTransitioningUp()
             })
             .disposed(by: disposeBag)
         
@@ -209,8 +222,6 @@ final class CameraViewController: BaseViewController {
         captureSession.addOutput(cameraOutput)
     }
     
-    
-    
     private func setupVideoOutput() {
         videoOutput = AVCaptureVideoDataOutput()
         videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
@@ -220,6 +231,18 @@ final class CameraViewController: BaseViewController {
 
         guard captureSession.canAddOutput(videoOutput) else { return }
         captureSession.addOutput(videoOutput)
+    }
+    
+    private func captureButtonTransitioningDown() {
+        UIView.animate(withDuration: 0.2) {
+            self.captureButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }
+    }
+    
+    private func captureButtonTransitioningUp() {
+        UIView.animate(withDuration: 0.2) {
+            self.captureButton.transform = .identity
+        }
     }
 }
 

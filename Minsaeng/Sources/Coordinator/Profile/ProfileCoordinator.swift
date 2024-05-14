@@ -21,19 +21,22 @@ final class ProfileCoordinator: Coordinator {
     func start() {
         print("Start: Profile Flow")
         let reactor = ProfileNameCreationReactor()
-        let viewController = ProfileNameCreationViewController(with: reactor, coordinator: self)
+        let profile = Profile(name: "", phoneNumber: "")
+        let viewController = ProfileNameCreationViewController(with: reactor, coordinator: self, component: profile)
         navigationController.pushViewController(viewController, animated: true)
     }
 }
 
 extension ProfileCoordinator: ProfileCoordinatorInterface {
-    func pushPhoneNumberCreationView() {
+    func pushPhoneNumberCreationView(profile: Profile) {
         let reactor = ProfilePhoneNumberCreationReactor()
-        let viewController = ProfilePhoneNumberCreationViewController(with: reactor, coordinator: self)
+        let viewController = ProfilePhoneNumberCreationViewController(with: reactor, coordinator: self, component: profile)
         navigationController.pushViewController(viewController, animated: true)
     }
     
-    func pushCompleteView() {
+    func pushCompleteView(profile: Profile) {
+        let realmManager = RealmManager()
+        realmManager.createItem(profile.asRealm())
         let reactor = ProfileCompleteReactor()
         let viewController = ProfileCompleteViewController(with: reactor, coordinator: self)
         navigationController.pushViewController(viewController, animated: true)

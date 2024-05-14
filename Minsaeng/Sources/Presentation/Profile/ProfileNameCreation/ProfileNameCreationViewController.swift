@@ -15,6 +15,7 @@ final class ProfileNameCreationViewController: BaseViewController {
         print("deinit: \(self)")
     }
     private let coordinator: ProfileCoordinatorInterface
+    private var component: Profile
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
@@ -26,6 +27,11 @@ final class ProfileNameCreationViewController: BaseViewController {
     private let contentView: UIView = {
         let contentView = UIView()
         return contentView
+    }()
+    
+    private let stepImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "ProfileStep1"))
+        return imageView
     }()
     
     private let titleLabel: UILabel = {
@@ -70,8 +76,11 @@ final class ProfileNameCreationViewController: BaseViewController {
     }()
     
     // MARK: Init
-    init(with reactor: ProfileNameCreationReactor, coordinator: ProfileCoordinatorInterface) {
+    init(with reactor: ProfileNameCreationReactor, 
+         coordinator: ProfileCoordinatorInterface,
+         component: Profile) {
         self.coordinator = coordinator
+        self.component = component
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -82,6 +91,7 @@ final class ProfileNameCreationViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigation()
         setKeyboardObserver()
     }
     
@@ -94,7 +104,7 @@ final class ProfileNameCreationViewController: BaseViewController {
     override func setupUI() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [titleLabel, nameTextField, nextButton, descriptionLabel].forEach {
+        [stepImage, titleLabel, nameTextField, nextButton, descriptionLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -116,8 +126,15 @@ final class ProfileNameCreationViewController: BaseViewController {
             $0.edges.equalToSuperview()
         }
         
+        stepImage.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(32)
+            $0.leading.equalToSuperview().inset(24)
+            $0.width.equalTo(35)
+            $0.height.equalTo(15)
+        }
+        
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(62)
+            $0.top.equalTo(stepImage.snp.bottom).offset(16)
             $0.leading.equalToSuperview().inset(24)
         }
         
@@ -137,6 +154,10 @@ final class ProfileNameCreationViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(62)
         }
+    }
+    
+    private func setupNavigation() {
+        title = "프로필 설정"
     }
 }
 
@@ -170,7 +191,9 @@ extension ProfileNameCreationViewController: View {
             .distinctUntilChanged()
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
-                owner.coordinator.pushPhoneNumberCreationView()
+                guard let name = owner.nameTextField.text else { return }
+                owner.component.name = name
+                owner.coordinator.pushPhoneNumberCreationView(profile: owner.component)
             })
             .disposed(by: disposeBag)
         

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProfileCoordinatorInterface {
-    func pushPhoneNumberCreationView()
-    func pushCompleteView()
+    func pushPhoneNumberCreationView(profile: Profile)
+    func pushCompleteView(profile: Profile)
     func pushMainView()
 }

@@ -15,6 +15,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
         print("deinit: \(self)")
     }
     private let coordinator: ProfileCoordinatorInterface
+    private var component: Profile
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
@@ -26,6 +27,11 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     private let contentView: UIView = {
         let contentView = UIView()
         return contentView
+    }()
+    
+    private let stepImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "ProfileStep2"))
+        return imageView
     }()
     
     private let titleLabel: UILabel = {
@@ -68,8 +74,11 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     }()
     
     // MARK: Init
-    init(with reactor: ProfilePhoneNumberCreationReactor, coordinator: ProfileCoordinatorInterface) {
+    init(with reactor: ProfilePhoneNumberCreationReactor, 
+         coordinator: ProfileCoordinatorInterface,
+         component: Profile) {
         self.coordinator = coordinator
+        self.component = component
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
@@ -93,7 +102,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     override func setupUI() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [titleLabel, phoneNumberTextField, nextButton, descriptionLabel].forEach {
+        [stepImage, titleLabel, phoneNumberTextField, nextButton, descriptionLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -115,8 +124,15 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
             $0.edges.equalToSuperview()
         }
         
+        stepImage.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(32)
+            $0.leading.equalToSuperview().inset(24)
+            $0.width.equalTo(35)
+            $0.height.equalTo(15)
+        }
+        
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(62)
+            $0.top.equalTo(stepImage.snp.bottom).offset(16)
             $0.leading.equalToSuperview().inset(24)
         }
         
@@ -139,6 +155,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     }
     
     private func setupNavigation() {
+        title = "프로필 설정"
         navigationItem.setHidesBackButton(true, animated: true)
     }
 }
@@ -173,7 +190,9 @@ extension ProfilePhoneNumberCreationViewController: View {
             .distinctUntilChanged()
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
-                owner.coordinator.pushCompleteView()
+                guard let phoneNumber = owner.phoneNumberTextField.text else { return }
+                owner.component.phoneNumber = phoneNumber
+                owner.coordinator.pushCompleteView(profile: owner.component)
             })
             .disposed(by: disposeBag)
         

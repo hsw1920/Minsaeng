@@ -354,12 +354,24 @@ final class CreateFormView: UIView {
         }
     }
     
+    private func setOptionalPhoto(to state: PhotoState) {
+        switch state {
+        case .empty:
+            shootPhotoLabel.text = "1/2"
+            shootPhotoLabel.textColor = .MSDarkGray
+        case .fill:
+            shootPhotoLabel.text = "2/2"
+            shootPhotoLabel.textColor = .MSWarning
+        }
+    }
+    
     func addOptionalPhoto(with data: Data?) {
         guard let data,
         let image = UIImage(data: data) else { return }
         optionalPhoto.image = image
         
         setOptionalPhotoUI()
+        setOptionalPhoto(to: .fill)
     }
     
     func removeOptionalPhoto() {
@@ -367,6 +379,12 @@ final class CreateFormView: UIView {
         removePhotoButton.snp.removeConstraints()
         optionalPhoto.removeFromSuperview()
         removePhotoButton.removeFromSuperview()
+        
+        setOptionalPhoto(to: .empty)
+    }
+    
+    enum PhotoState {
+        case empty, fill
     }
 }
 

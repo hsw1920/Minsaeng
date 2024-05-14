@@ -16,8 +16,9 @@ final class CreateFormViewController: BaseViewController {
     }
     
     private let coordinator: CreateFormCoordinator
+    private let createFormView = CreateFormView()
+    
     var captureImage = PublishRelay<Data?>()
-    let createFormView = CreateFormView()
     
     // MARK: Init
     init(with reactor: CreateFormReactor, coordinator: CreateFormCoordinator) {
@@ -85,7 +86,7 @@ extension CreateFormViewController: View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        self.captureImage.asObservable()
+        captureImage.asObservable()
             .map { CreateFormReactor.Action.shootCamera($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)

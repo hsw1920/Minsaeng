@@ -24,7 +24,7 @@ final class CreateFormView: UIView {
         return button
     }()
     
-    let requiredPhoto: UIImageView = {
+    private let requiredPhoto: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 12
         imageView.layer.borderWidth = 1
@@ -32,7 +32,7 @@ final class CreateFormView: UIView {
         return imageView
     }()
     
-    let optionalPhoto: UIImageView = {
+    private let optionalPhoto: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true

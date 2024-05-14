@@ -14,6 +14,43 @@ final class CreateFormView: UIView {
     let scrollView: UIScrollView = .init()
     private let contentView: UIView = .init()
     private let photoView: UIView = .init()
+    
+    let shootPhotoButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 12
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.backgroundColor = .systemGreen
+        return button
+    }()
+    
+    let requiredPhoto: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 12
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        return imageView
+    }()
+    
+    let optionalPhoto: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        return imageView
+    }()
+    
+    let removePhotoButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.tintColor = .white
+        button.layer.cornerRadius = 12
+        button.backgroundColor = .systemRed
+        return button
+    }()
+    
     private let vehicleNumberView: UIView = .init()
     private let violationView: UIView = .init()
     private let detailContentView: UIView = .init()
@@ -112,7 +149,6 @@ final class CreateFormView: UIView {
         super.init(frame: frame)
         
         setupUI()
-        setCollectionView()
         setKeyboardObserver()
     }
     
@@ -120,7 +156,6 @@ final class CreateFormView: UIView {
         super.init(coder: coder)
         
         setupUI()
-        setCollectionView()
         setKeyboardObserver()
     }
     
@@ -164,26 +199,31 @@ final class CreateFormView: UIView {
             $0.layer.borderColor = UIColor.lightGray.cgColor
             $0.layer.borderWidth = 1
         }
+        
         photoView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
-            $0.height.equalTo(92)
+            $0.height.equalTo(112)
         }
+        
         vehicleNumberView.snp.makeConstraints {
             $0.top.equalTo(photoView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(72)
         }
+        
         violationView.snp.makeConstraints {
             $0.top.equalTo(vehicleNumberView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(188)
         }
+        
         detailContentView.snp.makeConstraints {
             $0.top.equalTo(violationView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(132)
         }
+        
         replyOptionView.snp.makeConstraints {
             $0.top.equalTo(detailContentView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -199,19 +239,15 @@ final class CreateFormView: UIView {
         photoTitleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
         }
+        
         photoStackView.snp.makeConstraints {
             $0.bottom.leading.equalToSuperview()
-            $0.height.equalTo(60)
+            $0.height.equalTo(80)
         }
-        let view1 = UIView()
-        view1.backgroundColor = .systemGreen
-        let view2 = UIView()
-        view2.backgroundColor = .systemGreen
-        let view3 = UIView()
-        view3.backgroundColor = .systemGreen
-        [view1, view2, view3].forEach {
+
+        [shootPhotoButton, requiredPhoto].forEach {
             $0.snp.makeConstraints { make in
-                make.width.height.equalTo(60)
+                make.width.height.equalTo(80)
             }
             photoStackView.addArrangedSubview($0)
         }
@@ -219,6 +255,7 @@ final class CreateFormView: UIView {
         vehicleNumberTitleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
         }
+        
         vehicleNumberTextField.snp.makeConstraints {
             $0.bottom.leading.trailing.equalToSuperview()
             $0.height.equalTo(40)
@@ -253,6 +290,35 @@ final class CreateFormView: UIView {
         layout.minimumInteritemSpacing = 6.0
         layout.itemSize = CGSize(width: (self.bounds.width - 48.0 - 12) / 3, height: 48)
         violationCollectionView.collectionViewLayout = layout
+    }
+    
+    private func setOptionalPhotoUI() {
+        photoStackView.addArrangedSubview(optionalPhoto)
+        photoView.addSubview(removePhotoButton)
+        
+        optionalPhoto.snp.makeConstraints {
+            $0.width.height.equalTo(80)
+        }
+        
+        removePhotoButton.snp.makeConstraints {
+            $0.top.trailing.equalTo(optionalPhoto).inset(-8)
+            $0.width.height.equalTo(24)
+        }
+    }
+    
+    func addOptionalPhoto(with data: Data?) {
+        guard let data,
+        let image = UIImage(data: data) else { return }
+        optionalPhoto.image = image
+        
+        setOptionalPhotoUI()
+    }
+    
+    func removeOptionalPhoto() {
+        optionalPhoto.snp.removeConstraints()
+        removePhotoButton.snp.removeConstraints()
+        optionalPhoto.removeFromSuperview()
+        removePhotoButton.removeFromSuperview()
     }
 }
 

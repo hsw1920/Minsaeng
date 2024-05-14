@@ -40,12 +40,18 @@ extension CreateFormViewController: View {
         bindAction(reactor: reactor)
         bindState(reactor: reactor)
         
-        createFormView.view1.rx.tap
-            .bind(onNext: { [weak self] _ in
+        createFormView.shootPhotoButton.rx.tap
+            .bind(with: self) { owner, _ in
                 let vc = CameraViewController()
                 vc.modalPresentationStyle = .overFullScreen
-                self?.present(vc, animated: true)
-            })
+                owner.present(vc, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        createFormView.removePhotoButton.rx.tap
+            .bind(with: self) { owner, _ in
+                owner.createFormView.removeOptionalPhoto()
+            }
             .disposed(by: disposeBag)
     }
     
@@ -120,12 +126,9 @@ extension CreateFormViewController: View {
         
         reactor.state
             .map(\.captureImageData)
-            .map { data in
-                guard let data else { return UIImage() }
-                let image = UIImage(data: data)
-                return image
+            .bind(with: self) { owner, data in
+                owner.createFormView.addOptionalPhoto(with: data)
             }
-            .bind(to: createFormView.view3.rx.image)
             .disposed(by: disposeBag)
     }
 }

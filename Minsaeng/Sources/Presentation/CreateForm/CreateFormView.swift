@@ -14,6 +14,67 @@ final class CreateFormView: UIView {
     let scrollView: UIScrollView = .init()
     private let contentView: UIView = .init()
     private let photoView: UIView = .init()
+    
+    let shootPhotoButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 12
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.MSBorderGray.cgColor
+        return button
+    }()
+    
+    private let shootPhotoContentView: UIView = {
+        let view = UIView()
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
+    private let shootPhotoImage: UIImageView = {
+        let configuration = UIImage.SymbolConfiguration(pointSize: 26)
+        let image = UIImage(systemName: "camera", withConfiguration: configuration)
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = .MSDarkGray
+        return imageView
+    }()
+    
+    private let shootPhotoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "1/2"
+        label.textColor = .MSDarkGray
+        label.font = .systemFont(ofSize: 12, weight: .medium)
+        return label
+    }()
+    
+    
+    private let requiredPhoto: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 12
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.MSBorderGray.cgColor
+        return imageView
+    }()
+    
+    private let optionalPhoto: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.MSBorderGray.cgColor
+        return imageView
+    }()
+    
+    let removePhotoButton: UIButton = {
+        let button = UIButton()
+        let configuration = UIImage.SymbolConfiguration(pointSize: 12)
+        let image = UIImage(systemName: "xmark", withConfiguration: configuration)
+        button.setImage(image, for: .normal)
+        button.tintColor = .MSWhite
+        button.layer.cornerRadius = 12
+        button.backgroundColor = .MSWarning
+        return button
+    }()
+    
     private let vehicleNumberView: UIView = .init()
     private let violationView: UIView = .init()
     private let detailContentView: UIView = .init()
@@ -22,6 +83,7 @@ final class CreateFormView: UIView {
     private let photoTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "사진첨부"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
@@ -37,6 +99,7 @@ final class CreateFormView: UIView {
     private let vehicleNumberTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "차량번호"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
@@ -44,9 +107,11 @@ final class CreateFormView: UIView {
     let vehicleNumberTextField: UITextField = {
         let textField = UITextField()
         textField.isEnabled = false
+        textField.addPaddingLeft(16)
         textField.font = .systemFont(ofSize: 16, weight: .regular)
+        textField.textColor = .MSBlack
         textField.layer.cornerRadius = 12
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.MSBorderGray.cgColor
         textField.layer.borderWidth = 1
         return textField
     }()
@@ -54,6 +119,7 @@ final class CreateFormView: UIView {
     private let violationTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "위반유형"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
@@ -67,17 +133,20 @@ final class CreateFormView: UIView {
     private let detailContentTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "상세내용"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 16, weight: .bold)
         return label
     }()
     
     let detailContentTextView: UITextView = {
         let textView = UITextView()
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10)
         textView.autocorrectionType = .no
         textView.spellCheckingType = .no
         textView.font = .systemFont(ofSize: 14, weight: .regular)
+        textView.textColor = .MSBlack
         textView.layer.cornerRadius = 12
-        textView.layer.borderColor = UIColor.darkGray.cgColor
+        textView.layer.borderColor = UIColor.MSBorderGray.cgColor
         textView.layer.borderWidth = 1
         return textView
     }()
@@ -86,23 +155,24 @@ final class CreateFormView: UIView {
         let button = UIButton()
         button.setImage(.strokedCheckmark, for: .normal)
         button.setAttributedTitle(NSAttributedString(string: "(선택) 민원 접수 후 회신에 동의합니다.",
-                                                     attributes: [.font : UIFont.systemFont(ofSize: 16, weight: .bold)]),
+                                                     attributes: [.font : UIFont.systemFont(ofSize: 16, weight: .medium)]),
                                   for: .normal)
+        button.setTitleColor(.MSBlack, for: .normal)
         return button
     }()
 
     let confirmButton: UIButton = {
         let button = UIButton()
         button.setTitle("작성 완료", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.backgroundColor = .MSMain
         return button
     }()
     
     let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView()
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .white
+        activityIndicator.color = .MSWhite
         activityIndicator.style = .medium
         activityIndicator.stopAnimating()
         return activityIndicator
@@ -112,7 +182,6 @@ final class CreateFormView: UIView {
         super.init(frame: frame)
         
         setupUI()
-        setCollectionView()
         setKeyboardObserver()
     }
     
@@ -120,7 +189,6 @@ final class CreateFormView: UIView {
         super.init(coder: coder)
         
         setupUI()
-        setCollectionView()
         setKeyboardObserver()
     }
     
@@ -160,30 +228,32 @@ final class CreateFormView: UIView {
         
         [photoView, vehicleNumberView, violationView, detailContentView, replyOptionView].forEach {
             contentView.addSubview($0)
-            
-            $0.layer.borderColor = UIColor.lightGray.cgColor
-            $0.layer.borderWidth = 1
         }
+        
         photoView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
-            $0.height.equalTo(92)
+            $0.height.equalTo(112)
         }
+        
         vehicleNumberView.snp.makeConstraints {
             $0.top.equalTo(photoView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(72)
         }
+        
         violationView.snp.makeConstraints {
             $0.top.equalTo(vehicleNumberView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(188)
         }
+        
         detailContentView.snp.makeConstraints {
             $0.top.equalTo(violationView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(132)
         }
+        
         replyOptionView.snp.makeConstraints {
             $0.top.equalTo(detailContentView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(24)
@@ -199,26 +269,41 @@ final class CreateFormView: UIView {
         photoTitleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
         }
+        
         photoStackView.snp.makeConstraints {
             $0.bottom.leading.equalToSuperview()
-            $0.height.equalTo(60)
+            $0.height.equalTo(80)
         }
-        let view1 = UIView()
-        view1.backgroundColor = .systemGreen
-        let view2 = UIView()
-        view2.backgroundColor = .systemGreen
-        let view3 = UIView()
-        view3.backgroundColor = .systemGreen
-        [view1, view2, view3].forEach {
+
+        [shootPhotoButton, requiredPhoto].forEach {
             $0.snp.makeConstraints { make in
-                make.width.height.equalTo(60)
+                make.width.height.equalTo(80)
             }
             photoStackView.addArrangedSubview($0)
+        }
+        
+        shootPhotoButton.addSubview(shootPhotoContentView)
+        
+        shootPhotoContentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        [shootPhotoImage, shootPhotoLabel].forEach { shootPhotoContentView.addSubview($0) }
+        
+        shootPhotoImage.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(18)
+        }
+        
+        shootPhotoLabel.snp.makeConstraints {
+            $0.centerX.equalTo(shootPhotoImage)
+            $0.bottom.equalToSuperview().inset(10)
         }
         
         vehicleNumberTitleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
         }
+        
         vehicleNumberTextField.snp.makeConstraints {
             $0.bottom.leading.trailing.equalToSuperview()
             $0.height.equalTo(40)
@@ -253,6 +338,53 @@ final class CreateFormView: UIView {
         layout.minimumInteritemSpacing = 6.0
         layout.itemSize = CGSize(width: (self.bounds.width - 48.0 - 12) / 3, height: 48)
         violationCollectionView.collectionViewLayout = layout
+    }
+    
+    private func setOptionalPhotoUI() {
+        photoStackView.addArrangedSubview(optionalPhoto)
+        photoView.addSubview(removePhotoButton)
+        
+        optionalPhoto.snp.makeConstraints {
+            $0.width.height.equalTo(80)
+        }
+        
+        removePhotoButton.snp.makeConstraints {
+            $0.top.trailing.equalTo(optionalPhoto).inset(-8)
+            $0.width.height.equalTo(24)
+        }
+    }
+    
+    private func setOptionalPhoto(to state: PhotoState) {
+        switch state {
+        case .empty:
+            shootPhotoLabel.text = "1/2"
+            shootPhotoLabel.textColor = .MSDarkGray
+        case .fill:
+            shootPhotoLabel.text = "2/2"
+            shootPhotoLabel.textColor = .MSWarning
+        }
+    }
+    
+    func addOptionalPhoto(with data: Data?) {
+        guard let data,
+        let image = UIImage(data: data) else { return }
+        optionalPhoto.image = image
+        
+        setOptionalPhotoUI()
+        setOptionalPhoto(to: .fill)
+    }
+    
+    func removeOptionalPhoto() {
+        optionalPhoto.snp.removeConstraints()
+        removePhotoButton.snp.removeConstraints()
+        optionalPhoto.removeFromSuperview()
+        removePhotoButton.removeFromSuperview()
+        
+        setOptionalPhoto(to: .empty)
+    }
+    
+    enum PhotoState {
+        case empty, fill
     }
 }
 

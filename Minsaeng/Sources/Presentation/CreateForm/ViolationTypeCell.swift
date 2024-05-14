@@ -25,7 +25,11 @@ struct ViolationType {
 final class ViolationTypeCell: UICollectionViewCell {
     static let reuseIdentifier = "ViolationTypeCell"
 
-    private let titleLabel: UILabel = .init()
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .bold)
+        return label
+    }()
 
     // MARK: Init
     override init(frame: CGRect) {
@@ -41,13 +45,13 @@ final class ViolationTypeCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .MSLightGray
+        titleLabel.textColor = .MSDarkGray
     }
     
     private func setupUI() {
-        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 12
-        contentView.layer.borderColor = UIColor.darkGray.cgColor
+        contentView.layer.borderColor = UIColor.MSBorderGray.cgColor
         contentView.layer.borderWidth = 1
         
         contentView.addSubview(titleLabel)
@@ -60,7 +64,8 @@ final class ViolationTypeCell: UICollectionViewCell {
     func configure(type: ViolationType) {
         titleLabel.text = type.title
         if type.isSelected {
-            contentView.backgroundColor = .systemYellow
+            contentView.backgroundColor = .MSMain
+            titleLabel.textColor = .MSWhite
         }
     }
 }

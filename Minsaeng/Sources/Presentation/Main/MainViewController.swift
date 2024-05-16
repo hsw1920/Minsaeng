@@ -59,7 +59,7 @@ final class MainViewController: BaseViewController {
     private func bind() {
         testButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
-                owner.coordinator.pushCreateView()
+                owner.coordinator.pushCameraView(option: .required)
             })
             .disposed(by: disposeBag)
     }

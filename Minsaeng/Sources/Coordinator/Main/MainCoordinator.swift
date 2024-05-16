@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 final class MainCoordinator: Coordinator {
     var type: CoordinatorType { .main }
@@ -13,6 +14,10 @@ final class MainCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
+    
+    var imageData: PublishSubject<Data> = .init()
+    
+    var disposeBag = DisposeBag()
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -22,12 +27,31 @@ final class MainCoordinator: Coordinator {
         print("Start: Main Flow")
         let viewController = MainViewController(coordinator: self)
         navigationController.setViewControllers([viewController], animated: true)
+        
+        bind()
+    }
+    
+    private func bind() {
+        imageData
+            .bind(with: self, onNext: { owner, data in
+                owner.pushCreateView(data: data)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
 extension MainCoordinator: MainCoordinatorInterface {
-    func pushCreateView() {
-        let coordinator = CreateFormCoordinator(navigationController: navigationController)
+    func pushCameraView(option: CaptureOption) {
+        let coordinator = CameraCoordinator(navigationController: navigationController,
+                                            captureOption: option)
+        coordinator.finishDelegate = self
+        childCoordinators.append(coordinator)
+        coordinator.start(option: option)
+    }
+    
+    func pushCreateView(data: Data) {
+        let coordinator = CreateFormCoordinator(navigationController: navigationController, 
+                                                imageData: data)
         coordinator.finishDelegate = self
         childCoordinators.append(coordinator)
         coordinator.start()
@@ -43,11 +67,15 @@ extension MainCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("End: \(childCoordinator.type) Flow")
         removeChildCoordinator(child: childCoordinator)
+    }
+    
+    func coordinatorDidFinishWithData(childCoordinator: Coordinator, data: Data) {
+        print("End: \(childCoordinator.type) Flow")
+        removeChildCoordinator(child: childCoordinator)
         
         switch childCoordinator.type {
-        case .createForm:
-            // MARK: 나중에
-            break
+        case .cameraRequired:
+            self.imageData.onNext(data)
         default:
             break
         }

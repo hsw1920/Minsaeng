@@ -10,6 +10,8 @@
 		600D4F3B2BD7F0B0004CD12B /* CreateFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D4F3A2BD7F0B0004CD12B /* CreateFormView.swift */; };
 		600D4F3E2BD8F324004CD12B /* CreateFormComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D4F3D2BD8F324004CD12B /* CreateFormComponent.swift */; };
 		600D4F402BD8F347004CD12B /* Violation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600D4F3F2BD8F347004CD12B /* Violation.swift */; };
+		602D6F7A2BF5B8B40009361D /* CameraCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D6F792BF5B8B40009361D /* CameraCoordinator.swift */; };
+		602D6F7E2BF5C4FD0009361D /* CameraCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602D6F7D2BF5C4FD0009361D /* CameraCoordinatorInterface.swift */; };
 		604D1A5F2BCFACBE00630CFC /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A5E2BCFACBE00630CFC /* Coordinator.swift */; };
 		604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A602BCFAD4300630CFC /* AppCoordinator.swift */; };
 		604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */; };
@@ -53,6 +55,8 @@
 		600D4F3A2BD7F0B0004CD12B /* CreateFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormView.swift; sourceTree = "<group>"; };
 		600D4F3D2BD8F324004CD12B /* CreateFormComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormComponent.swift; sourceTree = "<group>"; };
 		600D4F3F2BD8F347004CD12B /* Violation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Violation.swift; sourceTree = "<group>"; };
+		602D6F792BF5B8B40009361D /* CameraCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCoordinator.swift; sourceTree = "<group>"; };
+		602D6F7D2BF5C4FD0009361D /* CameraCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCoordinatorInterface.swift; sourceTree = "<group>"; };
 		604D1A5E2BCFACBE00630CFC /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		604D1A602BCFAD4300630CFC /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
@@ -105,20 +109,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		600635AB2BE20EE50081BDEB /* Message */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Message;
-			sourceTree = "<group>";
-		};
-		600635AE2BE20F9E0081BDEB /* SendMessageCoordinator */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SendMessageCoordinator;
-			sourceTree = "<group>";
-		};
 		600D4F3C2BD8F315004CD12B /* Entity */ = {
 			isa = PBXGroup;
 			children = (
@@ -128,12 +118,28 @@
 			path = Entity;
 			sourceTree = "<group>";
 		};
+		602D6F7B2BF5B8C70009361D /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				602D6F792BF5B8B40009361D /* CameraCoordinator.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		602D6F7C2BF5C4E70009361D /* CoordinatorInterface */ = {
+			isa = PBXGroup;
+			children = (
+				602D6F7D2BF5C4FD0009361D /* CameraCoordinatorInterface.swift */,
+			);
+			path = CoordinatorInterface;
+			sourceTree = "<group>";
+		};
 		604D1A5D2BCFACB600630CFC /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
 				604D1A5E2BCFACBE00630CFC /* Coordinator.swift */,
 				604D1A602BCFAD4300630CFC /* AppCoordinator.swift */,
-				600635AE2BE20F9E0081BDEB /* SendMessageCoordinator */,
+				602D6F7B2BF5B8C70009361D /* Camera */,
 				60FF96D32BD54727003DCD7C /* CreateFormCoordinator */,
 				60714C6C2BD275FF008D8040 /* Main */,
 				604D1A622BCFB26600630CFC /* Profile */,
@@ -269,7 +275,6 @@
 			isa = PBXGroup;
 			children = (
 				60AA6D8E2BE3AB6F0087C8F3 /* Camera */,
-				600635AB2BE20EE50081BDEB /* Message */,
 				60FF96CD2BD54591003DCD7C /* CreateForm */,
 				60714C642BD272EF008D8040 /* Main */,
 				6089FE342BCCE66700E42E71 /* Profile */,
@@ -300,6 +305,7 @@
 		60AA6D8E2BE3AB6F0087C8F3 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				602D6F7C2BF5C4E70009361D /* CoordinatorInterface */,
 				60AA6D8F2BE3AB840087C8F3 /* CameraViewController.swift */,
 			);
 			path = Camera;
@@ -476,6 +482,7 @@
 				60BBAC8D2BCD608F00F8DA5B /* ProfileCompleteReactor.swift in Sources */,
 				60AA6D902BE3AB840087C8F3 /* CameraViewController.swift in Sources */,
 				60BBAC892BCD604300F8DA5B /* ProfileCompleteViewController.swift in Sources */,
+				602D6F7E2BF5C4FD0009361D /* CameraCoordinatorInterface.swift in Sources */,
 				604D1A672BCFBCD800630CFC /* ProfileCoordinatorInterface.swift in Sources */,
 				60FF96D52BD5474E003DCD7C /* CreateFormCoordinator.swift in Sources */,
 				60784A472BF1E6F500F4AC99 /* RMProfile.swift in Sources */,
@@ -486,6 +493,7 @@
 				60784A4A2BF1E76500F4AC99 /* Profile.swift in Sources */,
 				600D4F402BD8F347004CD12B /* Violation.swift in Sources */,
 				60C6FBFD2BF35553005C2A69 /* UIColor+.swift in Sources */,
+				602D6F7A2BF5B8B40009361D /* CameraCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

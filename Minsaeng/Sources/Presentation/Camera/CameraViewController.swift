@@ -10,11 +10,103 @@ import UIKit
 import RxCocoa
 import RxSwift
 
+enum CaptureOption {
+    case required, optional
+}
+
+enum CaptureState {
+    case none, waiting, correct, finish
+    var color: CGColor {
+        switch self {
+        case .none: return UIColor.clear.cgColor
+        case .waiting: return UIColor.MSBorderGray.cgColor
+        case .correct: return UIColor.MSMain.cgColor
+        case .finish: return UIColor.MSWarning.cgColor
+            
+        }
+    }
+}
+
+final class CircleView: UIView {
+    var state: CaptureState = .none
+    
+    let borderLayer = CAShapeLayer()
+    let gradientLayer = CAGradientLayer()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        addBorderLayer()
+        addGradientLayer()
+    }
+    
+    func removeBorderGradientLayer() {
+        borderLayer.removeFromSuperlayer()
+        gradientLayer.removeFromSuperlayer()
+    }
+    
+    func addBorderLayer() {
+        switch state {
+        case .waiting:
+            borderLayer.strokeColor = UIColor.MSLightGray.cgColor
+        case .correct:
+            borderLayer.strokeColor = UIColor.MSMain.cgColor
+        case .finish:
+            borderLayer.strokeColor = UIColor.MSWarning.cgColor
+        case .none:
+            borderLayer.strokeColor = UIColor.MSLightGray.cgColor
+        }
+        
+        let halfWidth = frame.width / 2
+        let center = CGPoint(x: halfWidth, y: halfWidth)
+        let strokeRadius = halfWidth - 2
+        let circularPath = UIBezierPath(arcCenter: center,
+                                        radius: strokeRadius,
+                                        startAngle: 0,
+                                        endAngle: 2 * CGFloat.pi,
+                                        clockwise: true)
+        
+        borderLayer.path = circularPath.cgPath
+        borderLayer.lineWidth = 4
+        borderLayer.fillColor = UIColor.clear.cgColor
+
+        layer.addSublayer(borderLayer)
+    }
+    
+    func addGradientLayer() {
+        switch state {
+        case .correct, .finish, .none:
+            return
+        case .waiting:
+            break
+        }
+
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
+        gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.frame = self.bounds
+        gradientLayer.mask = borderLayer
+        
+        gradientLayer.colors = [UIColor.MSLightGray,
+                                UIColor.MSWhite.cgColor]
+        layer.addSublayer(gradientLayer)
+    }
+    
+    private func addAnimation() {
+        let animation = CABasicAnimation(keyPath: "transform.rotation.z")
+        animation.fromValue = 0
+        animation.toValue = CGFloat.pi * 2
+        animation.duration = 1
+        animation.repeatCount = .infinity
+        layer.add(animation, forKey: "transform.rotation.z \(arc4random())")
+    }
+}
+
 final class CameraViewController: BaseViewController {
     deinit {
         print("deinit: \(self)")
     }
     
+    private let captureState: BehaviorRelay<CaptureState> = .init(value: .none)
     private var captureSession: AVCaptureSession!
     private var cameraOutput: AVCapturePhotoOutput!
     private var videoOutput: AVCaptureVideoDataOutput!
@@ -23,6 +115,7 @@ final class CameraViewController: BaseViewController {
     private let vehicleNumberlabel: UILabel = {
         let label = UILabel()
         label.text = "01가1234"
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .MSWhite
         return label
     }()
@@ -35,15 +128,16 @@ final class CameraViewController: BaseViewController {
     
     private let cameraView: UIImageView = {
         let view = UIImageView()
-        view.backgroundColor = .MSBlack
+        view.clipsToBounds = true
+        view.backgroundColor = .clear
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 6
+        view.layer.borderColor = UIColor.clear.cgColor
         return view
     }()
     
-    private let captureButtonView: UIView = {
-        let view = UIView()
-        view.layer.cornerRadius = 40
-        view.layer.borderWidth = 4
-        view.layer.borderColor = UIColor.MSWhite.cgColor
+    private var captureButtonView: CircleView = {
+        let view = CircleView()
         return view
     }()
     
@@ -63,9 +157,26 @@ final class CameraViewController: BaseViewController {
         return button
     }()
     
+    let captureOption: CaptureOption
+    
+    init(captureOption: CaptureOption) {
+        self.captureOption = captureOption
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        addAnimation()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,8 +201,8 @@ final class CameraViewController: BaseViewController {
         view.addSubview(captureButtonView)
         
         vehicleNumberView.snp.makeConstraints {
-            $0.top.leading.right.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(100)
+            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.height.equalTo(62)
         }
         
         vehicleNumberView.addSubview(vehicleNumberlabel)
@@ -100,8 +211,8 @@ final class CameraViewController: BaseViewController {
         }
         
         cameraView.snp.makeConstraints {
-            $0.top.equalTo(vehicleNumberView.snp.bottom)
-            $0.leading.right.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(vehicleNumberView.snp.bottom).offset(38)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(view.bounds.width * 4/3)
         }
         
@@ -138,13 +249,15 @@ final class CameraViewController: BaseViewController {
         
         captureButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
+                owner.captureButton.isUserInteractionEnabled = false
+                owner.captureButtonTransitioningUp()
+                
                 // 호출될 때 마다 다른 세팅을 주어야 하기 때문에 메서드 안에서 생성
                 let settings = AVCapturePhotoSettings(
                     format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
                 
                 // 아래에 AVCapturePhotoCaptureDelegate를 채택
                 owner.cameraOutput.capturePhoto(with: settings, delegate: owner)
-                owner.captureButtonTransitioningUp()
             })
             .disposed(by: disposeBag)
         
@@ -152,6 +265,33 @@ final class CameraViewController: BaseViewController {
             .bind(with: self, onNext: { owner, _ in
                 owner.dismiss(animated: true)
             })
+            .disposed(by: disposeBag)
+        
+        captureState.asDriver()
+            .distinctUntilChanged()
+            .drive(with: self) { owner, state in
+                owner.cameraView.layer.borderColor = state.color
+                owner.captureButtonView.removeBorderGradientLayer()
+                owner.captureButtonView.state = state
+                owner.captureButtonView.layoutSubviews()
+                
+                if state == .none {
+                    owner.vehicleNumberlabel.text = nil
+                    owner.captureButton.backgroundColor = .MSWhite
+                    owner.vehicleNumberView.backgroundColor = .clear
+                    owner.captureButton.isEnabled = true
+                } else if state == .waiting {
+                    owner.captureButton.backgroundColor = .MSDarkGray
+                    owner.vehicleNumberlabel.text = "차량번호를 인식시켜 주세요."
+                    owner.vehicleNumberView.backgroundColor = .MSDarkGray
+                    owner.captureButton.isEnabled = false
+                } else {
+                    owner.captureButton.backgroundColor = .MSWhite
+                    owner.vehicleNumberlabel.text = "01가1234"
+                    owner.vehicleNumberView.backgroundColor = .MSMain
+                    owner.captureButton.isEnabled = true
+                }
+            }
             .disposed(by: disposeBag)
     }
     
@@ -186,7 +326,9 @@ final class CameraViewController: BaseViewController {
             
             // Setup Outputs
             self?.setupOutput()
-            self?.setupVideoOutput()
+            if self?.captureOption == .required {
+                self?.setupVideoOutput()
+            }
             
             // commit configuration: 단일 atomic 업데이트에서 실행중인 캡처 세션의 구성에 대한 하나 이상의 변경 사항을 커밋합니다.
             self?.captureSession.commitConfiguration()
@@ -244,6 +386,20 @@ final class CameraViewController: BaseViewController {
             self.captureButton.transform = .identity
         }
     }
+    
+    private func addAnimation() { // 애니메이션 레이어 추가
+        let animation = CABasicAnimation(keyPath: "transform.rotation.z")
+        animation.fromValue = 0
+        animation.toValue = CGFloat.pi * 2
+        animation.duration = 1
+        animation.repeatCount = .infinity
+        captureButtonView.layer.add(animation, forKey: "transform.rotation.z \(arc4random())")
+    }
+
+    private func removeAnimation() {
+        captureButtonView.layer.removeAllAnimations() // 애니메이션 레이어 제거
+        captureButtonView.removeBorderGradientLayer() // Border, Gradient 레이어 제거
+    }
 }
 
 extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -260,9 +416,22 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
     
+    // MARK: 테스팅용 임시 메서드
+    func getStateForCurrentTime() -> Int {
+        let currentTime = Int(Date().timeIntervalSince1970) % 60  // 현재 시간의 초
+        
+        if currentTime >= 0 && currentTime < 10 || currentTime >= 30 && currentTime <= 40 {
+            return 2
+        } else if currentTime >= 10 && currentTime < 20 || currentTime >= 40 && currentTime <= 50 {
+            return 1
+        } else {
+            return 2
+        }
+    }
+    
     private func processPixelBuffer(_ pixelBuffer: CVPixelBuffer) {
         // TODO: pixelBuffer를 UIImage 또는 CIImage로 변환하여 AI 모델에 전달하여 위반유형 반환받기
-//        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        //        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let uiImage = UIImage(ciImage: CIImage(cvPixelBuffer: pixelBuffer))
         
         // TODO: AI 모델에 이미지 전달 등의 작업 수행
@@ -270,9 +439,15 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         // yourAIModel.processImage(uiImage)
         
         // TODO: 여기서 UI 로직 처리
-//        DispatchQueue.main.async { [weak self] in
-//
-//        }
+        
+        // MARK: 테스팅용 임시 메서드
+        captureButtonView.state = [CaptureState.none, CaptureState.waiting, CaptureState.correct][getStateForCurrentTime()]
+        
+        // MARK: AI 모델 리턴값 + 차량번호까지 같이?
+        let state = captureButtonView.state
+        DispatchQueue.main.async { [weak self] in
+            self?.captureState.accept(state)
+        }
     }
 }
 
@@ -286,8 +461,14 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.captureSession.stopRunning()
          
+//            DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
+//                self?.setupAndStartCaputeSession()
+//            }
+            
             DispatchQueue.main.async { [weak self] in
+                self?.captureState.accept(.none)
                 self?.cameraView.image = image
+                
                 
                 if let vc = self?.presentingViewController as? CreateFormViewController {
                     vc.captureImage.accept(imageData)

@@ -43,7 +43,7 @@ extension CreateFormViewController: View {
         
         createFormView.shootPhotoButton.rx.tap
             .bind(with: self) { owner, _ in
-                let vc = CameraViewController()
+                let vc = CameraViewController(captureOption: .optional)
                 vc.modalPresentationStyle = .overFullScreen
                 owner.present(vc, animated: true)
             }

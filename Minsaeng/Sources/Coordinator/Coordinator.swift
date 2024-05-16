@@ -27,6 +27,11 @@ extension Coordinator {
 
 protocol CoordinatorFinishDelegate: AnyObject {
     func coordinatorDidFinish(childCoordinator: Coordinator)
+    func coordinatorDidFinishWithData(childCoordinator: Coordinator, data: Data)
+}
+
+extension CoordinatorFinishDelegate {
+    func coordinatorDidFinishWithData(childCoordinator: Coordinator, data: Data) { }
 }
 
 enum CoordinatorType {
@@ -34,5 +39,6 @@ enum CoordinatorType {
     case main
     case profile
     case createForm
-    case createMessage
+    case cameraRequired
+    case cameraOptional
 }

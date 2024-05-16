@@ -22,7 +22,6 @@ enum CaptureState {
         case .waiting: return UIColor.MSBorderGray.cgColor
         case .correct: return UIColor.MSMain.cgColor
         case .finish: return UIColor.MSWarning.cgColor
-            
         }
     }
 }
@@ -46,14 +45,12 @@ final class CircleView: UIView {
     
     func addBorderLayer() {
         switch state {
-        case .waiting:
+        case .waiting, .none:
             borderLayer.strokeColor = UIColor.MSLightGray.cgColor
         case .correct:
             borderLayer.strokeColor = UIColor.MSMain.cgColor
         case .finish:
             borderLayer.strokeColor = UIColor.MSWarning.cgColor
-        case .none:
-            borderLayer.strokeColor = UIColor.MSLightGray.cgColor
         }
         
         let halfWidth = frame.width / 2
@@ -74,10 +71,10 @@ final class CircleView: UIView {
     
     func addGradientLayer() {
         switch state {
-        case .correct, .finish, .none:
-            return
-        case .waiting:
+        case .waiting: 
             break
+        default: 
+            return
         }
 
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
@@ -143,6 +140,7 @@ final class CameraViewController: BaseViewController {
     
     private let captureButton : UIButton = {
         let button = UIButton()
+        button.isEnabled = false
         button.backgroundColor = .MSWhite
         button.layer.cornerRadius = 32
         return button
@@ -157,10 +155,13 @@ final class CameraViewController: BaseViewController {
         return button
     }()
     
-    let captureOption: CaptureOption
+    private let coordinator: CameraCoordinatorInterface
+    private let captureOption: CaptureOption
     
-    init(captureOption: CaptureOption) {
+    init(coordinator: CameraCoordinatorInterface, captureOption: CaptureOption) {
+        self.coordinator = coordinator
         self.captureOption = captureOption
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -175,7 +176,7 @@ final class CameraViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         addAnimation()
     }
     
@@ -249,7 +250,7 @@ final class CameraViewController: BaseViewController {
         
         captureButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
-                owner.captureButton.isUserInteractionEnabled = false
+                owner.captureButton.isEnabled = false
                 owner.captureButtonTransitioningUp()
                 
                 // 호출될 때 마다 다른 세팅을 주어야 하기 때문에 메서드 안에서 생성
@@ -263,36 +264,39 @@ final class CameraViewController: BaseViewController {
         
         cancelButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
-                owner.dismiss(animated: true)
+                owner.coordinator.cancelCamera(owner)
             })
             .disposed(by: disposeBag)
         
-        captureState.asDriver()
-            .distinctUntilChanged()
-            .drive(with: self) { owner, state in
-                owner.cameraView.layer.borderColor = state.color
-                owner.captureButtonView.removeBorderGradientLayer()
-                owner.captureButtonView.state = state
-                owner.captureButtonView.layoutSubviews()
-                
-                if state == .none {
-                    owner.vehicleNumberlabel.text = nil
-                    owner.captureButton.backgroundColor = .MSWhite
-                    owner.vehicleNumberView.backgroundColor = .clear
-                    owner.captureButton.isEnabled = true
-                } else if state == .waiting {
-                    owner.captureButton.backgroundColor = .MSDarkGray
-                    owner.vehicleNumberlabel.text = "차량번호를 인식시켜 주세요."
-                    owner.vehicleNumberView.backgroundColor = .MSDarkGray
-                    owner.captureButton.isEnabled = false
-                } else {
-                    owner.captureButton.backgroundColor = .MSWhite
-                    owner.vehicleNumberlabel.text = "01가1234"
-                    owner.vehicleNumberView.backgroundColor = .MSMain
-                    owner.captureButton.isEnabled = true
+        if captureOption == .required {
+            captureState
+                .distinctUntilChanged()
+                .bind(with: self) { owner, state in
+                    owner.cameraView.layer.borderColor = state.color
+                    owner.captureButtonView.removeBorderGradientLayer()
+                    owner.captureButtonView.state = state
+                    owner.captureButtonView.layoutSubviews()
+
+                    if state == .none {
+                        owner.vehicleNumberlabel.text = nil
+                        owner.captureButton.backgroundColor = .MSWhite
+                        owner.vehicleNumberView.backgroundColor = .clear
+                        owner.captureButton.isEnabled = false
+                    } else if state == .waiting {
+                        owner.captureButton.backgroundColor = .MSDarkGray
+                        owner.vehicleNumberlabel.text = "차량번호를 인식시켜 주세요."
+                        owner.vehicleNumberView.backgroundColor = .MSDarkGray
+                        owner.captureButton.isEnabled = false
+                    }
+                    else {
+                        owner.captureButton.backgroundColor = .MSWhite
+                        owner.vehicleNumberlabel.text = "01가1234"
+                        owner.vehicleNumberView.backgroundColor = .MSMain
+                        owner.captureButton.isEnabled = true
+                    }
                 }
-            }
-            .disposed(by: disposeBag)
+                .disposed(by: disposeBag)
+        }
     }
     
     private func checkPermission() {
@@ -335,6 +339,17 @@ final class CameraViewController: BaseViewController {
             
             // 캡처 세션을 실행
             self?.captureSession.startRunning()
+            
+            // 세션 실행 전까지는 상호작용 불가능
+            // * optional의 경우
+            // 세션이 실행되면 captureButton의 상호작용이 가능하도록 변경
+            // * required의 경우
+            // videoOutput에서의 state에 따라서만 상호작용이 제어됨
+            DispatchQueue.main.async { [weak self] in
+                if self?.captureOption == .optional {
+                    self?.captureButton.isEnabled = true
+                }
+            }
         }
     }
     
@@ -423,7 +438,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         if currentTime >= 0 && currentTime < 10 || currentTime >= 30 && currentTime <= 40 {
             return 2
         } else if currentTime >= 10 && currentTime < 20 || currentTime >= 40 && currentTime <= 50 {
-            return 1
+            return 2
         } else {
             return 2
         }
@@ -459,22 +474,17 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         let image = UIImage(data: imageData)
         
         DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.captureSession.stopRunning()
+            guard let self else { return }
+            self.captureSession.stopRunning()
          
+            //MARK: 다시찍기 구현하면 사용할 수도?
 //            DispatchQueue.main.asyncAfter(deadline: .now()+3) { [weak self] in
 //                self?.setupAndStartCaputeSession()
 //            }
             
-            DispatchQueue.main.async { [weak self] in
-                self?.captureState.accept(.none)
-                self?.cameraView.image = image
-                
-                
-                if let vc = self?.presentingViewController as? CreateFormViewController {
-                    vc.captureImage.accept(imageData)
-                }
-                
-                self?.dismiss(animated: true)
+            DispatchQueue.main.async {
+                self.cameraView.image = image
+                self.coordinator.finishCamera(self, option: self.captureOption, imageData: imageData)
             }
         }
     }

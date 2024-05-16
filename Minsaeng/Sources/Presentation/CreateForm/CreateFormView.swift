@@ -48,6 +48,8 @@ final class CreateFormView: UIView {
     
     private let requiredPhoto: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 12
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = UIColor.MSBorderGray.cgColor
@@ -363,6 +365,12 @@ final class CreateFormView: UIView {
             shootPhotoLabel.text = "2/2"
             shootPhotoLabel.textColor = .MSWarning
         }
+    }
+    
+    func addRequiredPhoto(with data: Data?) {
+        guard let data,
+        let image = UIImage(data: data) else { return }
+        requiredPhoto.image = image
     }
     
     func addOptionalPhoto(with data: Data?) {

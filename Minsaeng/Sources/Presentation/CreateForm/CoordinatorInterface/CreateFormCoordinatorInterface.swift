@@ -9,4 +9,5 @@ import Foundation
 
 protocol CreateFormCoordinatorInterface {
     func finishCreateForm(_ viewController: CreateFormViewController)
+    func presentCamera(_ viewController: CreateFormViewController, option: CaptureOption)
 }

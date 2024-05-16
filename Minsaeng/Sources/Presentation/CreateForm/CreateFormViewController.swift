@@ -35,9 +35,18 @@ final class CreateFormViewController: BaseViewController {
         self.view = createFormView
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNavigation()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         coordinator.finishCreateForm(self)
+    }
+    
+    private func setupNavigation() {
+        title = "민원 문자 생성"
     }
 }
 

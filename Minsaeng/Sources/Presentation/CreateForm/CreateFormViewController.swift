@@ -17,6 +17,7 @@ final class CreateFormViewController: BaseViewController {
     
     private let coordinator: CreateFormCoordinatorInterface
     private let createFormView = CreateFormView()
+    private var isFinished = false
     
     var captureImage = PublishRelay<Data?>()
     
@@ -42,7 +43,9 @@ final class CreateFormViewController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        coordinator.finishCreateForm(self)
+        if !isFinished {
+            coordinator.finishCreateForm(self)
+        }
     }
     
     private func setupNavigation() {
@@ -185,6 +188,7 @@ extension CreateFormViewController: MFMessageComposeViewControllerDelegate {
             dismiss(animated: true)
         case .sent:
             dismiss(animated: true) {
+                self.isFinished = true
                 self.coordinator.finishCreateForm(self)
             }
         case .failed:

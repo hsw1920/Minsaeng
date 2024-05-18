@@ -45,6 +45,7 @@
 		60C6FBFA2BF1F74F005C2A69 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 60C6FBF92BF1F74F005C2A69 /* RealmSwift */; };
 		60C6FBFD2BF35553005C2A69 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6FBFC2BF35553005C2A69 /* UIColor+.swift */; };
 		60E9DA432BF8B8C800B1F280 /* MainReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E9DA422BF8B8C800B1F280 /* MainReactor.swift */; };
+		60E9DA452BF8C74600B1F280 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E9DA442BF8C74600B1F280 /* MainView.swift */; };
 		60FF96CF2BD545AE003DCD7C /* CreateFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96CE2BD545AE003DCD7C /* CreateFormViewController.swift */; };
 		60FF96D12BD545B4003DCD7C /* CreateFormReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96D02BD545B4003DCD7C /* CreateFormReactor.swift */; };
 		60FF96D52BD5474E003DCD7C /* CreateFormCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96D42BD5474E003DCD7C /* CreateFormCoordinator.swift */; };
@@ -86,6 +87,7 @@
 		60BBAC8C2BCD608F00F8DA5B /* ProfileCompleteReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCompleteReactor.swift; sourceTree = "<group>"; };
 		60C6FBFC2BF35553005C2A69 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		60E9DA422BF8B8C800B1F280 /* MainReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainReactor.swift; sourceTree = "<group>"; };
+		60E9DA442BF8C74600B1F280 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		60FF96CE2BD545AE003DCD7C /* CreateFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormViewController.swift; sourceTree = "<group>"; };
 		60FF96D02BD545B4003DCD7C /* CreateFormReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormReactor.swift; sourceTree = "<group>"; };
 		60FF96D42BD5474E003DCD7C /* CreateFormCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormCoordinator.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			children = (
 				60714C692BD27448008D8040 /* CoordinatorInterface */,
 				60714C652BD27414008D8040 /* MainViewController.swift */,
+				60E9DA442BF8C74600B1F280 /* MainView.swift */,
 				60E9DA422BF8B8C800B1F280 /* MainReactor.swift */,
 			);
 			path = Main;
@@ -472,6 +475,7 @@
 				60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */,
 				604D1A5F2BCFACBE00630CFC /* Coordinator.swift in Sources */,
 				604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */,
+				60E9DA452BF8C74600B1F280 /* MainView.swift in Sources */,
 				600D4F3B2BD7F0B0004CD12B /* CreateFormView.swift in Sources */,
 				600D4F3E2BD8F324004CD12B /* CreateFormComponent.swift in Sources */,
 				60FF96D82BD547D6003DCD7C /* CreateFormCoordinatorInterface.swift in Sources */,

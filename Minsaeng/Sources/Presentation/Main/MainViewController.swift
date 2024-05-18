@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ReactorKit
 import RxSwift
 import RxCocoa
 
@@ -14,18 +15,43 @@ final class MainViewController: BaseViewController {
         print("deinit: \(self)")
     }
 
-    private let testButton: UIButton = {
+    private let backBarItem: UIBarButtonItem = .init(title: "")
+    private let titleBarItem: UIBarButtonItem = .init()
+    private let profileBarItem: UIBarButtonItem = .init()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "홈"
+        label.textColor = .MSBlack
+        label.font = .systemFont(ofSize: 26, weight: .medium)
+        return label
+    }()
+    
+    private let profileButton: UIButton = {
+        let button = UIButton()
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24)
+        let image = UIImage(systemName: "person.fill", withConfiguration: imageConfig)
+        button.setImage(image, for: .normal)
+        button.tintColor = .MSBlack
+        return button
+    }()
+    
+    private let complaintButton: UIButton = {
         let button = UIButton()
         button.setTitle("메시지 생성", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.MSBlack, for: .normal)
         return button
     }()
     
     private let coordinator: MainCoordinatorInterface
     
-    init(coordinator: MainCoordinatorInterface) {
+    init(coordinator: MainCoordinatorInterface,
+         reactor: MainReactor) {
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
+        self.titleBarItem.customView = titleLabel
+        self.profileBarItem.customView = profileButton
+        self.reactor = reactor
     }
     
     required init?(coder: NSCoder) {
@@ -35,41 +61,45 @@ final class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigation()
-        bind()
     }
     
     func setupNavigation() {
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "",
-                                                           style: .plain,
-                                                           target: self,
-                                                           action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.fill"),
-                                                            style: .plain,
-                                                            target: self,
-                                                            action: #selector(didTapSettingButton))
+        navigationItem.backBarButtonItem = backBarItem
+        navigationItem.leftBarButtonItem = titleBarItem
+        navigationItem.rightBarButtonItem = profileBarItem
         navigationItem.backBarButtonItem?.tintColor = .MSMain
         navigationItem.rightBarButtonItem?.tintColor = .MSBlack
     }
     
     override func setupUI() {
-        view.addSubview(testButton)
-        testButton.snp.makeConstraints {
+        view.addSubview(complaintButton)
+        
+        complaintButton.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
     }
+}
+
+extension MainViewController: View {
+    func bind(reactor: MainReactor) {
+        bindAction(reactor: reactor)
+        bindState(reactor: reactor)
+    }
     
-    private func bind() {
-        testButton.rx.tap
+    private func bindAction(reactor: MainReactor) {
+        complaintButton.rx.tap
+            .map { MainReactor.Action.pushComplaint }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindState(reactor: MainReactor) {
+        reactor.state
+            .map(\.isPushComplaint)
+            .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushCameraView(option: .required)
             })
             .disposed(by: disposeBag)
-    }
-}
-
-extension MainViewController {
-    @objc
-    func didTapSettingButton() {
-        print("Start: Setting Flow")
     }
 }

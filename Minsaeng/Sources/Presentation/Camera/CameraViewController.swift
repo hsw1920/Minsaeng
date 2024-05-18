@@ -15,13 +15,12 @@ enum CaptureOption {
 }
 
 enum CaptureState {
-    case none, waiting, correct, finish
+    case none, waiting, correct
     var color: CGColor {
         switch self {
         case .none: return UIColor.clear.cgColor
         case .waiting: return UIColor.MSBorderGray.cgColor
         case .correct: return UIColor.MSMain.cgColor
-        case .finish: return UIColor.MSWarning.cgColor
         }
     }
 }
@@ -49,8 +48,6 @@ final class CircleView: UIView {
             borderLayer.strokeColor = UIColor.MSLightGray.cgColor
         case .correct:
             borderLayer.strokeColor = UIColor.MSMain.cgColor
-        case .finish:
-            borderLayer.strokeColor = UIColor.MSWarning.cgColor
         }
         
         let halfWidth = frame.width / 2
@@ -111,7 +108,7 @@ final class CameraViewController: BaseViewController {
     
     private let vehicleNumberlabel: UILabel = {
         let label = UILabel()
-        label.text = "01가1234"
+        label.text = nil
         label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textColor = .MSWhite
         return label
@@ -119,7 +116,7 @@ final class CameraViewController: BaseViewController {
     
     private let vehicleNumberView: UIView = {
         let view = UIView()
-        view.backgroundColor = .MSBlack
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -277,21 +274,21 @@ final class CameraViewController: BaseViewController {
                     owner.captureButtonView.state = state
                     owner.captureButtonView.layoutSubviews()
 
-                    if state == .none {
+                    switch state {
+                    case .none:
                         owner.vehicleNumberlabel.text = nil
-                        owner.captureButton.backgroundColor = .MSWhite
                         owner.vehicleNumberView.backgroundColor = .clear
+                        owner.captureButton.backgroundColor = .MSWhite
                         owner.captureButton.isEnabled = false
-                    } else if state == .waiting {
-                        owner.captureButton.backgroundColor = .MSDarkGray
+                    case .waiting:
                         owner.vehicleNumberlabel.text = "차량번호를 인식시켜 주세요."
                         owner.vehicleNumberView.backgroundColor = .MSDarkGray
+                        owner.captureButton.backgroundColor = .MSDarkGray
                         owner.captureButton.isEnabled = false
-                    }
-                    else {
-                        owner.captureButton.backgroundColor = .MSWhite
+                    case .correct:
                         owner.vehicleNumberlabel.text = "01가1234"
                         owner.vehicleNumberView.backgroundColor = .MSMain
+                        owner.captureButton.backgroundColor = .MSWhite
                         owner.captureButton.isEnabled = true
                     }
                 }
@@ -436,7 +433,7 @@ extension CameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let currentTime = Int(Date().timeIntervalSince1970) % 60  // 현재 시간의 초
         
         if currentTime >= 0 && currentTime < 10 || currentTime >= 30 && currentTime <= 40 {
-            return 2
+            return 1
         } else if currentTime >= 10 && currentTime < 20 || currentTime >= 40 && currentTime <= 50 {
             return 2
         } else {

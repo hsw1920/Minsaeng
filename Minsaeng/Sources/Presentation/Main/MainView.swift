@@ -9,7 +9,13 @@ import UIKit
 
 final class MainView: UIView {
     
-    private let scrollView: UIScrollView = .init()
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.delaysContentTouches = false
+        return scrollView
+    }()
+    
     private let contentView: UIView = .init()
     
     let titleLabel: UILabel = {
@@ -29,10 +35,46 @@ final class MainView: UIView {
         return button
     }()
     
+    private let complaintView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .MSBackgroundGray
+        view.layer.cornerRadius = 12
+        return view
+    }()
+    private let pinIcon: UILabel = {
+        let label = UILabel()
+        label.text = "📌"
+        label.font = .systemFont(ofSize: 28)
+        return label
+    }()
+    private let complaintDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "불법 주정차된 차량을\n촬영하여 신고할 수 있어요"
+        label.numberOfLines = 2
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.textColor = .MSBlack
+        return label
+    }()
     let complaintButton: UIButton = {
         let button = UIButton()
-        button.setTitle("메시지 생성", for: .normal)
-        button.setTitleColor(.MSBlack, for: .normal)
+        
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 35)
+        let image = UIImage(systemName: "camera.circle.fill", withConfiguration: imageConfig)
+        button.setImage(image, for: .normal)
+        button.setImage(image, for: .highlighted)
+        
+        button.setTitle("신고하기", for: .normal)
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
+        
+        button.setBackgroundColor(.MSMain, for: .normal)
+        button.setBackgroundColor(.MSLightMain, for: .highlighted)
+        
+        button.tintColor = .MSWhite
+        
+        button.layer.cornerRadius = 12
+        button.clipsToBounds = true
         return button
     }()
     
@@ -55,9 +97,30 @@ final class MainView: UIView {
             $0.width.height.equalToSuperview()
         }
         
-        self.addSubview(complaintButton)
+        [complaintView].forEach { contentView.addSubview($0) }
+
+        [pinIcon, complaintDescriptionLabel, complaintButton].forEach { complaintView.addSubview($0) }
+        
+        complaintView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.top.equalToSuperview().inset(21)
+            $0.height.equalTo(200)
+        }
+        
+        pinIcon.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(24)
+            $0.top.equalToSuperview().inset(32)
+        }
+        
+        complaintDescriptionLabel.snp.makeConstraints {
+            $0.leading.equalTo(pinIcon.snp.trailing).offset(12)
+            $0.top.equalTo(pinIcon)
+        }
+        
         complaintButton.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(12)
+            $0.bottom.equalToSuperview().inset(12)
+            $0.height.equalTo(62)
         }
     }
     

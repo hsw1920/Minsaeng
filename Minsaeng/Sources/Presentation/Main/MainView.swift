@@ -78,6 +78,21 @@ final class MainView: UIView {
         return button
     }()
     
+    let tipButton: UIButton = {
+        let button = UIButton()
+        
+        button.setTitle("🚨 신고 요령이 궁금해요", for: .normal)
+        button.setTitleColor(.MSDarkGray, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        
+        button.setBackgroundColor(.MSBackgroundGray, for: .normal)
+        button.setBackgroundColor(.MSGray, for: .highlighted)
+        
+        button.layer.cornerRadius = 12
+        button.clipsToBounds = true
+        return button
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -97,7 +112,7 @@ final class MainView: UIView {
             $0.width.height.equalToSuperview()
         }
         
-        [complaintView].forEach { contentView.addSubview($0) }
+        [complaintView, tipButton].forEach { contentView.addSubview($0) }
 
         [pinIcon, complaintDescriptionLabel, complaintButton].forEach { complaintView.addSubview($0) }
         
@@ -120,6 +135,12 @@ final class MainView: UIView {
         complaintButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(12)
             $0.bottom.equalToSuperview().inset(12)
+            $0.height.equalTo(62)
+        }
+        
+        tipButton.snp.makeConstraints {
+            $0.top.equalTo(complaintView.snp.bottom).offset(24)
+            $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(62)
         }
     }

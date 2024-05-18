@@ -93,6 +93,12 @@ final class MainView: UIView {
         return button
     }()
     
+    private let divider: UIView = {
+        let view = UIView()
+        view.backgroundColor = .MSBackgroundGray
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -112,7 +118,7 @@ final class MainView: UIView {
             $0.width.height.equalToSuperview()
         }
         
-        [complaintView, tipButton].forEach { contentView.addSubview($0) }
+        [complaintView, tipButton, divider].forEach { contentView.addSubview($0) }
 
         [pinIcon, complaintDescriptionLabel, complaintButton].forEach { complaintView.addSubview($0) }
         
@@ -142,6 +148,11 @@ final class MainView: UIView {
             $0.top.equalTo(complaintView.snp.bottom).offset(24)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(62)
+        }
+        divider.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(tipButton.snp.bottom).offset(40)
+            $0.height.equalTo(1)
         }
     }
     

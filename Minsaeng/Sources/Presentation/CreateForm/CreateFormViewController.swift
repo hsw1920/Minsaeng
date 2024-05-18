@@ -15,13 +15,14 @@ final class CreateFormViewController: BaseViewController {
         print("deinit: \(self)")
     }
     
-    private let coordinator: CreateFormCoordinator
+    private let coordinator: CreateFormCoordinatorInterface
     private let createFormView = CreateFormView()
+    private var isFinished = false
     
     var captureImage = PublishRelay<Data?>()
     
     // MARK: Init
-    init(with reactor: CreateFormReactor, coordinator: CreateFormCoordinator) {
+    init(with reactor: CreateFormReactor, coordinator: CreateFormCoordinatorInterface) {
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
@@ -34,6 +35,22 @@ final class CreateFormViewController: BaseViewController {
     override func loadView() {
         self.view = createFormView
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNavigation()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if !isFinished {
+            coordinator.finishCreateForm(self)
+        }
+    }
+    
+    private func setupNavigation() {
+        title = "민원 문자 생성"
+    }
 }
 
 extension CreateFormViewController: View {
@@ -43,9 +60,7 @@ extension CreateFormViewController: View {
         
         createFormView.shootPhotoButton.rx.tap
             .bind(with: self) { owner, _ in
-                let vc = CameraViewController()
-                vc.modalPresentationStyle = .overFullScreen
-                owner.present(vc, animated: true)
+                owner.coordinator.presentCamera(owner, option: .optional)
             }
             .disposed(by: disposeBag)
         
@@ -90,6 +105,11 @@ extension CreateFormViewController: View {
             .map { CreateFormReactor.Action.shootCamera($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        createFormView.removePhotoButton.rx.tap
+            .map { CreateFormReactor.Action.removeOptionalPhoto }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(reactor: CreateFormReactor) {
@@ -131,6 +151,13 @@ extension CreateFormViewController: View {
                 owner.createFormView.addOptionalPhoto(with: data)
             }
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.requiredImageData)
+            .bind(with: self) { owner, data in
+                owner.createFormView.addRequiredPhoto(with: data)
+            }
+            .disposed(by: disposeBag)
     }
 }
 
@@ -158,13 +185,10 @@ extension CreateFormViewController: MFMessageComposeViewControllerDelegate {
         self.stopActivityIndicator()
         switch result {
         case .cancelled:
-            print(">>> Cancel")
-            dismiss(animated: true) {
-                self.coordinator.finishCreateForm(self)
-            }
+            dismiss(animated: true)
         case .sent:
-            print(">>> Sent Message: \(controller.body ?? "")")
             dismiss(animated: true) {
+                self.isFinished = true
                 self.coordinator.finishCreateForm(self)
             }
         case .failed:

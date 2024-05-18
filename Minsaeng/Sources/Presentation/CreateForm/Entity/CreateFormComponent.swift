@@ -12,6 +12,7 @@ protocol CreateFormComponent {
     var vehicleNumber: String { get }
     var date: Date { get }
     var profile: Profile { get }
+    var requiredImageData: Data { get }
 }
 
 struct CreateFormComponentImpl: CreateFormComponent {
@@ -20,7 +21,8 @@ struct CreateFormComponentImpl: CreateFormComponent {
     let detailContent: String
     let date: Date
     let profile: Profile
-    let imageData: Data?
+    let requiredImageData: Data
+    let optionalImageData: Data?
     let isReceived: Bool
     
     init(vehicleNumber: String,
@@ -29,13 +31,15 @@ struct CreateFormComponentImpl: CreateFormComponent {
          date: Date = .now,
          profile: Profile,
          isReceived: Bool,
-         imageData: Data?) {
+         requiredImageData: Data,
+         optionalImageData: Data?) {
         self.violationType = violationType
         self.vehicleNumber = vehicleNumber
         self.detailContent = detailContent
         self.date = date
         self.profile = profile
         self.isReceived = isReceived
-        self.imageData = imageData
+        self.requiredImageData = requiredImageData
+        self.optionalImageData = optionalImageData
     }
 }

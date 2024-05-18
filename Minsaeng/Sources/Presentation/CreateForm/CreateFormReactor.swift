@@ -18,6 +18,7 @@ final class CreateFormReactor: Reactor {
         case confirmButtonTapped
         case editDetailContent(String)
         case shootCamera(Data?)
+        case removeOptionalPhoto
     }
     
     enum Mutation {
@@ -27,6 +28,7 @@ final class CreateFormReactor: Reactor {
         case setDetailContentString(String)
         case toggleReply
         case updateCaptureImage(Data)
+        case deleteCaptureImage
     }
     
     struct State {
@@ -34,6 +36,7 @@ final class CreateFormReactor: Reactor {
         var vehicleNumber: String = ""
         var detailContent: String = ""
         var isSelectedReplyButton: Bool = true
+        var requiredImageData: Data = Data()
         var captureImageData: Data?
     }
     
@@ -48,6 +51,7 @@ final class CreateFormReactor: Reactor {
         self.initialState.violations[component.violationType.rawValue].isSelected = true
         self.initialState.detailContent = component.violationType.description
         self.initialState.vehicleNumber = component.vehicleNumber
+        self.initialState.requiredImageData = component.requiredImageData
     }
     
     deinit {
@@ -75,6 +79,8 @@ final class CreateFormReactor: Reactor {
         case .shootCamera(let image):
             guard let image else { return .empty() }
             return .just(.updateCaptureImage(image))
+        case .removeOptionalPhoto:
+            return .just(.deleteCaptureImage)
         }
     }
     
@@ -85,6 +91,7 @@ final class CreateFormReactor: Reactor {
         case .setComponent:
             newState.vehicleNumber = initialState.vehicleNumber
             newState.detailContent = initialState.detailContent
+            newState.requiredImageData = initialState.requiredImageData
         case .setViolation(let indexPath):
             newState.violations = parseSelectedViolationType(with: newState.violations, 
                                                              index: indexPath.row)
@@ -96,6 +103,8 @@ final class CreateFormReactor: Reactor {
             newState.detailContent = text
         case .updateCaptureImage(let image):
             newState.captureImageData = image
+        case .deleteCaptureImage:
+            newState.captureImageData = nil
         }
         return newState
     }
@@ -119,7 +128,8 @@ extension CreateFormReactor {
         let vehicleNumber = currentState.vehicleNumber
         let detailContent = currentState.detailContent
         let date = Date.now
-        let imageData = currentState.captureImageData
+        let requiredImageData = currentState.requiredImageData
+        let optionalImageData = currentState.captureImageData
         let isReceived = currentState.isSelectedReplyButton
         
         return CreateFormComponentImpl(vehicleNumber: vehicleNumber,
@@ -127,7 +137,8 @@ extension CreateFormReactor {
                                        detailContent: detailContent,
                                        date: date,
                                        profile: component.profile,
-                                       isReceived: isReceived,
-                                       imageData: imageData)
+                                       isReceived: isReceived, 
+                                       requiredImageData: requiredImageData,
+                                       optionalImageData: optionalImageData)
     }
 }

@@ -8,6 +8,6 @@
 import Foundation
 
 protocol MainCoordinatorInterface {
-    func pushCreateView()
+    func pushCameraView(option: CaptureOption)
     func pushSettingView()
 }

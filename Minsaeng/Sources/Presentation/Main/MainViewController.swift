@@ -39,14 +39,16 @@ final class MainViewController: BaseViewController {
     }
     
     func setupNavigation() {
-        navigationItem.rightBarButtonItem =
-        UIBarButtonItem(
-            image: UIImage(systemName: "person.fill"),
-            style: .plain,
-            target: self,
-            action: #selector(didTapSettingButton)
-        )
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "",
+                                                           style: .plain,
+                                                           target: self,
+                                                           action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.fill"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(didTapSettingButton))
+        navigationItem.backBarButtonItem?.tintColor = .MSMain
+        navigationItem.rightBarButtonItem?.tintColor = .MSBlack
     }
     
     override func setupUI() {
@@ -59,7 +61,7 @@ final class MainViewController: BaseViewController {
     private func bind() {
         testButton.rx.tap
             .bind(with: self, onNext: { owner, _ in
-                owner.coordinator.pushCreateView()
+                owner.coordinator.pushCameraView(option: .required)
             })
             .disposed(by: disposeBag)
     }

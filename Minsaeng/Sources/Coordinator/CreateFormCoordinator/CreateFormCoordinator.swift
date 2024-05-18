@@ -18,9 +18,11 @@ final class CreateFormCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
+    var imageData: Data
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, imageData: Data) {
         self.navigationController = navigationController
+        self.imageData = imageData
     }
     
     deinit {
@@ -42,12 +44,14 @@ final class CreateFormCoordinator: Coordinator {
                                                 detailContent: violation.description,
                                                 profile: profile,
                                                 isReceived: true,
-                                                imageData: nil)
+                                                requiredImageData: imageData, 
+                                                optionalImageData: nil)
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         viewController.modalPresentationStyle = .overFullScreen
         
-        navigationController.present(viewController, animated: true)
+//        navigationController.present(viewController, animated: true)
+        navigationController.pushViewController(viewController, animated: true)
         
         bind(with: viewController,
              reactor: reactor)
@@ -85,21 +89,51 @@ final class CreateFormCoordinator: Coordinator {
         회신 동의 여부: \(component.isReceived ? "예" : "아니오")
         """
         
-        if let image = UIImage(data: component.imageData ?? Data()),
-           let imageData = image.pngData() {
-            messageViewController.addAttachmentData(imageData, typeIdentifier: "public.png", filename: "image.png")
-        }
+        let requiredImageData = component.requiredImageData
+        messageViewController.addAttachmentData(requiredImageData, typeIdentifier: "required.png", filename: "requiredImage.png")
         
+        if let optionalImage = component.optionalImageData {
+            messageViewController.addAttachmentData(optionalImage, typeIdentifier: "optional.png", filename: "optionalImage.png")
+        }
+
         viewController.present(messageViewController, animated: true)
     }
 }
 
 extension CreateFormCoordinator: CreateFormCoordinatorInterface {
+    func presentCamera(_ viewController: CreateFormViewController, option: CaptureOption) {
+        let coordinator = CameraCoordinator(navigationController: navigationController, 
+                                            captureOption: option)
+        coordinator.finishDelegate = self
+        coordinator.start(option: option)
+    }
+    
     func finishCreateForm(_ viewController: CreateFormViewController) {
         // MARK: 왜 강제로 해제해야할까?
         disposeBag = DisposeBag()
-        viewController.dismiss(animated: true)
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+        navigationController.popViewController(animated: true)
+    }
+}
+
+extension CreateFormCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        print("End: \(childCoordinator.type) Flow")
+        removeChildCoordinator(child: childCoordinator)
+    }
+    
+    func coordinatorDidFinishWithData(childCoordinator: Coordinator, data: Data) {
+        print("End: \(childCoordinator.type) Flow")
+        removeChildCoordinator(child: childCoordinator)
+        
+        switch childCoordinator.type {
+        case .cameraOptional:
+            if let presentingVC = navigationController.viewControllers.first(where: { $0 is CreateFormViewController }) as? CreateFormViewController {
+                presentingVC.captureImage.accept(data)
+            }
+        default:
+            break
+        }
     }
 }
 

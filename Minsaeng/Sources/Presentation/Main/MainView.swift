@@ -55,6 +55,7 @@ final class MainView: UIView {
         label.textColor = .MSBlack
         return label
     }()
+    
     let complaintButton: UIButton = {
         let button = UIButton()
         
@@ -99,9 +100,62 @@ final class MainView: UIView {
         return view
     }()
     
+    private let recentComplaintSubTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "최근 신고 내역"
+        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.textColor = .MSBlack
+        return label
+    }()
+    
+    private let recentComplaintCountLabel: UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .MSBlack
+        return label
+    }()
+    
+    let viewAllButton: UIButton = .init()
+    
+    private let viewAllLabel: UILabel = {
+        let label = UILabel()
+        label.text = "더 보기"
+        label.font = .systemFont(ofSize: 14, weight: .bold)
+        label.textColor = .MSBlack
+        return label
+    }()
+    
+    private let viewAllIcon: UIImageView = {
+        let image = UIImage(systemName: "chevron.right")
+        let imageView = UIImageView(image: image)
+        imageView.tintColor = .MSBlack
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    let recentComplaintCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero,
+                                              collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(RecentComplaintCell.self,
+                                forCellWithReuseIdentifier: RecentComplaintCell.reuseIdentifier)
+        
+        return collectionView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+    
+    override func layoutSubviews() {
+        setCollectionView()
     }
     
     private func setupUI() {
@@ -115,10 +169,16 @@ final class MainView: UIView {
         
         contentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.width.height.equalToSuperview()
+            $0.width.equalToSuperview()
         }
         
-        [complaintView, tipButton, divider].forEach { contentView.addSubview($0) }
+        [complaintView, 
+         tipButton,
+         divider, 
+         recentComplaintSubTitleLabel, recentComplaintCountLabel, viewAllButton,
+         recentComplaintCollectionView].forEach {
+            contentView.addSubview($0)
+        }
 
         [pinIcon, complaintDescriptionLabel, complaintButton].forEach { complaintView.addSubview($0) }
         
@@ -145,19 +205,64 @@ final class MainView: UIView {
         }
         
         tipButton.snp.makeConstraints {
-            $0.top.equalTo(complaintView.snp.bottom).offset(24)
+            $0.top.equalTo(complaintView.snp.bottom).offset(12)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(62)
         }
+        
         divider.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.top.equalTo(tipButton.snp.bottom).offset(40)
+            $0.top.equalTo(tipButton.snp.bottom).offset(24)
             $0.height.equalTo(1)
+        }
+        
+        recentComplaintSubTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(divider.snp.bottom).offset(16)
+            $0.height.equalTo(25)
+            $0.leading.equalToSuperview().inset(28)
+        }
+        
+        recentComplaintCountLabel.snp.makeConstraints {
+            $0.leading.equalTo(recentComplaintSubTitleLabel.snp.trailing).offset(4)
+            $0.centerY.equalTo(recentComplaintSubTitleLabel)
+            $0.height.equalTo(25)
+        }
+        
+        viewAllButton.snp.makeConstraints {
+            $0.centerY.equalTo(recentComplaintSubTitleLabel)
+            $0.trailing.equalToSuperview().inset(28)
+            $0.height.equalTo(25)
+        }
+        
+        [viewAllLabel, viewAllIcon].forEach { viewAllButton.addSubview($0) }
+        viewAllLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview()
+        }
+        viewAllIcon.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(viewAllLabel.snp.trailing).offset(4)
+            $0.trailing.equalToSuperview()
+        }
+        
+        recentComplaintCollectionView.snp.makeConstraints {
+            $0.top.equalTo(recentComplaintSubTitleLabel.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.greaterThanOrEqualTo(12)
+            $0.height.equalTo(200)
         }
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupUI()
+    private func setCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 8.0
+        layout.itemSize = CGSize(width: 124, height: 200)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        recentComplaintCollectionView.collectionViewLayout = layout
+        
+        // MARK: 셀의 오른쪽을 뷰 포트의 오른쪽으로 맞춤
+        recentComplaintCollectionView.scrollToItem(at: [0,0], at: .right, animated: false)
     }
 }
+

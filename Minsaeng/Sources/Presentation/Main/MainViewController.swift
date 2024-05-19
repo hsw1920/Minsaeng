@@ -60,6 +60,11 @@ extension MainViewController: View {
     }
     
     private func bindAction(reactor: MainReactor) {
+        self.rx.methodInvoked(#selector(UIViewController.viewDidLoad))
+            .map{ _ in MainReactor.Action.viewDidLoad }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         mainView.complaintButton.rx.tap
             .map { MainReactor.Action.pushComplaint }
             .bind(to: reactor.action)
@@ -72,6 +77,20 @@ extension MainViewController: View {
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushCameraView(option: .required)
+            })
+            .disposed(by: disposeBag)
+
+        reactor.state.map(\.complaints.count)
+            .bind(onNext: { [weak self] count in
+                guard let self else { return }
+                mainView.recentComplaintCountLabel.text = String(count)
+                
+                if count == 0 {
+                    let backgroundView = EmptyComplaintBackgroundView()
+                    mainView.recentComplaintCollectionView.backgroundView = backgroundView
+                } else {
+                    mainView.recentComplaintCollectionView.backgroundView = nil
+                }
             })
             .disposed(by: disposeBag)
         

@@ -10,6 +10,7 @@ import RxCocoa
 
 final class MainReactor: Reactor {
     enum Action {
+        case viewDidLoad
         case pushComplaint
     }
     
@@ -28,6 +29,10 @@ final class MainReactor: Reactor {
     // MARK: Mutation
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .viewDidLoad:
+            return Observable.concat([
+                .empty()
+            ])
         case .pushComplaint:
             return Observable.just(.goToCamera)
         }
@@ -42,5 +47,4 @@ final class MainReactor: Reactor {
         }
         return newState
     }
-
 }

@@ -108,9 +108,8 @@ final class MainView: UIView {
         return label
     }()
     
-    private let recentComplaintCountLabel: UILabel = {
+    let recentComplaintCountLabel: UILabel = {
         let label = UILabel()
-        label.text = "0"
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .MSBlack
         return label
@@ -262,7 +261,59 @@ final class MainView: UIView {
         recentComplaintCollectionView.collectionViewLayout = layout
         
         // MARK: 셀의 오른쪽을 뷰 포트의 오른쪽으로 맞춤
-        recentComplaintCollectionView.scrollToItem(at: [0,0], at: .right, animated: false)
+        guard let isEmptyView = recentComplaintCollectionView.backgroundView else {
+            recentComplaintCollectionView.scrollToItem(at: [0,0], at: .right, animated: false)
+            return
+        }
     }
 }
 
+final class EmptyComplaintBackgroundView: UIView {
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.distribution = .equalSpacing
+        return stackView
+    }()
+    
+    private let emptyImageView: UIImageView = {
+        let image = UIImage(named: "CommonIcon")
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "불법 주정차된 차량을 신고해주세요!"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .MSDarkGray
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func setupView() {
+        addSubview(stackView)
+        [emptyImageView, descriptionLabel].forEach { stackView.addArrangedSubview($0) }
+        
+        emptyImageView.snp.makeConstraints {
+            $0.height.equalTo(100)
+            $0.width.equalTo(descriptionLabel.snp.width)
+        }
+        
+        stackView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+    }
+}

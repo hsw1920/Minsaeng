@@ -12,14 +12,17 @@ final class MainReactor: Reactor {
     enum Action {
         case viewDidLoad
         case pushComplaint
+        case pushViewAllComplaints
     }
     
     enum Mutation {
         case goToCamera
+        case goToViewAllComplaints
     }
     
     struct State {
         var isPushComplaint: Bool = false
+        var isPushViewAllComplaints: Bool = false
         var complaints: [RecentComplaint] = RecentComplaint.list
     }
     
@@ -35,6 +38,8 @@ final class MainReactor: Reactor {
             ])
         case .pushComplaint:
             return Observable.just(.goToCamera)
+        case .pushViewAllComplaints:
+            return Observable.just(.goToViewAllComplaints)
         }
     }
     
@@ -44,6 +49,8 @@ final class MainReactor: Reactor {
         switch mutation {
         case .goToCamera:
             newState.isPushComplaint = true
+        case .goToViewAllComplaints:
+            newState.isPushViewAllComplaints = true
         }
         return newState
     }

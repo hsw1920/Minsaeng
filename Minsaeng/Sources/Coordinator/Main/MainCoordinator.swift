@@ -60,6 +60,10 @@ extension MainCoordinator: MainCoordinatorInterface {
         coordinator.start()
     }
     
+    func pushViewAllComplaints() {
+        print("viewAllComplaints")
+    }
+    
     func pushSettingView() {
         // setting Flow의 start 화면으로 push합니다.
     }

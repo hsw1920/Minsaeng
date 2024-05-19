@@ -9,5 +9,6 @@ import Foundation
 
 protocol MainCoordinatorInterface {
     func pushCameraView(option: CaptureOption)
+    func pushViewAllComplaints()
     func pushSettingView()
 }

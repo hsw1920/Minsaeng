@@ -9,12 +9,14 @@ import UIKit
 
 extension UIColor {
     class var MSMain: UIColor { return UIColor(hex: 0x4AA8FF) }
+    class var MSLightMain: UIColor { return UIColor(hex: 0x88CCFF) }
     class var MSWarning: UIColor { return UIColor(hex: 0xFF8676) }
     class var MSBlack: UIColor { return UIColor(hex: 0x111111) }
     class var MSDarkGray: UIColor { return UIColor(hex: 0x767676) }
     class var MSGray: UIColor { return UIColor(hex: 0xD9D9D9) }
     class var MSLightGray: UIColor { return UIColor(hex: 0xFAFAFA) }
     class var MSWhite: UIColor { return UIColor(hex: 0xFFFFFF) }
+    class var MSBackgroundGray: UIColor { return UIColor(hex: 0xF5F5F9) }
     class var MSBorderGray: UIColor { return UIColor(hex: 0xD9D9D9) }
 }
 

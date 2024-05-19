@@ -16,6 +16,18 @@ enum Violation: Int, CaseIterable {
     case sidewalk
     case etc
     
+    var toString: String {
+        switch self {
+        case .hydrant: "소화전"
+        case .intersection: "교차로 모퉁이"
+        case .busStop: "버스 정류소"
+        case .crosswalk: "횡단보도"
+        case .schoolZone: "어린이 보호구역"
+        case .sidewalk: "인도"
+        case .etc: "기타"
+        }
+    }
+    
     var description: String {
         switch self {
         case .hydrant: "소화전에 불법주정차"

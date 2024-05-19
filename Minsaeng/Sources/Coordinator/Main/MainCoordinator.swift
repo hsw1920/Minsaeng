@@ -25,8 +25,11 @@ final class MainCoordinator: Coordinator {
     
     func start() {
         print("Start: Main Flow")
-        let viewController = MainViewController(coordinator: self)
-        navigationController.setViewControllers([viewController], animated: true)
+        let reactor = MainReactor()
+        let viewController = MainViewController(coordinator: self,
+                                                reactor: reactor)
+        navigationController.setViewControllers([viewController], 
+                                                animated: true)
         
         bind()
     }
@@ -55,6 +58,10 @@ extension MainCoordinator: MainCoordinatorInterface {
         coordinator.finishDelegate = self
         childCoordinators.append(coordinator)
         coordinator.start()
+    }
+    
+    func pushViewAllComplaints() {
+        print("viewAllComplaints")
     }
     
     func pushSettingView() {

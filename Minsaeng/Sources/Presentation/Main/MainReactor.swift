@@ -19,6 +19,7 @@ final class MainReactor: Reactor {
     
     struct State {
         var isPushComplaint: Bool = false
+        var complaints: [RecentComplaint] = RecentComplaint.list
     }
     
     // MARK: Property

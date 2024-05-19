@@ -74,5 +74,15 @@ extension MainViewController: View {
                 owner.coordinator.pushCameraView(option: .required)
             })
             .disposed(by: disposeBag)
+        
+        reactor.state
+            .map(\.complaints)
+            .bind(to: mainView.recentComplaintCollectionView.rx.items(
+                cellIdentifier: RecentComplaintCell.reuseIdentifier,
+                cellType: RecentComplaintCell.self
+            )) { index, item, cell in
+                cell.configure(item: item)
+            }
+            .disposed(by: disposeBag)
     }
 }

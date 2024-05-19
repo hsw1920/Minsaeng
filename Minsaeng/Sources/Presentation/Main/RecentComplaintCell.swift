@@ -70,8 +70,8 @@ final class RecentComplaintCell: UICollectionViewCell {
         }
     }
     
-    func configure(item: String) {
-        violationTypeLabel.text = item
-        dateLabel.text = item
+    func configure(item: RecentComplaint) {
+        violationTypeLabel.text = item.violationType.toString
+        dateLabel.text = item.date.description
     }
 }

@@ -71,7 +71,9 @@ final class RecentComplaintCell: UICollectionViewCell {
     }
     
     func configure(item: RecentComplaint) {
+        let formatter = MSDateFormatter()
+        let dateString = formatter.getY4M2D4(date: item.date)
+        dateLabel.text = dateString
         violationTypeLabel.text = item.violationType.toString
-        dateLabel.text = item.date.description
     }
 }

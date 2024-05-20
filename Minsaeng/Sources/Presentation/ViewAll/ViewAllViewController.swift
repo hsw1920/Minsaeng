@@ -16,6 +16,8 @@ final class ViewAllViewController: BaseViewController {
         coordinator.finish()
     }
     
+    private let viewAllView = ViewAllView()
+    
     private let coordinator: ViewAllCoordinatorInterface
     
     init(coordinator: ViewAllCoordinatorInterface,
@@ -27,6 +29,10 @@ final class ViewAllViewController: BaseViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        self.view = viewAllView
     }
     
     override func viewDidLoad() {
@@ -50,12 +56,19 @@ extension ViewAllViewController: View {
         self.rx.methodInvoked(#selector(UIViewController.viewDidLoad))
             .map{ _ in ViewAllReactor.Action.viewDidLoad }
             .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
+            .disposed(by: disposeBag)   
     }
     
     private func bindState(reactor: ViewAllReactor) {
-        
+        reactor.state
+            .map(\.complaints)
+            .bind(to: viewAllView.complaintsCollectionView.rx.items(
+                cellIdentifier: ViewAllComplaintsCell.reuseIdentifier,
+                cellType: ViewAllComplaintsCell.self
+            )) { index, item, cell in
+                cell.configure(item: item)
+            }
+            .disposed(by: disposeBag)
     }
 }
 

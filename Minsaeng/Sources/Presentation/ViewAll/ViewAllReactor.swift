@@ -22,7 +22,7 @@ final class ViewAllReactor: Reactor {
     }
     
     struct State {
-        
+        var complaints: [Complaint] = Complaint.list
     }
     
     // MARK: Property
@@ -41,7 +41,6 @@ final class ViewAllReactor: Reactor {
     // MARK: Reduce
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
-        
         return newState
     }
 }

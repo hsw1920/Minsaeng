@@ -47,6 +47,10 @@
 		60BBAC892BCD604300F8DA5B /* ProfileCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBAC882BCD604300F8DA5B /* ProfileCompleteViewController.swift */; };
 		60BBAC8B2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBAC8A2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift */; };
 		60BBAC8D2BCD608F00F8DA5B /* ProfileCompleteReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBAC8C2BCD608F00F8DA5B /* ProfileCompleteReactor.swift */; };
+		60C21BC12BFB008C00557B5B /* ViewAllView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C21BC02BFB008C00557B5B /* ViewAllView.swift */; };
+		60C21BC42BFB033A00557B5B /* UserComplaintInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C21BC32BFB033A00557B5B /* UserComplaintInfoView.swift */; };
+		60C21BC62BFB358900557B5B /* ViewAllComplaintsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C21BC52BFB358900557B5B /* ViewAllComplaintsCell.swift */; };
+		60C21BC82BFB3C1200557B5B /* Complaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C21BC72BFB3C1200557B5B /* Complaint.swift */; };
 		60C37DA42BF8DB0C00F84A14 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C37DA32BF8DB0C00F84A14 /* UIButton+.swift */; };
 		60C37DA62BF8E26B00F84A14 /* RecentComplaintCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C37DA52BF8E26B00F84A14 /* RecentComplaintCell.swift */; };
 		60C6FBF82BF1F74F005C2A69 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 60C6FBF72BF1F74F005C2A69 /* Realm */; };
@@ -99,6 +103,10 @@
 		60BBAC882BCD604300F8DA5B /* ProfileCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCompleteViewController.swift; sourceTree = "<group>"; };
 		60BBAC8A2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePhoneNumberCreationReactor.swift; sourceTree = "<group>"; };
 		60BBAC8C2BCD608F00F8DA5B /* ProfileCompleteReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCompleteReactor.swift; sourceTree = "<group>"; };
+		60C21BC02BFB008C00557B5B /* ViewAllView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAllView.swift; sourceTree = "<group>"; };
+		60C21BC32BFB033A00557B5B /* UserComplaintInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserComplaintInfoView.swift; sourceTree = "<group>"; };
+		60C21BC52BFB358900557B5B /* ViewAllComplaintsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAllComplaintsCell.swift; sourceTree = "<group>"; };
+		60C21BC72BFB3C1200557B5B /* Complaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Complaint.swift; sourceTree = "<group>"; };
 		60C37DA32BF8DB0C00F84A14 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		60C37DA52BF8E26B00F84A14 /* RecentComplaintCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentComplaintCell.swift; sourceTree = "<group>"; };
 		60C6FBFC2BF35553005C2A69 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
@@ -235,6 +243,7 @@
 			children = (
 				60784A492BF1E76500F4AC99 /* Profile.swift */,
 				608B63772BFA146100756242 /* RecentComplaint.swift */,
+				60C21BC72BFB3C1200557B5B /* Complaint.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -253,6 +262,8 @@
 				60813BF42BFAF90300676785 /* CoordinatorInterface */,
 				60813BF52BFAF92500676785 /* ViewAllViewController.swift */,
 				60813BF72BFAF95200676785 /* ViewAllReactor.swift */,
+				60C21BC52BFB358900557B5B /* ViewAllComplaintsCell.swift */,
+				60C21BC22BFB02F400557B5B /* View */,
 			);
 			path = ViewAll;
 			sourceTree = "<group>";
@@ -399,6 +410,15 @@
 			path = ProfilePhoneNumberCreation;
 			sourceTree = "<group>";
 		};
+		60C21BC22BFB02F400557B5B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				60C21BC02BFB008C00557B5B /* ViewAllView.swift */,
+				60C21BC32BFB033A00557B5B /* UserComplaintInfoView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		60C6FBFB2BF3554C005C2A69 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -523,9 +543,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60C21BC82BFB3C1200557B5B /* Complaint.swift in Sources */,
 				604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */,
 				60FF96CF2BD545AE003DCD7C /* CreateFormViewController.swift in Sources */,
 				608C957B2BCD0E4A00B334EF /* ProfileNameCreationReactor.swift in Sources */,
+				60C21BC42BFB033A00557B5B /* UserComplaintInfoView.swift in Sources */,
 				60813BF02BFAF88500676785 /* ViewAllCoordinator.swift in Sources */,
 				6089FE252BCCC20800E42E71 /* BaseViewController.swift in Sources */,
 				608B63782BFA146100756242 /* RecentComplaint.swift in Sources */,
@@ -554,6 +576,7 @@
 				60FF96D52BD5474E003DCD7C /* CreateFormCoordinator.swift in Sources */,
 				60784A472BF1E6F500F4AC99 /* RMProfile.swift in Sources */,
 				60E9DA432BF8B8C800B1F280 /* MainReactor.swift in Sources */,
+				60C21BC12BFB008C00557B5B /* ViewAllView.swift in Sources */,
 				60813BF32BFAF90000676785 /* ViewAllCoordinatorInterface.swift in Sources */,
 				60BBAC872BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift in Sources */,
 				608B637B2BFA184200756242 /* MSDateFormatter.swift in Sources */,
@@ -565,6 +588,7 @@
 				60813BF82BFAF95200676785 /* ViewAllReactor.swift in Sources */,
 				600D4F402BD8F347004CD12B /* Violation.swift in Sources */,
 				60C6FBFD2BF35553005C2A69 /* UIColor+.swift in Sources */,
+				60C21BC62BFB358900557B5B /* ViewAllComplaintsCell.swift in Sources */,
 				602D6F7A2BF5B8B40009361D /* CameraCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

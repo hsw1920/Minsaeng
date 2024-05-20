@@ -77,16 +77,14 @@ extension MainViewController: View {
     }
     
     private func bindState(reactor: MainReactor) {
-        reactor.state
-            .map(\.isPushComplaint)
+        reactor.pulse(\.$isPushComplaint)
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushCameraView(option: .required)
             })
             .disposed(by: disposeBag)
         
-        reactor.state
-            .map(\.isPushViewAllComplaints)
+        reactor.pulse(\.$isPushViewAllComplaints)
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushViewAllComplaints()

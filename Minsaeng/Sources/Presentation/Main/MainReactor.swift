@@ -21,8 +21,8 @@ final class MainReactor: Reactor {
     }
     
     struct State {
-        var isPushComplaint: Bool = false
-        var isPushViewAllComplaints: Bool = false
+        @Pulse var isPushComplaint: Bool = false
+        @Pulse var isPushViewAllComplaints: Bool = false
         var complaints: [RecentComplaint] = RecentComplaint.list
     }
     

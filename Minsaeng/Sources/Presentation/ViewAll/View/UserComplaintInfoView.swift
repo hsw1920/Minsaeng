@@ -37,7 +37,6 @@ final class UserComplaintInfoView: UIView {
     }
     
     private func setupUI() {
-        self.backgroundColor = .MSBackgroundGray
         addSubview(userInfoLabel)
         addSubview(imageView)
         

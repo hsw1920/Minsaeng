@@ -57,11 +57,23 @@ extension ViewAllViewController: View {
             .map{ _ in ViewAllReactor.Action.viewDidLoad }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)   
+        
+        viewAllView.complaintsCollectionView.rx.itemSelected
+            .map { ViewAllReactor.Action.pushDetailComplaint(idx: $0.item) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func bindState(reactor: ViewAllReactor) {
-        reactor.state
-            .map(\.complaints)
+        reactor.pulse(\.$isPushDetailComplaint)
+            .filter { $0.0 }
+            .map { $1 }
+            .bind(with: self) { owner, idx in
+                owner.coordinator.pushDetailComplaint(idx: idx)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$complaints)
             .bind(to: viewAllView.complaintsCollectionView.rx.items(
                 cellIdentifier: ViewAllComplaintsCell.reuseIdentifier,
                 cellType: ViewAllComplaintsCell.self

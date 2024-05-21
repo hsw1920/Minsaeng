@@ -36,5 +36,9 @@ extension ViewAllCoordinator: ViewAllCoordinatorInterface {
     func finish() {
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
+    
+    func pushDetailComplaint(idx: Int) {
+        print("\(idx)로 이동")
+    }
 }
 

@@ -46,6 +46,7 @@ final class ViewAllView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        complaintsCollectionView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -54,7 +55,7 @@ final class ViewAllView: UIView {
     }
     
     override func layoutSubviews() {
-        setCollectionView()
+        updateCollectionViewLayout()
     }
     
     private func setupUI() {
@@ -89,24 +90,38 @@ final class ViewAllView: UIView {
         }
     }
     
-    private func setCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 1.0
-        layout.minimumLineSpacing = 1.0
-        layout.itemSize = CGSize(width: (self.bounds.width - 2) / 3,
-                                 height: (self.bounds.width - 2) / 3)
-        complaintsCollectionView.collectionViewLayout = layout
-        
+    private func updateCollectionViewLayout() {
+        let itemSpacing: CGFloat = 1
+        let width: CGFloat = (bounds.width - itemSpacing * 2) / 3
         let dataCounts = complaintsCollectionView.numberOfItems(inSection: 0)
-        updateContentViewHeight(by: dataCounts)
-    }
-    
-    func updateContentViewHeight(by dataCounts: Int) {
-        let cellSize: CGFloat = (self.bounds.width - 2) / 3.0
-        let collectionViewHeight = CGFloat(Int(dataCounts / 3)) * cellSize
+        var itemSpacingCount: Int = (dataCounts - 1) / 3
+        var itemSpacingHeight: CGFloat = CGFloat(itemSpacingCount) * itemSpacing
+        var itemHeight: CGFloat = CGFloat(itemSpacingCount + 1) * width
+        var collectionViewHeight: CGFloat = itemSpacingHeight + itemHeight
+
         complaintsCollectionView.snp.updateConstraints {
             $0.height.equalTo(collectionViewHeight)
         }
+    }
+}
+
+extension ViewAllView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let itemSpacing: CGFloat = 1
+        let width: CGFloat = (collectionView.bounds.width - itemSpacing * 2) / 3
+
+        return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1.0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1.0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 }

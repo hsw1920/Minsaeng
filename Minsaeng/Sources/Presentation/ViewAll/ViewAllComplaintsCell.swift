@@ -13,7 +13,7 @@ final class ViewAllComplaintsCell: UICollectionViewCell {
     private let thumbnail: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = .MSBackgroundGray
+        imageView.clipsToBounds = true
         return imageView
     }()
 
@@ -30,8 +30,7 @@ final class ViewAllComplaintsCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        contentView.backgroundColor = .MSLightGray
+
     }
     
     private func setupUI() {
@@ -43,6 +42,9 @@ final class ViewAllComplaintsCell: UICollectionViewCell {
     }
     
     func configure(item: Complaint) {
-        thumbnail.backgroundColor = [UIColor.MSGray, UIColor.MSMain, UIColor.MSWarning].randomElement()
+        let randomImage = ["CommonIcon", "ProfileComplete", "ProfileStep1", "ProfileStep2"]
+        
+        let image = UIImage(named: randomImage.randomElement()!)
+        thumbnail.image = image
     }
 }

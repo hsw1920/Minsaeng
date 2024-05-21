@@ -67,7 +67,7 @@ extension ViewAllViewController: View {
     private func bindState(reactor: ViewAllReactor) {
         reactor.pulse(\.$isPushDetailComplaint)
             .filter { $0.0 }
-            .map { $1 }
+            .map { $0.idx }
             .bind(with: self) { owner, idx in
                 owner.coordinator.pushDetailComplaint(idx: idx)
             }
@@ -79,6 +79,13 @@ extension ViewAllViewController: View {
                 cellType: ViewAllComplaintsCell.self
             )) { index, item, cell in
                 cell.configure(item: item)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$userInfo)
+            .bind(with: self) { owner, userInfo in
+                owner.viewAllView.infoView.setLabelAttribute(name: userInfo.name,
+                                                             count: userInfo.count)
             }
             .disposed(by: disposeBag)
     }

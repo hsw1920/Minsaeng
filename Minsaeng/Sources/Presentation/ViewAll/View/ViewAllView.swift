@@ -21,8 +21,7 @@ final class ViewAllView: UIView {
     
     private let contentView: UIView = .init()
   
-    private let infoView: UIView = UserComplaintInfoView()
-    
+    let infoView: UserComplaintInfoView = UserComplaintInfoView()
     
     private let complaintDescriptionLabel: UILabel = {
         let label = UILabel()

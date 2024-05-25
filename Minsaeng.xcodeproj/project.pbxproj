@@ -16,6 +16,9 @@
 		604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A602BCFAD4300630CFC /* AppCoordinator.swift */; };
 		604D1A642BCFB27400630CFC /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */; };
 		604D1A672BCFBCD800630CFC /* ProfileCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604D1A662BCFBCD800630CFC /* ProfileCoordinatorInterface.swift */; };
+		6061B3CF2BFC694200D639AA /* DetailComplaintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3CE2BFC694200D639AA /* DetailComplaintViewController.swift */; };
+		6061B3D12BFC69DC00D639AA /* DetailComplaintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3D02BFC69DC00D639AA /* DetailComplaintView.swift */; };
+		6061B3D32BFC6BB400D639AA /* DetailComplaintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */; };
 		60714C662BD27414008D8040 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C652BD27414008D8040 /* MainViewController.swift */; };
 		60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */; };
 		60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6D2BD27606008D8040 /* MainCoordinator.swift */; };
@@ -75,6 +78,9 @@
 		604D1A602BCFAD4300630CFC /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		604D1A632BCFB27400630CFC /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		604D1A662BCFBCD800630CFC /* ProfileCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinatorInterface.swift; sourceTree = "<group>"; };
+		6061B3CE2BFC694200D639AA /* DetailComplaintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintViewController.swift; sourceTree = "<group>"; };
+		6061B3D02BFC69DC00D639AA /* DetailComplaintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintView.swift; sourceTree = "<group>"; };
+		6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintViewModel.swift; sourceTree = "<group>"; };
 		60714C652BD27414008D8040 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinatorInterface.swift; sourceTree = "<group>"; };
 		60714C6D2BD27606008D8040 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -190,6 +196,16 @@
 				604D1A662BCFBCD800630CFC /* ProfileCoordinatorInterface.swift */,
 			);
 			path = CoordinatorInterface;
+			sourceTree = "<group>";
+		};
+		6061B3CD2BFC68DA00D639AA /* DetailComplaint */ = {
+			isa = PBXGroup;
+			children = (
+				6061B3CE2BFC694200D639AA /* DetailComplaintViewController.swift */,
+				6061B3D02BFC69DC00D639AA /* DetailComplaintView.swift */,
+				6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */,
+			);
+			path = DetailComplaint;
 			sourceTree = "<group>";
 		};
 		60714C642BD272EF008D8040 /* Main */ = {
@@ -337,6 +353,7 @@
 		6089FE302BCCD5B900E42E71 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				6061B3CD2BFC68DA00D639AA /* DetailComplaint */,
 				60813BF12BFAF8F100676785 /* ViewAll */,
 				60AA6D8E2BE3AB6F0087C8F3 /* Camera */,
 				60FF96CD2BD54591003DCD7C /* CreateForm */,
@@ -561,6 +578,7 @@
 				60FF96D82BD547D6003DCD7C /* CreateFormCoordinatorInterface.swift in Sources */,
 				60C37DA62BF8E26B00F84A14 /* RecentComplaintCell.swift in Sources */,
 				6089FE0F2BCCC13F00E42E71 /* AppDelegate.swift in Sources */,
+				6061B3D12BFC69DC00D639AA /* DetailComplaintView.swift in Sources */,
 				60BBAC8B2BCD606800F8DA5B /* ProfilePhoneNumberCreationReactor.swift in Sources */,
 				60714C662BD27414008D8040 /* MainViewController.swift in Sources */,
 				60784A512BF1F09800F4AC99 /* RealmManager.swift in Sources */,
@@ -581,6 +599,7 @@
 				60BBAC872BCD600C00F8DA5B /* ProfilePhoneNumberCreationViewController.swift in Sources */,
 				608B637B2BFA184200756242 /* MSDateFormatter.swift in Sources */,
 				60FF96DA2BD55F0E003DCD7C /* ViolationTypeCell.swift in Sources */,
+				6061B3D32BFC6BB400D639AA /* DetailComplaintViewModel.swift in Sources */,
 				6089FE112BCCC13F00E42E71 /* SceneDelegate.swift in Sources */,
 				6089FE362BCCE69B00E42E71 /* ProfileNameCreationViewController.swift in Sources */,
 				60C37DA42BF8DB0C00F84A14 /* UIButton+.swift in Sources */,
@@ -590,6 +609,7 @@
 				60C6FBFD2BF35553005C2A69 /* UIColor+.swift in Sources */,
 				60C21BC62BFB358900557B5B /* ViewAllComplaintsCell.swift in Sources */,
 				602D6F7A2BF5B8B40009361D /* CameraCoordinator.swift in Sources */,
+				6061B3CF2BFC694200D639AA /* DetailComplaintViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

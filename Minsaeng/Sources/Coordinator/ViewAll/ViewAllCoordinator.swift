@@ -39,6 +39,15 @@ extension ViewAllCoordinator: ViewAllCoordinatorInterface {
     
     func pushDetailComplaint(idx: Int) {
         print("\(idx)로 이동")
+        let complaint = Complaint.list[idx]
+        let viewModel = DetailComplaintViewModel(complaint: complaint)
+        
+        let viewController = DetailComplaintViewController(viewModel: viewModel)
+        viewController.detailComplaintView.label.text = "\(idx)로 이동됨"
+        let nextNav = UINavigationController(rootViewController: viewController)
+        nextNav.modalPresentationStyle = .overFullScreen
+        
+        navigationController.present(nextNav, animated: true)
     }
 }
 

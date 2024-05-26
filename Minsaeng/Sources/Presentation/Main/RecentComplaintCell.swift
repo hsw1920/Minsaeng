@@ -12,7 +12,7 @@ final class RecentComplaintCell: UICollectionViewCell {
 
     let photoView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .MSBackgroundGray
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -44,6 +44,9 @@ final class RecentComplaintCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        photoView.image = nil
+        photoView.backgroundColor = .clear
     }
     
     private func setupUI() {
@@ -75,5 +78,26 @@ final class RecentComplaintCell: UICollectionViewCell {
         let dateString = formatter.getY4M2D4(date: item.date)
         dateLabel.text = dateString
         violationTypeLabel.text = item.violationType.toString
+        
+        if let image = loadImageFromDirectory(with: item.image) {
+            // 이미지를 성공적으로 로드한 경우
+            photoView.image = image
+        } else {
+            // 이미지를 로드하지 못한 경우
+            print("Failed to load image")
+            photoView.backgroundColor = .MSLightGray
+        }
+    }
+    
+    private func loadImageFromDirectory(with idnetifier: String) -> UIImage? {
+        let fileManager = FileManager.default
+        // 파일 경로로 접근
+        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsDirectory.appendingPathComponent(idnetifier, conformingTo: .jpeg)
+        
+        // 이미지 파일이 존재한다면, 이미지로 변환 후 리턴
+        guard fileManager.fileExists(atPath: fileURL.path) else { return nil }
+        
+        return UIImage(contentsOfFile: fileURL.path)
     }
 }

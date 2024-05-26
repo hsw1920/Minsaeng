@@ -6,3 +6,9 @@
 //
 
 import Foundation
+import RealmSwift
+
+class RMViolation: Object {
+    @Persisted var name: String
+    @Persisted var phoneNumber: String
+}

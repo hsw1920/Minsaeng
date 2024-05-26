@@ -65,6 +65,11 @@ extension MainViewController: View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.rx.methodInvoked(#selector(UIViewController.viewWillAppear))
+            .map{ _ in MainReactor.Action.viewWillAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         mainView.complaintButton.rx.tap
             .map { MainReactor.Action.pushComplaint }
             .bind(to: reactor.action)

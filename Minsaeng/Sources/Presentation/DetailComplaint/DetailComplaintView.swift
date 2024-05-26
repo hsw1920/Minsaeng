@@ -30,7 +30,6 @@ final class DetailComplaintView: UIView {
     
     let locationLabel: UILabel = {
         let label = UILabel()
-        label.text = "서울특별시 광진구 XX로 XX-X"
         label.font = .systemFont(ofSize: 12, weight: .semibold)
         label.textColor = .MSDarkGray
         return label

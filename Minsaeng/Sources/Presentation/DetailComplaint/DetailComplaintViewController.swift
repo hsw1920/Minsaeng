@@ -14,6 +14,8 @@ final class DetailComplaintViewController: BaseViewController {
         print("deinit: \(self)")
     }
     
+//    let images: PublishRelay<[String]> = .init()
+    
     let detailComplaintView = DetailComplaintView()
     private let exitBarItem: UIBarButtonItem = .init()
     
@@ -36,13 +38,13 @@ final class DetailComplaintViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigation()
-        configure()
         bind()
+        configure()
     }
     
     func setupNavigation() {
         let dateFormatter = MSDateFormatter()
-        let formattedDate = dateFormatter.getY4M2D4(date: viewModel.complaint.date)
+        let formattedDate = dateFormatter.getTimeAll(date: viewModel.complaint.date)
         title = formattedDate
         
         navigationItem.rightBarButtonItem = exitBarItem
@@ -50,7 +52,9 @@ final class DetailComplaintViewController: BaseViewController {
     }
     
     private func configure() {
-        detailComplaintView.label.text = viewModel.complaint.violationType.description
+        detailComplaintView.violationTypeLabel.text = viewModel.complaint.violationType.toString
+        detailComplaintView.locationLabel.text = viewModel.complaint.location
+        detailComplaintView.detailTextView.text = viewModel.complaint.detailContent
     }
     
     private func bind() {
@@ -58,6 +62,20 @@ final class DetailComplaintViewController: BaseViewController {
             .bind(with: self) { owner, _ in
                 owner.dismiss(animated: true)
             }
+            .disposed(by: disposeBag)
+        
+        viewModel.images
+            .bind(to: detailComplaintView.imageCollectionView.rx.items(
+                cellIdentifier: DetailComplaintImageCell.reuseIdentifier,
+                cellType: DetailComplaintImageCell.self
+            )) { index, item, cell in
+                cell.configure(image: item)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.images
+            .map{ $0.count < 2 }
+            .bind(to: detailComplaintView.pageControl.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

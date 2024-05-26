@@ -6,12 +6,24 @@
 //
 
 import RxSwift
+import RxCocoa
+import RxRelay
 
 final class DetailComplaintViewModel {
     let complaint: Complaint
+    let images: BehaviorRelay<[String]> = .init(value: [])
     
     init(complaint: Complaint) {
         self.complaint = complaint
+        setImages()
+    }
+    
+    private func setImages() {
+        var images = [complaint.requiredImage]
+        if let optionalImage = complaint.optionalImage {
+            images.append(optionalImage)
+        }
+        self.images.accept(images)
     }
 }
 

@@ -19,6 +19,8 @@
 		6061B3CF2BFC694200D639AA /* DetailComplaintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3CE2BFC694200D639AA /* DetailComplaintViewController.swift */; };
 		6061B3D12BFC69DC00D639AA /* DetailComplaintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3D02BFC69DC00D639AA /* DetailComplaintView.swift */; };
 		6061B3D32BFC6BB400D639AA /* DetailComplaintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */; };
+		606515202C02D9C100FD6E6E /* RMComplaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6065151F2C02D9C100FD6E6E /* RMComplaint.swift */; };
+		606515242C02DC0400FD6E6E /* RMViolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606515232C02DC0400FD6E6E /* RMViolation.swift */; };
 		60714C662BD27414008D8040 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C652BD27414008D8040 /* MainViewController.swift */; };
 		60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */; };
 		60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6D2BD27606008D8040 /* MainCoordinator.swift */; };
@@ -59,6 +61,7 @@
 		60C6FBF82BF1F74F005C2A69 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 60C6FBF72BF1F74F005C2A69 /* Realm */; };
 		60C6FBFA2BF1F74F005C2A69 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 60C6FBF92BF1F74F005C2A69 /* RealmSwift */; };
 		60C6FBFD2BF35553005C2A69 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C6FBFC2BF35553005C2A69 /* UIColor+.swift */; };
+		60CDA7F12C020F6F00BC4582 /* DetailComplaintImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CDA7F02C020F6F00BC4582 /* DetailComplaintImageCell.swift */; };
 		60E9DA432BF8B8C800B1F280 /* MainReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E9DA422BF8B8C800B1F280 /* MainReactor.swift */; };
 		60E9DA452BF8C74600B1F280 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E9DA442BF8C74600B1F280 /* MainView.swift */; };
 		60FF96CF2BD545AE003DCD7C /* CreateFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FF96CE2BD545AE003DCD7C /* CreateFormViewController.swift */; };
@@ -81,6 +84,8 @@
 		6061B3CE2BFC694200D639AA /* DetailComplaintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintViewController.swift; sourceTree = "<group>"; };
 		6061B3D02BFC69DC00D639AA /* DetailComplaintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintView.swift; sourceTree = "<group>"; };
 		6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintViewModel.swift; sourceTree = "<group>"; };
+		6065151F2C02D9C100FD6E6E /* RMComplaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMComplaint.swift; sourceTree = "<group>"; };
+		606515232C02DC0400FD6E6E /* RMViolation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMViolation.swift; sourceTree = "<group>"; };
 		60714C652BD27414008D8040 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinatorInterface.swift; sourceTree = "<group>"; };
 		60714C6D2BD27606008D8040 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -116,6 +121,7 @@
 		60C37DA32BF8DB0C00F84A14 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		60C37DA52BF8E26B00F84A14 /* RecentComplaintCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentComplaintCell.swift; sourceTree = "<group>"; };
 		60C6FBFC2BF35553005C2A69 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
+		60CDA7F02C020F6F00BC4582 /* DetailComplaintImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintImageCell.swift; sourceTree = "<group>"; };
 		60E9DA422BF8B8C800B1F280 /* MainReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainReactor.swift; sourceTree = "<group>"; };
 		60E9DA442BF8C74600B1F280 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		60FF96CE2BD545AE003DCD7C /* CreateFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFormViewController.swift; sourceTree = "<group>"; };
@@ -204,6 +210,7 @@
 				6061B3CE2BFC694200D639AA /* DetailComplaintViewController.swift */,
 				6061B3D02BFC69DC00D639AA /* DetailComplaintView.swift */,
 				6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */,
+				60CDA7F02C020F6F00BC4582 /* DetailComplaintImageCell.swift */,
 			);
 			path = DetailComplaint;
 			sourceTree = "<group>";
@@ -250,6 +257,8 @@
 			isa = PBXGroup;
 			children = (
 				60784A462BF1E6F500F4AC99 /* RMProfile.swift */,
+				6065151F2C02D9C100FD6E6E /* RMComplaint.swift */,
+				606515232C02DC0400FD6E6E /* RMViolation.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -562,6 +571,7 @@
 			files = (
 				60C21BC82BFB3C1200557B5B /* Complaint.swift in Sources */,
 				604D1A612BCFAD4300630CFC /* AppCoordinator.swift in Sources */,
+				60CDA7F12C020F6F00BC4582 /* DetailComplaintImageCell.swift in Sources */,
 				60FF96CF2BD545AE003DCD7C /* CreateFormViewController.swift in Sources */,
 				608C957B2BCD0E4A00B334EF /* ProfileNameCreationReactor.swift in Sources */,
 				60C21BC42BFB033A00557B5B /* UserComplaintInfoView.swift in Sources */,
@@ -605,7 +615,9 @@
 				60C37DA42BF8DB0C00F84A14 /* UIButton+.swift in Sources */,
 				60784A4A2BF1E76500F4AC99 /* Profile.swift in Sources */,
 				60813BF82BFAF95200676785 /* ViewAllReactor.swift in Sources */,
+				606515202C02D9C100FD6E6E /* RMComplaint.swift in Sources */,
 				600D4F402BD8F347004CD12B /* Violation.swift in Sources */,
+				606515242C02DC0400FD6E6E /* RMViolation.swift in Sources */,
 				60C6FBFD2BF35553005C2A69 /* UIColor+.swift in Sources */,
 				60C21BC62BFB358900557B5B /* ViewAllComplaintsCell.swift in Sources */,
 				602D6F7A2BF5B8B40009361D /* CameraCoordinator.swift in Sources */,

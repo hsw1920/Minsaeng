@@ -9,5 +9,5 @@ import Foundation
 
 protocol ViewAllCoordinatorInterface {
     func finish()
-    func pushDetailComplaint(idx: Int)
+    func pushDetailComplaint(id: UUID)
 }

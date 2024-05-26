@@ -12,7 +12,7 @@ final class ViewAllComplaintsCell: UICollectionViewCell {
 
     private let thumbnail: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -30,7 +30,9 @@ final class ViewAllComplaintsCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-
+        
+        thumbnail.image = nil
+        thumbnail.backgroundColor = .clear
     }
     
     private func setupUI() {
@@ -41,10 +43,26 @@ final class ViewAllComplaintsCell: UICollectionViewCell {
         }
     }
     
-    func configure(item: Complaint) {
-        let randomImage = ["CommonIcon", "ProfileComplete", "ProfileStep1", "ProfileStep2"]
+    func configure(image: String) {
+        if let image = loadImageFromDirectory(with: image) {
+            // 이미지를 성공적으로 로드한 경우
+            thumbnail.image = image
+        } else {
+            // 이미지를 로드하지 못한 경우
+            print("Failed to load image")
+            thumbnail.backgroundColor = .MSLightGray
+        }
+    }
+    
+    private func loadImageFromDirectory(with idnetifier: String) -> UIImage? {
+        let fileManager = FileManager.default
+        // 파일 경로로 접근
+        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsDirectory.appendingPathComponent(idnetifier, conformingTo: .jpeg)
         
-        let image = UIImage(named: randomImage.randomElement()!)
-        thumbnail.image = image
+        // 이미지 파일이 존재한다면, 이미지로 변환 후 리턴
+        guard fileManager.fileExists(atPath: fileURL.path) else { return nil }
+        
+        return UIImage(contentsOfFile: fileURL.path)
     }
 }

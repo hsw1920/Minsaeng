@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 final class ViewAllCoordinator: Coordinator {
     deinit {
@@ -37,13 +38,15 @@ extension ViewAllCoordinator: ViewAllCoordinatorInterface {
         finishDelegate?.coordinatorDidFinish(childCoordinator: self)
     }
     
-    func pushDetailComplaint(idx: Int) {
-        print("\(idx)로 이동")
-        let complaint = Complaint.list[idx]
+    func pushDetailComplaint(id: UUID) {
+        let realmManager = RealmManager()
+        guard let complaint = realmManager.loadComplaint(id: id) else {
+            return
+        }
+        
         let viewModel = DetailComplaintViewModel(complaint: complaint)
         
         let viewController = DetailComplaintViewController(viewModel: viewModel)
-        viewController.detailComplaintView.label.text = "\(idx)로 이동됨"
         let nextNav = UINavigationController(rootViewController: viewController)
         nextNav.modalPresentationStyle = .overFullScreen
         

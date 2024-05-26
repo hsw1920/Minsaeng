@@ -8,16 +8,11 @@
 import Foundation
 
 struct Complaint {
-    let idx: Int = 0
-    let image: String
+    let id: UUID
+    let requiredImage: String
+    let optionalImage: String?
     let violationType: Violation
     let date: Date
-    
-    static let list: [Complaint] = [
-        Complaint(image: "1", violationType: .crosswalk, date: Date()),
-        Complaint(image: "2", violationType: .busStop, date: Date()),
-        Complaint(image: "3", violationType: .etc, date: Date()),
-        Complaint(image: "4", violationType: .crosswalk, date: Date()),
-        Complaint(image: "5", violationType: .hydrant, date: Date()),
-    ]
+    let location: String
+    let detailContent: String
 }

@@ -21,11 +21,12 @@ final class ViewAllReactor: Reactor {
     enum Mutation {
         case goToDetailComplaint(idx: Int)
         case fetchUserInfo
+        case fetchComplaints
     }
     
     struct State {
-        @Pulse var complaints: [Complaint] = Complaint.list
-        @Pulse var isPushDetailComplaint: (Bool, idx: Int) = (false, 0)
+        @Pulse var complaints: [Complaint] = []
+        @Pulse var isPushDetailComplaint: (Bool, id: UUID) = (false, UUID())
         @Pulse var userInfo: (name: String, count: Int) = ("", 0)
     }
     
@@ -38,6 +39,7 @@ final class ViewAllReactor: Reactor {
         switch action {
         case .viewDidLoad:
             return Observable.concat([
+                .just(.fetchComplaints),
                 .just(.fetchUserInfo)
             ])
         case .pushDetailComplaint(let idx):
@@ -50,10 +52,14 @@ final class ViewAllReactor: Reactor {
         var newState = state
         switch mutation {
         case .goToDetailComplaint(let idx):
-            newState.isPushDetailComplaint = (true, idx)
+            let uuid = state.complaints[idx].id
+            newState.isPushDetailComplaint = (true, uuid)
         case .fetchUserInfo:
             guard let profile = realmManager.loadProfile() else { return newState }
             newState.userInfo = (profile.name, state.$complaints.value.count)
+        case .fetchComplaints:
+            let complaints = realmManager.loadAllComplaints()
+            newState.complaints = complaints
         }
         return newState
     }

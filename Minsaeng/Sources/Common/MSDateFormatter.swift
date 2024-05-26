@@ -18,4 +18,14 @@ final class MSDateFormatter {
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter.string(from: date)
     }
+    
+    func getTimeAll(date: Date) -> String {
+        formatter.dateFormat = "yyyy/MM/dd(E) - HH:mm"
+        return formatter.string(from: date)
+    }
+    
+    func getTimeToSave(date: Date) -> String {
+        formatter.dateFormat = "yyyy:MM:dd:HH:mm:ss"
+        return formatter.string(from: date)
+    }
 }

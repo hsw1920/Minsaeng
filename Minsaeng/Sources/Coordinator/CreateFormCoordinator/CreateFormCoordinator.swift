@@ -49,8 +49,6 @@ final class CreateFormCoordinator: Coordinator {
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         viewController.modalPresentationStyle = .overFullScreen
-        
-//        navigationController.present(viewController, animated: true)
         navigationController.pushViewController(viewController, animated: true)
         
         bind(with: viewController,
@@ -74,16 +72,18 @@ final class CreateFormCoordinator: Coordinator {
             print("SMS services are not available")
             return
         }
-        
+        let dateFormatter = MSDateFormatter()
+        let formattedDate = dateFormatter.getTimeAll(date: component.date)
         let messageViewController = MFMessageComposeViewController()
         
         messageViewController.messageComposeDelegate = viewController
         messageViewController.recipients = ["02120"]
         messageViewController.body = """
         위반 차량 번호: \(component.vehicleNumber)
-        위반 유형: \(component.violationType)
+        위반 유형: \(component.violationType.toString)
+        위치: <component.location>
         상세 내용: \(component.detailContent)
-        일시: \(component.date)
+        일시: \(formattedDate)
         신고자 이름: \(component.profile.name)
         신고자 번호: \(component.profile.phoneNumber)
         회신 동의 여부: \(component.isReceived ? "예" : "아니오")

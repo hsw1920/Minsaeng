@@ -41,4 +41,5 @@ enum CoordinatorType {
     case createForm
     case cameraRequired
     case cameraOptional
+    case viewAll
 }

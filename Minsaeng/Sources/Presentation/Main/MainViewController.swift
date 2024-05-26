@@ -65,6 +65,11 @@ extension MainViewController: View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.rx.methodInvoked(#selector(UIViewController.viewWillAppear))
+            .map{ _ in MainReactor.Action.viewWillAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         mainView.complaintButton.rx.tap
             .map { MainReactor.Action.pushComplaint }
             .bind(to: reactor.action)
@@ -77,16 +82,14 @@ extension MainViewController: View {
     }
     
     private func bindState(reactor: MainReactor) {
-        reactor.state
-            .map(\.isPushComplaint)
+        reactor.pulse(\.$isPushComplaint)
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushCameraView(option: .required)
             })
             .disposed(by: disposeBag)
         
-        reactor.state
-            .map(\.isPushViewAllComplaints)
+        reactor.pulse(\.$isPushViewAllComplaints)
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushViewAllComplaints()

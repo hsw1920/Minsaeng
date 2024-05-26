@@ -19,6 +19,7 @@ final class CreateFormReactor: Reactor {
         case editDetailContent(String)
         case shootCamera(Data?)
         case removeOptionalPhoto
+        case saveForm
     }
     
     enum Mutation {
@@ -42,6 +43,7 @@ final class CreateFormReactor: Reactor {
     
     // MARK: Property
     var initialState: State = .init()
+    var realmManager = RealmManager()
     var readyToConfirm = PublishSubject<CreateFormComponentImpl>()
     var component: CreateFormComponent!
     
@@ -81,6 +83,10 @@ final class CreateFormReactor: Reactor {
             return .just(.updateCaptureImage(image))
         case .removeOptionalPhoto:
             return .just(.deleteCaptureImage)
+        case .saveForm:
+            let rmForm = makeForm()
+            realmManager.createItem(rmForm)
+            return .empty()
         }
     }
     
@@ -140,5 +146,56 @@ extension CreateFormReactor {
                                        isReceived: isReceived, 
                                        requiredImageData: requiredImageData,
                                        optionalImageData: optionalImageData)
+    }
+    
+    private func makeForm() -> RMComplaint {
+        let violationId = currentState.violations.firstIndex(where: { $0.isSelected }) ?? 0
+        let violationType = Violation(rawValue: violationId) ?? .etc
+        let detailContent = currentState.detailContent
+        let date = Date.now
+        
+        let requiredImageData = currentState.requiredImageData
+        let requiredImagePath = getImagePathAndSave(data: requiredImageData, 
+                                                    type: .required)
+        var optionalImagePath: String?
+        if let optionalImageData = currentState.captureImageData {
+            optionalImagePath = getImagePathAndSave(data: optionalImageData,
+                                                    type: .optional)
+        }
+        
+        let form = Complaint(id: UUID(),
+                             requiredImage: requiredImagePath,
+                             optionalImage: optionalImagePath ?? nil,
+                             violationType: violationType,
+                             date: date, 
+                             location: "서울특별시 어딘가",
+                             detailContent: detailContent)
+        
+        return form.asRealm()
+    }
+    
+    private func getImagePathAndSave(data: Data, type: ImageType) -> String {
+        let fileManager = FileManager.default
+        guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return ""
+        }
+        
+        let dateformatter = MSDateFormatter()
+        let timeString = dateformatter.getTimeToSave(date: Date.now)
+        let imageName = "\(timeString)_\(type)"
+        
+        let fileURL = documentsURL.appendingPathComponent(imageName, conformingTo: .jpeg)
+        
+        do {
+            try data.write(to: fileURL)
+            return imageName
+        } catch {
+            print("Error saving image: \(error)")
+            return ""
+        }
+    }
+    
+    enum ImageType {
+        case required, optional
     }
 }

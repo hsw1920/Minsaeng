@@ -11,6 +11,7 @@ import RxCocoa
 final class MainReactor: Reactor {
     enum Action {
         case viewDidLoad
+        case viewWillAppear
         case pushComplaint
         case pushViewAllComplaints
     }
@@ -18,24 +19,32 @@ final class MainReactor: Reactor {
     enum Mutation {
         case goToCamera
         case goToViewAllComplaints
+        case updateRecentComplaints
     }
     
     struct State {
-        var isPushComplaint: Bool = false
-        var isPushViewAllComplaints: Bool = false
-        var complaints: [RecentComplaint] = RecentComplaint.list
+        @Pulse var isPushComplaint: Bool = false
+        @Pulse var isPushViewAllComplaints: Bool = false
+        var complaints: [RecentComplaint] = []
     }
     
     // MARK: Property
     var initialState: State = .init()
+    let realmManager = RealmManager()
+    
+    init() {
+        self.initialState.complaints =  realmManager.loadRecentComplaints()
+    }
+    
     
     // MARK: Mutation
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .viewDidLoad:
-            return Observable.concat([
-                .empty()
-            ])
+            return .just(.updateRecentComplaints)
+        case .viewWillAppear:
+            print("ViewWillAppear")
+            return .just(.updateRecentComplaints)
         case .pushComplaint:
             return Observable.just(.goToCamera)
         case .pushViewAllComplaints:
@@ -51,7 +60,13 @@ final class MainReactor: Reactor {
             newState.isPushComplaint = true
         case .goToViewAllComplaints:
             newState.isPushViewAllComplaints = true
+        case .updateRecentComplaints:
+            newState.complaints = updateRecentComplaints()
         }
         return newState
+    }
+    
+    private func updateRecentComplaints() -> [RecentComplaint] {
+        return realmManager.loadRecentComplaints()
     }
 }

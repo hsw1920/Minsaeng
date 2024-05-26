@@ -61,7 +61,10 @@ extension MainCoordinator: MainCoordinatorInterface {
     }
     
     func pushViewAllComplaints() {
-        print("viewAllComplaints")
+        let coordinator = ViewAllCoordinator(navigationController: navigationController)
+        coordinator.finishDelegate = self
+        childCoordinators.append(coordinator)
+        coordinator.start()
     }
     
     func pushSettingView() {

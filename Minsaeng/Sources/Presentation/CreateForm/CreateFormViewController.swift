@@ -188,6 +188,7 @@ extension CreateFormViewController: MFMessageComposeViewControllerDelegate {
             dismiss(animated: true)
         case .sent:
             dismiss(animated: true) {
+                self.reactor?.action.onNext(.saveForm)
                 self.isFinished = true
                 self.coordinator.finishCreateForm(self)
             }

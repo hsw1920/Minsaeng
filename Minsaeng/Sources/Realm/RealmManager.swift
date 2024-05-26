@@ -48,27 +48,44 @@ final class RealmManager {
 }
 
 extension RealmManager {
-    func loadProfile() -> Profile? {
-        do {
-            let realm = try Realm()
-            let realmProfile = realm.objects(RMProfile.self).first
-            let localProfile = realmProfile?.asLocal()
-            return localProfile
-        } catch {
-            print("loadProfile From Realm Error")
+    func loadComplaint(id: UUID) -> Complaint? {
+        guard let realmComplaint = realm.object(ofType: RMComplaint.self, 
+                                                forPrimaryKey: id) 
+        else {
             return nil
         }
+        
+        return realmComplaint.asLocal()
+    }
+    
+    func loadAllComplaints() -> [Complaint] {
+        let realmComplaint = realm.objects(RMComplaint.self)
+            .sorted(byKeyPath: "date", ascending: false)
+            .map { $0.asLocal() }
+        
+        return Array(realmComplaint)
+        
+    }
+    
+    func loadRecentComplaints() -> [RecentComplaint] {
+        let realmComplaint = realm.objects(RMComplaint.self)
+            .sorted(byKeyPath: "date", ascending: false)
+            .prefix(5)
+            .map { $0.asLocalRecentComplaint() }
+        
+        return Array(realmComplaint)
+    }
+    
+    func loadProfile() -> Profile? {
+        let realmProfile = realm.objects(RMProfile.self).first
+        let localProfile = realmProfile?.asLocal()
+        
+        return localProfile
     }
     
     func isProfileExists() -> Bool {
-        do {
-            let realm = try Realm()
-            let isProfileExists = !realm.objects(RMProfile.self).isEmpty
-            return isProfileExists
-        } catch {
-            print("isProfileExists From Realm Error")
-            return false
-        }
+        let isProfileExists = !realm.objects(RMProfile.self).isEmpty
+        return isProfileExists
     }
     
     func deleteProfile() {

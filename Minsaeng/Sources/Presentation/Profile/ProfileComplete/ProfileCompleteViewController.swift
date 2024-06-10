@@ -18,6 +18,7 @@ final class ProfileCompleteViewController: BaseViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .MSBlack
         label.text = "프로필 설정이 완료되었습니다!"
         label.font = .systemFont(ofSize: 18, weight: .bold)
         return label
@@ -32,8 +33,10 @@ final class ProfileCompleteViewController: BaseViewController {
     private let nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("확인", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        button.setBackgroundColor(.MSMain, for: .normal)
+        button.setBackgroundColor(.MSLightMain, for: .highlighted)
         return button
     }()
     

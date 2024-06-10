@@ -12,7 +12,7 @@ import RxCocoa
 final class ProfilePhoneNumberCreationReactor: Reactor {
     enum Action {
         case textFieldValueChanged(String)
-        case buttonTapped
+        case buttonTapped(String)
     }
     
     enum Mutation {
@@ -62,8 +62,9 @@ final class ProfilePhoneNumberCreationReactor: Reactor {
                     .of(.setIsActive(false))
                 ])
             }
-        case .buttonTapped:
-            return Observable.just(.setIsPresent(true))
+        case .buttonTapped(let phoneNumber):
+            let regex = isValidPhoneNumber(phoneNumber: phoneNumber) == .success
+            return Observable.just(.setIsPresent(regex))
         }
     }
     

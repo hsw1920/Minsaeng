@@ -16,7 +16,7 @@ enum TextFieldState {
 final class ProfileNameCreationReactor: Reactor {
     enum Action {
         case textFieldValueChanged(String)
-        case buttonTapped
+        case buttonTapped(String)
     }
     
     enum Mutation {
@@ -66,8 +66,9 @@ final class ProfileNameCreationReactor: Reactor {
                     .of(.setIsActive(false))
                 ])
             }
-        case .buttonTapped:
-            return Observable.just(.setIsPresent(true))
+        case .buttonTapped(let name):
+            let regex = isValidName(name: name) == .success
+            return Observable.just(.setIsPresent(regex))
         }
     }
     

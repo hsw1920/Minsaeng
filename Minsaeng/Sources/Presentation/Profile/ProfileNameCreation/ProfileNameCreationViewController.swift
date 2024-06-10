@@ -173,12 +173,13 @@ extension ProfileNameCreationViewController: View {
     
     private func bindAction(reactor: ProfileNameCreationReactor) {
         nameTextField.rx.text.orEmpty
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .map { ProfileNameCreationReactor.Action.textFieldValueChanged($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         nextButton.rx.tap
-            .map { ProfileNameCreationReactor.Action.buttonTapped }
+            .map { ProfileNameCreationReactor.Action.buttonTapped(self.nameTextField.text ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -220,7 +221,7 @@ extension ProfileNameCreationViewController {
             self.titleLabel.alpha = 0
             self.underLine.layer.borderColor = UIColor.MSBorderGray.cgColor
             self.descriptionLabel.alpha = 0.0
-            self.nextButton.alpha = 0.0
+            self.nextButton.setBackgroundColor(.clear, for: .normal)
             
             UIView.animate(withDuration: 0.3) {
                 self.nextButton.snp.updateConstraints {
@@ -247,7 +248,7 @@ extension ProfileNameCreationViewController {
                 self.titleLabel.alpha = 1
                 self.underLine.layer.borderColor = UIColor.MSMain.cgColor
                 self.descriptionLabel.alpha = 0.0
-                self.nextButton.alpha = 1.0
+                self.nextButton.setBackgroundColor(.MSMain, for: .normal)
                 self.view.layoutIfNeeded()
             }
             
@@ -262,7 +263,7 @@ extension ProfileNameCreationViewController {
                 self.titleLabel.alpha = 1
                 self.underLine.layer.borderColor = UIColor.MSWarning.cgColor
                 self.descriptionLabel.alpha = 1.0
-                self.nextButton.alpha = 0.5
+                self.nextButton.setBackgroundColor(.MSLightMain, for: .normal)
                 self.view.layoutIfNeeded()
             }
         }

@@ -21,6 +21,7 @@
 		6061B3D32BFC6BB400D639AA /* DetailComplaintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */; };
 		606515202C02D9C100FD6E6E /* RMComplaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6065151F2C02D9C100FD6E6E /* RMComplaint.swift */; };
 		606515242C02DC0400FD6E6E /* RMViolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606515232C02DC0400FD6E6E /* RMViolation.swift */; };
+		606BA5422C16FD280059EF15 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 606BA5442C16FD280059EF15 /* InfoPlist.strings */; };
 		60714C662BD27414008D8040 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C652BD27414008D8040 /* MainViewController.swift */; };
 		60714C6B2BD2745F008D8040 /* MainCoordinatorInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */; };
 		60714C6E2BD27606008D8040 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60714C6D2BD27606008D8040 /* MainCoordinator.swift */; };
@@ -86,6 +87,8 @@
 		6061B3D22BFC6BB400D639AA /* DetailComplaintViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailComplaintViewModel.swift; sourceTree = "<group>"; };
 		6065151F2C02D9C100FD6E6E /* RMComplaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMComplaint.swift; sourceTree = "<group>"; };
 		606515232C02DC0400FD6E6E /* RMViolation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMViolation.swift; sourceTree = "<group>"; };
+		606BA53F2C16FC810059EF15 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		606BA5432C16FD280059EF15 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		60714C652BD27414008D8040 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		60714C6A2BD2745F008D8040 /* MainCoordinatorInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinatorInterface.swift; sourceTree = "<group>"; };
 		60714C6D2BD27606008D8040 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -346,6 +349,7 @@
 				6089FE172BCCC14000E42E71 /* Assets.xcassets */,
 				6089FE192BCCC14000E42E71 /* LaunchScreen.storyboard */,
 				6089FE1C2BCCC14000E42E71 /* Info.plist */,
+				606BA5442C16FD280059EF15 /* InfoPlist.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -535,6 +539,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 6089FE022BCCC13F00E42E71;
 			packageReferences = (
@@ -558,6 +563,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6089FE1B2BCCC14000E42E71 /* LaunchScreen.storyboard in Resources */,
+				606BA5422C16FD280059EF15 /* InfoPlist.strings in Resources */,
 				6089FE182BCCC14000E42E71 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -628,10 +634,19 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		606BA5442C16FD280059EF15 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				606BA5432C16FD280059EF15 /* ko */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		6089FE192BCCC14000E42E71 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				6089FE1A2BCCC14000E42E71 /* Base */,
+				606BA53F2C16FC810059EF15 /* ko */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -644,6 +659,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -707,6 +723,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -769,10 +786,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Minsaeng/Resources/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "원활한 신고를 위한 정확한 위치 정보 제공에 동의해주세요.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "원활한 신고를 위한 정확한 위치 정보 제공에 동의해주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -783,7 +801,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -798,10 +816,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Minsaeng/Resources/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "원활한 신고를 위한 정확한 위치 정보 제공에 동의해주세요.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "원활한 신고를 위한 정확한 위치 정보 제공에 동의해주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -812,7 +831,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

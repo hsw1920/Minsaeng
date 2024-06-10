@@ -37,6 +37,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "휴대전화를 입력해주세요"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 18, weight: .bold)
         label.alpha = 0.0
         return label
@@ -50,6 +51,7 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     
     private let phoneNumberTextField: UITextField = {
         let textField = UITextField()
+        textField.textColor = .MSBlack
         textField.font = .systemFont(ofSize: 24)
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
@@ -61,15 +63,17 @@ final class ProfilePhoneNumberCreationViewController: BaseViewController {
     private let underLine: UIView = {
         let view = UIView()
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderColor = UIColor.MSBorderGray.cgColor
         return view
     }()
     
     private let nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        button.setBackgroundColor(.MSMain, for: .normal)
+        button.setBackgroundColor(.MSLightMain, for: .highlighted)
         return button
     }()
     
@@ -168,12 +172,13 @@ extension ProfilePhoneNumberCreationViewController: View {
     
     private func bindAction(reactor: ProfilePhoneNumberCreationReactor) {
         phoneNumberTextField.rx.text.orEmpty
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .map { ProfilePhoneNumberCreationReactor.Action.textFieldValueChanged($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         nextButton.rx.tap
-            .map { ProfilePhoneNumberCreationReactor.Action.buttonTapped }
+            .map { ProfilePhoneNumberCreationReactor.Action.buttonTapped(self.phoneNumberTextField.text ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -218,14 +223,14 @@ extension ProfilePhoneNumberCreationViewController {
                 self.view.layoutIfNeeded()
             }
             self.titleLabel.alpha = 0
-            self.underLine.layer.borderColor = UIColor.lightGray.cgColor
+            self.underLine.layer.borderColor = UIColor.MSBorderGray.cgColor
             self.descriptionLabel.text = "본인의 휴대전화 번호를 입력해주세요. (번호만 입력)"
-            self.descriptionLabel.textColor = .lightGray
-            self.nextButton.alpha = 0.0
+            self.descriptionLabel.textColor = .MSDarkGray
+            self.nextButton.setBackgroundColor(.clear, for: .normal)
         case .none:
             UIView.transition(with: self.view, duration: 0.3) {
                 self.titleLabel.alpha = 1
-                self.underLine.layer.borderColor = UIColor.systemBlue.cgColor
+                self.underLine.layer.borderColor = UIColor.MSMain.cgColor
                 self.view.layoutIfNeeded()
             }
             UIView.animate(withDuration: 0.3) {
@@ -235,12 +240,12 @@ extension ProfilePhoneNumberCreationViewController {
                 self.view.layoutIfNeeded()
             }
             self.descriptionLabel.text = "본인의 휴대전화 번호를 입력해주세요. (번호만 입력)"
-            self.descriptionLabel.textColor = .lightGray
+            self.descriptionLabel.textColor = .MSDarkGray
         case .success:
             UIView.transition(with: self.view, duration: 0.3) {
                 self.titleLabel.alpha = 1
-                self.underLine.layer.borderColor = UIColor.systemBlue.cgColor
-                self.nextButton.alpha = 1.0
+                self.underLine.layer.borderColor = UIColor.MSMain.cgColor
+                self.nextButton.setBackgroundColor(.MSMain, for: .normal)
                 self.view.layoutIfNeeded()
             }
             UIView.animate(withDuration: 0.3) {
@@ -251,17 +256,17 @@ extension ProfilePhoneNumberCreationViewController {
             }
             
             self.descriptionLabel.text = "본인의 휴대전화 번호를 입력해주세요. (번호만 입력)"
-            self.descriptionLabel.textColor = .lightGray
+            self.descriptionLabel.textColor = .MSDarkGray
         case .warning:
             UIView.transition(with: self.view, duration: 0.3) {
                 self.titleLabel.alpha = 1
-                self.underLine.layer.borderColor = UIColor.systemRed.cgColor
-                self.nextButton.alpha = 0.5
+                self.underLine.layer.borderColor = UIColor.MSWarning.cgColor
+                self.nextButton.setBackgroundColor(.MSLightMain, for: .normal)
                 self.view.layoutIfNeeded()
             }
             
             self.descriptionLabel.text = "올바르지 않은 휴대전화 번호 형식입니다."
-            self.descriptionLabel.textColor = .systemRed
+            self.descriptionLabel.textColor = .MSWarning
         }
     }
     

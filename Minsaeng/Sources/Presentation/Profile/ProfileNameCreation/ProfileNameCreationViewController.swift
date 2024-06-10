@@ -37,6 +37,7 @@ final class ProfileNameCreationViewController: BaseViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "이름을 입력해주세요"
+        label.textColor = .MSBlack
         label.font = .systemFont(ofSize: 18, weight: .bold)
         label.alpha = 0.0
         return label
@@ -46,7 +47,7 @@ final class ProfileNameCreationViewController: BaseViewController {
         let label = UILabel()
         label.text = "올바르지 않은 이름 형식입니다."
         label.font = .systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .systemRed
+        label.textColor = .MSWarning
         label.alpha = 0.0
         return label
     }()
@@ -54,6 +55,7 @@ final class ProfileNameCreationViewController: BaseViewController {
     private let nameTextField: UITextField = {
         let textField = UITextField()
         textField.font = .systemFont(ofSize: 24)
+        textField.textColor = .MSBlack
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.placeholder = "이름을 입력해주세요"
@@ -63,15 +65,17 @@ final class ProfileNameCreationViewController: BaseViewController {
     private let underLine: UIView = {
         let view = UIView()
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderColor = UIColor.MSBorderGray.cgColor
         return view
     }()
     
     private let nextButton: UIButton = {
         let button = UIButton()
         button.setTitle("다음", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .blue
+        button.setTitleColor(.MSWhite, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        button.setBackgroundColor(.MSMain, for: .normal)
+        button.setBackgroundColor(.MSLightMain, for: .highlighted)
         return button
     }()
     
@@ -169,12 +173,13 @@ extension ProfileNameCreationViewController: View {
     
     private func bindAction(reactor: ProfileNameCreationReactor) {
         nameTextField.rx.text.orEmpty
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .map { ProfileNameCreationReactor.Action.textFieldValueChanged($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         nextButton.rx.tap
-            .map { ProfileNameCreationReactor.Action.buttonTapped }
+            .map { ProfileNameCreationReactor.Action.buttonTapped(self.nameTextField.text ?? "") }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -214,9 +219,9 @@ extension ProfileNameCreationViewController {
             
         case .empty:
             self.titleLabel.alpha = 0
-            self.underLine.layer.borderColor = UIColor.lightGray.cgColor
+            self.underLine.layer.borderColor = UIColor.MSBorderGray.cgColor
             self.descriptionLabel.alpha = 0.0
-            self.nextButton.alpha = 0.0
+            self.nextButton.setBackgroundColor(.clear, for: .normal)
             
             UIView.animate(withDuration: 0.3) {
                 self.nextButton.snp.updateConstraints {
@@ -227,7 +232,7 @@ extension ProfileNameCreationViewController {
         case .none:
             UIView.transition(with: self.view, duration: 0.3) {
                 self.titleLabel.alpha = 1
-                self.underLine.layer.borderColor = UIColor.systemBlue.cgColor
+                self.underLine.layer.borderColor = UIColor.MSMain.cgColor
                 self.descriptionLabel.alpha = 0.0
                 self.view.layoutIfNeeded()
             }
@@ -241,9 +246,9 @@ extension ProfileNameCreationViewController {
         case .success:
             UIView.transition(with: self.view, duration: 0.3) {
                 self.titleLabel.alpha = 1
-                self.underLine.layer.borderColor = UIColor.systemBlue.cgColor
+                self.underLine.layer.borderColor = UIColor.MSMain.cgColor
                 self.descriptionLabel.alpha = 0.0
-                self.nextButton.alpha = 1.0
+                self.nextButton.setBackgroundColor(.MSMain, for: .normal)
                 self.view.layoutIfNeeded()
             }
             
@@ -256,9 +261,9 @@ extension ProfileNameCreationViewController {
         case .warning:
             UIView.transition(with: self.view, duration: 0.3) {
                 self.titleLabel.alpha = 1
-                self.underLine.layer.borderColor = UIColor.systemRed.cgColor
+                self.underLine.layer.borderColor = UIColor.MSWarning.cgColor
                 self.descriptionLabel.alpha = 1.0
-                self.nextButton.alpha = 0.5
+                self.nextButton.setBackgroundColor(.MSLightMain, for: .normal)
                 self.view.layoutIfNeeded()
             }
         }

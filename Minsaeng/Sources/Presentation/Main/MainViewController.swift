@@ -51,6 +51,27 @@ final class MainViewController: BaseViewController {
         navigationItem.backBarButtonItem?.tintColor = .MSMain
         navigationItem.rightBarButtonItem?.tintColor = .MSBlack
     }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "위치 정보 제공 동의.", message: "신고자의 원활한 신고를 위한\n위치 정보 제공에 동의해주세요.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            
+            self?.requestLocationAuthorization()
+        })
+        present(alert, animated: true)
+    }
+    
+    private func requestLocationAuthorization() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                print("Settings opened: \(success)")
+            })
+        }
+    }
 }
 
 extension MainViewController: View {
@@ -71,7 +92,7 @@ extension MainViewController: View {
             .disposed(by: disposeBag)
         
         mainView.complaintButton.rx.tap
-            .map { MainReactor.Action.pushComplaint }
+            .map { MainReactor.Action.checkCLAuthorization }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -93,6 +114,13 @@ extension MainViewController: View {
             .filter { $0 }
             .bind(with: self, onNext: { owner, _ in
                 owner.coordinator.pushViewAllComplaints()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$setAlert)
+            .filter { $0 }
+            .bind(with: self, onNext: { owner, _ in
+                owner.showAlert()
             })
             .disposed(by: disposeBag)
 

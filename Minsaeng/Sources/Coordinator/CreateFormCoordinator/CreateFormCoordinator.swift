@@ -45,7 +45,8 @@ final class CreateFormCoordinator: Coordinator {
                                                 profile: profile,
                                                 isReceived: true,
                                                 requiredImageData: imageData, 
-                                                optionalImageData: nil)
+                                                optionalImageData: nil, 
+                                                location: "")
         let reactor = CreateFormReactor(component: component)
         let viewController = CreateFormViewController(with: reactor, coordinator: self)
         viewController.modalPresentationStyle = .overFullScreen
@@ -81,7 +82,7 @@ final class CreateFormCoordinator: Coordinator {
         messageViewController.body = """
         위반 차량 번호: \(component.vehicleNumber)
         위반 유형: \(component.violationType.toString)
-        위치: <component.location>
+        위치: \(component.location)
         상세 내용: \(component.detailContent)
         일시: \(formattedDate)
         신고자 이름: \(component.profile.name)

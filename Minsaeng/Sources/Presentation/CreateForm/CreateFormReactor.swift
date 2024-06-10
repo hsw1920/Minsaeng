@@ -8,9 +8,10 @@
 import Foundation
 import ReactorKit
 import RxCocoa
-import UIKit
+import CoreLocation
+import Contacts
 
-final class CreateFormReactor: Reactor {
+final class CreateFormReactor: NSObject, Reactor {
     enum Action {
         case viewDidLoad
         case violationButtonTapped(IndexPath)
@@ -20,6 +21,7 @@ final class CreateFormReactor: Reactor {
         case shootCamera(Data?)
         case removeOptionalPhoto
         case saveForm
+        case requestLocation(String)
     }
     
     enum Mutation {
@@ -30,6 +32,7 @@ final class CreateFormReactor: Reactor {
         case toggleReply
         case updateCaptureImage(Data)
         case deleteCaptureImage
+        case setLocation(String)
     }
     
     struct State {
@@ -39,11 +42,14 @@ final class CreateFormReactor: Reactor {
         var isSelectedReplyButton: Bool = true
         var requiredImageData: Data = Data()
         var captureImageData: Data?
+        var location: String = ""
     }
     
     // MARK: Property
     var initialState: State = .init()
     var realmManager = RealmManager()
+    private var locationManager = CLLocationManager()
+    private let geocoder = CLGeocoder()
     var readyToConfirm = PublishSubject<CreateFormComponentImpl>()
     var component: CreateFormComponent!
     
@@ -54,6 +60,10 @@ final class CreateFormReactor: Reactor {
         self.initialState.detailContent = component.violationType.description
         self.initialState.vehicleNumber = component.vehicleNumber
         self.initialState.requiredImageData = component.requiredImageData
+        
+        super.init()
+        locationManager.delegate = self
+        locationManager.startUpdatingLocation()
     }
     
     deinit {
@@ -87,6 +97,8 @@ final class CreateFormReactor: Reactor {
             let rmForm = makeForm()
             realmManager.createItem(rmForm)
             return .empty()
+        case .requestLocation(let location):
+            return .just(.setLocation(location))
         }
     }
     
@@ -111,6 +123,8 @@ final class CreateFormReactor: Reactor {
             newState.captureImageData = image
         case .deleteCaptureImage:
             newState.captureImageData = nil
+        case .setLocation(let location):
+            newState.location = location
         }
         return newState
     }
@@ -137,6 +151,7 @@ extension CreateFormReactor {
         let requiredImageData = currentState.requiredImageData
         let optionalImageData = currentState.captureImageData
         let isReceived = currentState.isSelectedReplyButton
+        let location = currentState.location
         
         return CreateFormComponentImpl(vehicleNumber: vehicleNumber,
                                        violationType: violationType,
@@ -145,7 +160,8 @@ extension CreateFormReactor {
                                        profile: component.profile,
                                        isReceived: isReceived, 
                                        requiredImageData: requiredImageData,
-                                       optionalImageData: optionalImageData)
+                                       optionalImageData: optionalImageData, 
+                                       location: location)
     }
     
     private func makeForm() -> RMComplaint {
@@ -153,6 +169,7 @@ extension CreateFormReactor {
         let violationType = Violation(rawValue: violationId) ?? .etc
         let detailContent = currentState.detailContent
         let date = Date.now
+        let location = currentState.location
         
         let requiredImageData = currentState.requiredImageData
         let requiredImagePath = getImagePathAndSave(data: requiredImageData, 
@@ -168,7 +185,7 @@ extension CreateFormReactor {
                              optionalImage: optionalImagePath ?? nil,
                              violationType: violationType,
                              date: date, 
-                             location: "서울특별시 어딘가",
+                             location: location,
                              detailContent: detailContent)
         
         return form.asRealm()
@@ -197,5 +214,62 @@ extension CreateFormReactor {
     
     enum ImageType {
         case required, optional
+    }
+}
+
+extension CreateFormReactor: CLLocationManagerDelegate {
+    
+    // CLPlacemark에서 주소 문자열 변환
+    private func getAddressString(from placemark: CLPlacemark) -> String {
+        if let postalAddress = placemark.postalAddress {
+            let formatter = CNPostalAddressFormatter()
+            formatter.style = .mailingAddress
+            
+            // 주소 문자열 포매팅
+            var addressString = formatter.string(from: postalAddress)
+            
+            // 국가, 우편번호를 제거
+            let country = postalAddress.country
+            let postalCode = postalAddress.postalCode
+            addressString = addressString.replacingOccurrences(of: country, with: "")
+            addressString = addressString.replacingOccurrences(of: postalCode, with: "")
+            
+            // 줄바꿈 문자를 공백으로 대체
+            addressString = addressString.replacingOccurrences(of: "\n", with: " ")
+            
+            // 공백을 제거
+            addressString = addressString.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            return addressString
+        }
+        return ""
+    }
+    
+    private func addressInfo(lati: CLLocationDegrees, longi: CLLocationDegrees) {
+        let findLocation = CLLocation(latitude: lati, longitude: longi)
+        let locale = Locale(identifier: "Ko-kr")
+        
+        geocoder.reverseGeocodeLocation(findLocation, preferredLocale: locale) { [weak self] (placemarks, error) in
+            if error != nil {
+                print(">>> Error!! : \(error?.localizedDescription ?? "주소를 구성할 수 없습니다.")")
+            }
+            else {
+                if let address = placemarks?.last {
+                    let addressString = self?.getAddressString(from: address)
+                    self?.action.onNext(.requestLocation(addressString ?? ""))
+                }
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            locationManager.stopUpdatingLocation()
+            self.addressInfo(lati: location.coordinate.latitude, longi: location.coordinate.longitude)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(">>> Error: \(error.localizedDescription)")
     }
 }

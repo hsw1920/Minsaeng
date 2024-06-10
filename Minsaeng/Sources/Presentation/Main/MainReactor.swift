@@ -7,33 +7,40 @@
 
 import ReactorKit
 import RxCocoa
+import CoreLocation
+import UIKit
 
-final class MainReactor: Reactor {
+final class MainReactor: NSObject, Reactor {
     enum Action {
         case viewDidLoad
         case viewWillAppear
-        case pushComplaint
         case pushViewAllComplaints
+        case checkCLAuthorization
     }
     
     enum Mutation {
         case goToCamera
         case goToViewAllComplaints
+        case setAlert
         case updateRecentComplaints
     }
     
     struct State {
         @Pulse var isPushComplaint: Bool = false
         @Pulse var isPushViewAllComplaints: Bool = false
+        @Pulse var setAlert: Bool = false
         var complaints: [RecentComplaint] = []
     }
     
     // MARK: Property
     var initialState: State = .init()
     let realmManager = RealmManager()
+    private var locationManager = CLLocationManager()
     
-    init() {
+    override init() {
         self.initialState.complaints =  realmManager.loadRecentComplaints()
+        super.init()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
     
@@ -45,10 +52,25 @@ final class MainReactor: Reactor {
         case .viewWillAppear:
             print("ViewWillAppear")
             return .just(.updateRecentComplaints)
-        case .pushComplaint:
-            return Observable.just(.goToCamera)
         case .pushViewAllComplaints:
-            return Observable.just(.goToViewAllComplaints)
+            return .just(.goToViewAllComplaints)
+        case .checkCLAuthorization:
+            // 위치 서비스 권한 상태 확인
+            let status = CLLocationManager.authorizationStatus()
+            switch status {
+            case .notDetermined:
+                // 권한이 요청되지 않음
+                locationManager.requestWhenInUseAuthorization()
+            case .restricted, .denied:
+                // 위치 서비스 사용 제한 또는 거부됨
+                return .just(.setAlert)
+            case .authorizedWhenInUse, .authorizedAlways:
+                // 위치 서비스 사용 허용됨
+                return .just(.goToCamera)
+            default:
+                break
+            }
+            return .empty()
         }
     }
     
@@ -62,6 +84,8 @@ final class MainReactor: Reactor {
             newState.isPushViewAllComplaints = true
         case .updateRecentComplaints:
             newState.complaints = updateRecentComplaints()
+        case .setAlert:
+            newState.setAlert = true
         }
         return newState
     }

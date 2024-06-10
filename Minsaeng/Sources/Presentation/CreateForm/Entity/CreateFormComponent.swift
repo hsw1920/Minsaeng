@@ -24,6 +24,7 @@ struct CreateFormComponentImpl: CreateFormComponent {
     let requiredImageData: Data
     let optionalImageData: Data?
     let isReceived: Bool
+    let location: String
     
     init(vehicleNumber: String,
          violationType: Violation,
@@ -32,7 +33,8 @@ struct CreateFormComponentImpl: CreateFormComponent {
          profile: Profile,
          isReceived: Bool,
          requiredImageData: Data,
-         optionalImageData: Data?) {
+         optionalImageData: Data?,
+         location: String) {
         self.violationType = violationType
         self.vehicleNumber = vehicleNumber
         self.detailContent = detailContent
@@ -41,5 +43,6 @@ struct CreateFormComponentImpl: CreateFormComponent {
         self.isReceived = isReceived
         self.requiredImageData = requiredImageData
         self.optionalImageData = optionalImageData
+        self.location = location
     }
 }

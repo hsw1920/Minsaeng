@@ -4,10 +4,6 @@
 <dict>
 	<key>NSLocationDefaultAccuracyReduced</key>
 	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>원활한 신고를 위한 정확한 위치 정보 제공에 동의해주세요.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>원활한 신고를 위한 정확한 위치 정보 제공에 동의해주세요.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
